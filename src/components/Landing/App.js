@@ -45,7 +45,9 @@ export default class App extends Component {
       <div className="App">
         <CssBaseline/>
         <Header isSignedIn={signedIn} onSignIn={signIn} onSignOut={this.handleSignOut} userInfo={userInfo} />
-        <WelcomeLanding/>
+        {signedIn 
+        ? <LandingSignedIn upcomingComps={this.state.upcomingComps} />
+        : <WelcomeLanding />}
         <Footer/>
       </div>
     );
