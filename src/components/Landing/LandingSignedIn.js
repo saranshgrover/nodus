@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import Header from '../Header'
-import Footer from '../Footer'
+import Header from '../common/Header'
+import Footer from '../common/Footer'
 import { isSignedIn, signOut } from '../../server/auth'
 import { getMe } from '../../server/wca-api'
 
@@ -29,9 +29,7 @@ class LandingSignedIn extends Component {
         if (!this.state.infoReceived) this.getClientInfo()
         return (
             <>
-                <Header signFunction={signOut} isSignedIn={isSignedIn()} infoReceived={this.state.infoReceived} userInfo={this.state.userInfo} />
                 <p>SIGNED IN WOOO</p>
-                <Footer />
             </>
         )
     }

@@ -1,8 +1,4 @@
 import React, { Component } from 'react'
-import Header from '../Header'
-import Footer from '../Footer'
-import {signIn, isSignedIn} from '../../server/auth'
-
 
 class WelcomeLanding extends Component {
     constructor(props) {
@@ -12,9 +8,7 @@ class WelcomeLanding extends Component {
     render() {
         return (
             <>
-                <Header signFunction={signIn} isSignedIn={isSignedIn()} />
-
-                <Footer />
+                <p>You ain't signed in</p>
             </>
         );
     }

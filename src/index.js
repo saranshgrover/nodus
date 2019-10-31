@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './components/App';
+import App from './components/Landing/App';
 import * as serviceWorker from './serviceWorker';
 import { initializeAuth} from './server/auth'
 initializeAuth()
