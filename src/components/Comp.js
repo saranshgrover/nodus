@@ -1,19 +1,18 @@
 import React, { Component } from 'react'
-import axios from 'axios'
-import {signIn} from '../server/auth'
-import  {getWcif} from '../server/wca-api'
+import {signIn, isSignedIn} from '../server/auth'
+import {getWcif} from '../server/wca-api'
 class Comp extends Component {
     constructor(props) {
         super();
-        const API_URL = "https://www.worldcubeassociation.org/api/v0/competitions/SBUFall2019/schedule";
-        const API_OTHER = "https://www.worldcubeassociation.org/api/v0/competitions/BrooklynFall2019/schedule";
-        this.getData(API_URL);
-        this.getData(API_OTHER);
+        console.log(isSignedIn())
+        isSignedIn() ?
+        this.getWcif('BrooklynFall2019') :
+        console.log("you aint signed in")
     }
 
-    async getData(URL) {
-        let data = await axios.get(URL);
-        console.log(JSON.parse(data.request.response));
+    async getWcif(competitionID) {
+        let data = await getWcif(competitionID);
+        console.log(data);
     }
 
     render() {

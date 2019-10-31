@@ -59,7 +59,7 @@ export const initializeAuth = () => {
 export const wcaAccessToken = () =>
   localStorage.getItem(localStorageKey('accessToken'));
 
-export const signIn = () => {
+export const signIn = () => { 
   const params = new URLSearchParams({
     client_id: WCA_OAUTH_CLIENT_ID,
     response_type: 'token',
