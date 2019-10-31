@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-
+import {signIn} from '../server/auth'
+import  {getWcif} from '../server/wca-api'
 class Comp extends Component {
     constructor(props) {
         super();
@@ -18,7 +19,7 @@ class Comp extends Component {
     render() {
         return (
             <div>
-                <h1>Check console</h1>
+                <h1 onClick={signIn}>Sign In </h1>
             </div>
         );
     }
