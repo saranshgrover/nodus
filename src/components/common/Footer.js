@@ -5,7 +5,6 @@ import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
 import grey from '@material-ui/core/colors/grey';
 import { makeStyles } from '@material-ui/core/styles';
-import GitHub from '@material-ui/icons/Github';
 
 import { version } from '../../../package.json';
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { isSignedIn, signIn, signOut } from '../../server/auth'
-import  {getMe, getMyUpcomingCompetitions} from '../../server/wca-api'
+import  {getMe, getMyManagableComps, getMyUpcomingComps, myComps} from '../../server/wca-api'
 import WelcomeLanding from './WelcomeLanding'
 import LandingSignedIn from './LandingSignedIn'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -11,7 +11,7 @@ export default class App extends Component {
   constructor() {
     super()
     this.state = {
-      userInfo: null,
+      userInfo: null, 
       upcomingComps : null,
       signedIn : isSignedIn(),
       error: null
@@ -19,14 +19,16 @@ export default class App extends Component {
     if(this.state.signedIn) {
     getMe().then(user => this.setState({userInfo:user}))
       .catch(error => this.setState({error: error.message}))
-     getMyUpcomingCompetitions().then(competitions => this.setState({upcomingComps: competitions}))
+     getMyManagableComps().then(competitions => this.setState({upcomingComps: competitions}))
     .catch(error => this.setState({error: error.message}))
+    getMyUpcomingComps()
+    console.log(myComps)
     }
   }
   getUserInfo() {
     getMe().then(user => this.setState({userInfo:user}))
     .catch(error => this.setState({error: error.message}))
-    getMyUpcomingCompetitions().then(competitions => this.setState({upcomingComps: competitions}))
+    getMyManagableComps().then(competitions => this.setState({upcomingComps: competitions}))
     .catch(error => this.setState({error: error.message}))
   }
 
