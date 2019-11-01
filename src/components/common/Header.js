@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { signIn } from '../../server/auth';
+import { signIn, isSignedIn } from '../../server/auth';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Header = ({ userInfo, onSignIn, onSignOut }) => {
+const Header = ({ userInfo, onSignOut }) => {
   const classes = useStyles();
   return (
     <AppBar position="sticky" color="primary">
@@ -27,7 +27,7 @@ const Header = ({ userInfo, onSignIn, onSignOut }) => {
         <Typography variant="h6" className={classes.title}>
           WCA Real Time
         </Typography>
-        {userInfo ? (
+        {userInfo && isSignedIn() ? (
           <Fragment>
             <Typography variant="subtitle1" className={classes.username}>
               {userInfo.name}
@@ -37,7 +37,7 @@ const Header = ({ userInfo, onSignIn, onSignOut }) => {
             </Button>
           </Fragment>
         ) : (
-          <Button color="inherit" onClick={onSignIn}>
+          <Button color="inherit" onClick={signIn}>
             Sign in with the WCA
           </Button>
         )}

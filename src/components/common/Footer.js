@@ -2,7 +2,6 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 // import Typography from '@material-ui/core/Typography';
-import red from '@material-ui/core/colors/red';
 import grey from '@material-ui/core/colors/grey';
 import { makeStyles } from '@material-ui/core/styles';
 import GitHubIcon from '@material-ui/icons/GitHub';
@@ -11,10 +10,8 @@ import { version } from '../../../package.json';
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(2),
-  },
-  icon: {
-    verticalAlign: 'middle',
-    color: red[700],
+    bottom: "0",
+    width: "100%",
   },
   grow: {
     flexGrow: 1,
@@ -22,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   link: {
     verticalAlign: 'middle',
     fontWeight: 500,
-    color: grey['900'],
+    color: grey[50],
     '&:hover': {
       textDecoration: 'none',
       opacity: 0.7,
@@ -63,7 +60,6 @@ const Footer = () => {
               >
                 {text}
               </Link>
-              {text === 'GitHub' && <GitHubIcon />}
             </Grid>
           ))}
         </Grid>
