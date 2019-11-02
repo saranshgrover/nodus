@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import LinearProgress from '@material-ui/core/LinearProgress';
-import CompListUpcoming from './CompListUpcoming'
+import CompList from './CompList'
 import {getAllUpcomingComps, getMyManagableComps, getMyUpcomingComps} from '../../server/wca-api'
 import {sortArrayBy} from '../../server/tools'
 
@@ -47,7 +47,7 @@ class LandingSignedIn extends Component {
         } = this.state
         return (
             <>
-                {!loadingAll && !loadingMine && <CompListUpcoming myUpcomingComps={myUpcomingComps} myManagableComps={myManagableComps}/>}
+                {!loadingAll && !loadingMine && <CompList myUpcomingComps={myUpcomingComps} myManagableComps={myManagableComps}/>}
                 {loadingMine && loadingAll && <LinearProgress/>}
             </>
         )

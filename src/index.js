@@ -3,9 +3,18 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/Landing/App';
 import * as serviceWorker from './serviceWorker';
+import { getMe} from './server/wca-api'
+import {isSignedIn} from './server/auth'
 import { initializeAuth} from './server/auth'
 initializeAuth()
-ReactDOM.render(<App />, document.getElementById('root'));
+if(isSignedIn()) {
+    getMe().then(user => {
+        ReactDOM.render(<App userInfo={user} />, document.getElementById('root'));
+        })
+}
+else {
+    ReactDOM.render(<App userInfo={{}} />, document.getElementById('root'));
+}
 
 
 // If you want your app to work offline and load faster, you can change

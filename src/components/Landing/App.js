@@ -1,7 +1,7 @@
+// eslint-disable-next-line no-unused-vars
 import React, {Component, useState} from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { isSignedIn, signOut } from '../../server/auth'
-import  {getMe} from '../../server/wca-api'
 import WelcomeLanding from './WelcomeLanding'
 import LandingSignedIn from './LandingSignedIn'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -62,33 +62,26 @@ const useStyles = makeStyles(theme => ({
     }
   }));
 
- const App = () =>  {
+ const App = ({userInfo}) =>  {
    const classes = useStyles()
    const [signedIn,setSignedIn] = useState(isSignedIn())
    const handleSignOut = () => {
      signOut()
      setSignedIn(false)
-     setUserInfo(null)
+     setUser(null)
    }
-   const [userInfo,setUserInfo] = useState(null)
-   const [loading,setLoading] = useState(true)
-  if(signedIn) {
-    getMe().then(user => {
-       setUserInfo(user)
-       setLoading(false)
-      })
-  }
+   const [user,setUser] = useState(userInfo)
     return (
       <Router>
         <ThemeProvider theme={theme}>
           <div className={classes.root}>
             <CssBaseline/>
-            <Header isSignedIn={signedIn} onSignOut={handleSignOut} userInfo={userInfo} />
+            <Header isSignedIn={signedIn} onSignOut={handleSignOut} userInfo={user} />
             <Grid container justify="center" className={classes.grow}>
             <Grid item xs={12} md={8} xl={6} className={classes.main} >
               {signedIn ? (
                 <Switch>
-              {!loading && <Route path="/" render={(props)=> <LandingSignedIn {...props} userInfo={userInfo}/>} />}
+              {<Route path="/" render={(props)=> <LandingSignedIn {...props} userInfo={user}/>} />}
                   <Redirect to="/" />
                 </Switch>
               ) : (

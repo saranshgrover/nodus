@@ -6,7 +6,6 @@ class WelcomeLanding extends Component {
     }
 
     render() {
-        console.log(this.props.upcomingComps)
         return (
             <>
                 <p>You ain't signed in</p>

@@ -2,10 +2,13 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 // import Typography from '@material-ui/core/Typography';
+import InfoIcon from '@material-ui/icons/Info';
+import ContactMailIcon from '@material-ui/icons/ContactMail';
 import grey from '@material-ui/core/colors/grey';
 import { makeStyles } from '@material-ui/core/styles';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { version } from '../../../package.json';
+import { Tooltip } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,41 +30,55 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const links = [
-  {
-    text: 'Guide',
-    url: 'https://github.com/saranshgrover/WCAProjector/wiki/',
-  },
-  { text: 'GitHub', url: 'https://github.com/saranshgrover/WCAProjector' },
-  { text: 'Contact', url: 'mailto:ycubiksrube@gmail.com@gmail.com' },
-  {
-    text: `v${version}`,
-    url: 'https://github.com/saranshgrover/WCAProjector',
-  },
-];
-
 const Footer = () => {
   const classes = useStyles();
   return (
     <Grid container className={classes.root}>
-      <Grid item>
-      </Grid>
       <Grid item className={classes.grow} />
       <Grid item>
-        <Grid container spacing={1}>
-          {links.map(({ text, url }) => (
-            <Grid item key={text}>
+        <Grid container spacing={2}>
+          <Tooltip title={'Gitub'}>
+            <Grid item key='Github'>
               <Link
                 className={classes.link}
                 variant="body2"
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {text}
-              </Link>
+                href={'https://github.com/saranshgrover/WCAProjector'}
+                >
+                  <GitHubIcon/>
+                </Link>
             </Grid>
-          ))}
+          </Tooltip>
+          <Tooltip title={'Contact'}>
+            <Grid item key='Contact'>
+              <Link
+                className={classes.link}
+                variant="body2"
+                href={'mailto:ycubiksrube@gmail.com'}
+                >
+                  <ContactMailIcon/>
+                </Link>
+            </Grid>
+          </Tooltip>
+          <Tooltip title={'About'}>
+            <Grid item key='Info'>
+              <Link
+                className={classes.link}
+                variant="body2"
+                href={'/about'}
+                >
+                  <InfoIcon size={20}/>
+                </Link>
+            </Grid>
+          </Tooltip>
+          <Grid item key='Version'>
+            <Link
+              className={classes.link}
+              variant="body2"
+              href={'/about/version-history'}
+              >
+                {version}
+              </Link>
+          </Grid>
         </Grid>
       </Grid>
     </Grid>

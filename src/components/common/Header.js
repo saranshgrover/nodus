@@ -1,15 +1,16 @@
 import React, { Fragment } from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { signIn, isSignedIn } from '../../server/auth';
+import FlipCameraAndroidIcon from '@material-ui/icons/FlipCameraAndroid';
 
 const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
+    marginLeft: theme.spacing(1)
   },
   titleIcon: {
     marginRight: theme.spacing(2),
@@ -23,7 +24,8 @@ const Header = ({ userInfo, onSignOut }) => {
   const classes = useStyles();
   return (
     <AppBar position="sticky" color="primary">
-      <Toolbar>
+      <Toolbar spacing={2} className={classes.titleIcon}>
+       <FlipCameraAndroidIcon/>
         <Typography variant="h6" className={classes.title}>
           WCA Real Time
         </Typography>
