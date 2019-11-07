@@ -14,8 +14,8 @@ Note that you will need to add an additional wca-env.js with the token as 'examp
 
 ## Built With
 
-* [React](reactjs.org) 
-* [Material UI](material-ui.com) 
+* [React](https://www.reactjs.org) 
+* [Material UI](https://www.material-ui.com) 
 
 ## Contributing
 
@@ -23,15 +23,12 @@ This is still currently under development - so if you are interestred in contrib
 
 ## Authors
 
-* **Saransh Grover** - *Initial work* - [saranshgrover](https://github.com/saranshgrover)
+* **Saransh Grover** - [saranshgrover](https://saranshgrover.com)
 
-See also the list of [contributors](https://github.com/WCARealTime/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/WCARealTime/graphs/contributors) who participated in this project.
 
 ## License
 
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
