@@ -2,14 +2,13 @@ import { WCA_ORIGIN } from './wca-env';
 import { wcaAccessToken} from './auth'
 import moment from 'moment';
 
+export const getWcifPublic = (competitionId) => wcaApiFetch( `/competitions/${competitionId}/wcif/public`);
+
 export const getWcif = (competitionId) =>
   wcaApiFetch( `/competitions/${competitionId}/wcif`);
-
-export let myComps = []
  
 export const getMyUpcomingComps = (userId) => { return wcaApiFetch(`/users/${userId}?upcoming_competitions=true`) }
    
-
 export const getAllUpcomingComps = (pageNum) => {
   let today = moment().startOf('day');
   let nextWeek = moment().add(7,'days').startOf('day')

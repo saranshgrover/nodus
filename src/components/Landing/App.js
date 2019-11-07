@@ -1,103 +1,109 @@
-// eslint-disable-next-line no-unused-vars
-import React, {Component, useState} from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import { isSignedIn, signOut } from '../../server/auth'
-import WelcomeLanding from './WelcomeLanding'
-import LandingSignedIn from './LandingSignedIn'
-import CssBaseline from '@material-ui/core/CssBaseline'
+import React, { Component } from 'react'
+import { Router,Switch,Route,Redirect } from "react-router-dom";
 import Header from '../common/Header'
 import Footer from '../common/Footer'
-import { ThemeProvider } from '@material-ui/styles';
-import Grid from '@material-ui/core/Grid';
-import grey from '@material-ui/core/colors/grey';
-import blueGrey from '@material-ui/core/colors/blueGrey';
-import blue from '@material-ui/core/colors/blue';
-import { makeStyles } from '@material-ui/core/styles';
-import { createMuiTheme } from '@material-ui/core/styles';
 
-  const theme = createMuiTheme({
-    palette: {
-      type: 'dark',
-      primary: {
-        main: blue[200],
-      },
+import { ThemeProvider, createMuiTheme, } from "@material-ui/core/styles";
+import CssBaseline from '@material-ui/core/CssBaseline';
+import blue from '@material-ui/core/colors/blue'
+import blueGrey from '@material-ui/core/colors/blueGrey'
+import LinearProgress from '@material-ui/core/LinearProgress';
+
+
+import { getMyManagableComps, getMyUpcomingComps} from '../../server/wca-api'
+import {isSignedIn, signOut} from '../../server/auth'
+import history from '../../server/history'
+import {sortArrayByDate} from '../../server/tools'
+import Dashboard from '../Competition/Dashboard';
+import LandingSignedIn from './LandingSignedIn';
+import WelcomeLanding from './WelcomeLanding';
+
+const darkTheme = {
+    palette: {  
+      primary: blue,
       secondary: blueGrey,
-    },
-  });
-
-const useStyles = makeStyles(theme => ({
-    root: {
-      display: 'flex',
-      minHeight: '100vh',
-      flexDirection: 'column',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    main: {
-      padding: theme.spacing(2),
-    },
-    footer: {
-      root: {
-        padding: theme.spacing(2),
-        //position: 'absolute',
-        bottom: "0",
-        width: "100%",
-      },
-      icon: {
-        verticalAlign: 'middle',
-      },
-      grow: {
-        flexGrow: 1,
-      },
-      link: {
-        verticalAlign: 'middle',
-        fontWeight: 500,
-        color: grey['900'],
-        '&:hover': {
-          textDecoration: 'none',
-          opacity: 0.7,
-        },
-      },
+      type: "dark",
     }
-  }));
-
- const App = ({userInfo}) =>  {
-   const classes = useStyles()
-   const [signedIn,setSignedIn] = useState(isSignedIn())
-   const handleSignOut = () => {
-     signOut()
-     setSignedIn(false)
-     setUser(null)
-   }
-   const [user,setUser] = useState(userInfo)
-    return (
-      <Router>
-        <ThemeProvider theme={theme}>
-          <div className={classes.root}>
-            <CssBaseline/>
-            <Header isSignedIn={signedIn} onSignOut={handleSignOut} userInfo={user} />
-            <Grid container justify="center" className={classes.grow}>
-            <Grid item xs={12} md={8} xl={6} className={classes.main} >
-              {signedIn ? (
-                <Switch>
-              {<Route path="/" render={(props)=> <LandingSignedIn {...props} userInfo={user}/>} />}
-                  <Redirect to="/" />
-                </Switch>
-              ) : (
-                <Switch>
-                  <Route exact path="/" component={WelcomeLanding} />
-                  <Redirect to="/" />
-                </Switch>
-              )}
-            </Grid>
-              </Grid>
-            
-            <Footer className={classes.footer}/>
-          </div>
-          </ThemeProvider>
-        </Router>
-    );
+  }
+const lightTheme = {
+    palette: {  
+      primary: blue,
+      secondary: blueGrey,
+      type: "light",
+    }
+  }
+class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      userInfo : this.props.userInfo,
+      signedIn : isSignedIn(),
+      theme: darkTheme,
+      mobileOpen: false,
+      upcomingComps: null,
+      managableComps: null,
+      loadinAdmin: true,
+      loadingAll: true
+    }
+    if(this.state.signedIn) {
+      getMyUpcomingComps(this.state.userInfo.me.id).then(res=>this.setState({upcomingComps:sortArrayByDate(res.upcoming_competitions),loadingAll: false}))
+      getMyManagableComps(this.state.userInfo.me.id).then(res=>this.setState({managableComps:sortArrayByDate(res),loadingAdmin: false}))
+    }
+  }
+  setMobileOpen = () => {
+    this.setState({mobileOpen: !this.state.mobileOpen})
+  }
+  onSignOut = () => {
+    signOut();
+    this.setState({userInfo: null, signedIn: isSignedIn(),loading: isSignedIn()})
+    history.push('/login')
+    this.forceUpdate()
   }
 
-export default App
+  toggleDarkTheme = () => {
+    let newTheme = this.state.theme.palette.type === "light" ? darkTheme : lightTheme;
+    this.setState({
+      theme: newTheme
+    });
+  };
+
+  render() {
+    const {
+      signedIn,
+      userInfo,
+      theme,
+      mobileOpen,
+      upcomingComps,
+      managableComps,
+      loadingAdmin,
+      loadingAll
+    } = this.state
+    const muiTheme = createMuiTheme(theme);
+    return (
+    <>
+      <ThemeProvider theme={muiTheme}>
+        <CssBaseline/>
+          <Router history={history}>
+          <Route render={(props) => <Header {...props} userInfo={userInfo} onSignOut={this.onSignOut} setMobileOpen={this.setMobileOpen}/>}/>
+            {(loadingAll || loadingAdmin) && signedIn && <LinearProgress/>}
+            {(!loadingAll && !loadingAdmin && signedIn) ? <Switch>
+              {<Route exact path="/" render={(props) => <LandingSignedIn {...props} userInfo={userInfo}/>} />}
+              <Route exact path="/competitions/:compId/:component" render={(props) => <Dashboard {...props} userInfo={userInfo} mobileOpen={mobileOpen} setMobileOpen={this.setMobileOpen} managableComps={managableComps} upcomingComps={upcomingComps}/>}/>
+              <Route exact path="/competitions/:compId/" render={(props) => <Dashboard {...props} userInfo={userInfo} mobileOpen={mobileOpen} setMobileOpen={this.setMobileOpen} managableComps={managableComps} upcomingComps={upcomingComps}/>}/>
+              <Redirect from='/competitions' to='/'/>
+              <Redirect from='/:compId' to='/competitions/:compId'/>
+              <Redirect from='/:compId/:component' to='/competitions/:compId/:component'/>
+              <Redirect to="/"/>
+            </Switch> :
+          <Switch>
+            <Route exact path="/" render={(props) => <WelcomeLanding {...props}/>} />
+          </Switch>}
+          </Router>
+          <Footer currTheme={theme.palette.type} onThemeChange={this.toggleDarkTheme}/>
+        </ThemeProvider>
+    </>
+    )
+  }
+}
+
+export default App;

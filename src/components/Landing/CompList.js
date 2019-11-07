@@ -13,13 +13,13 @@ import FlagIconFactory from 'react-flag-icon-css'
 import {compDatesToString} from '../../server/tools'
 const FlagIcon = FlagIconFactory(React, { useCssModules: false }) 
 
-export default function CompList({myUpcomingComps, myManagableComps}) {
+export default function CompList({myUpcomingComps}) {
   return (
     <Paper>
-        <List subheader={<ListSubheader>Upcoming Competitions</ListSubheader>}>
+        <List  subheader={<ListSubheader>Upcoming Competitions</ListSubheader>}>
         {myUpcomingComps.map( comp => {
             return(
-              <ListItem alignItems="flex-start" key={comp.id} button component={Link} to={`/competitions/${comp.id}`} >
+              <ListItem alignItems="flex-start" key={comp.id} button component={Link} to={`/competitions/${comp.id}/overview`}>
               <ListItemIcon children={<FlagIcon size={'2x'} code={comp.country_iso2.toLowerCase()}/>}/>
               <ListItemText
               key={comp.id+"-about"}
