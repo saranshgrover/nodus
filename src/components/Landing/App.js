@@ -14,7 +14,7 @@ import { getMyManagableComps, getMyUpcomingComps} from '../../server/wca-api'
 import {isSignedIn, signOut} from '../../server/auth'
 import history from '../../server/history'
 import {sortArrayByDate} from '../../server/tools'
-import Dashboard from '../Competition/Dashboard';
+import Dashboard from '../Competition/Dashboard/Dashboard';
 import LandingSignedIn from './LandingSignedIn';
 import WelcomeLanding from './WelcomeLanding';
 

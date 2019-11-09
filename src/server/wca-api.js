@@ -1,5 +1,6 @@
 import { WCA_ORIGIN } from './wca-env';
-import { wcaAccessToken} from './auth'
+import { wcaAccessToken} from './auth';
+import {pick} from './tools'
 import moment from 'moment';
 
 export const getWcifPublic = (competitionId) => wcaApiFetch( `/competitions/${competitionId}/wcif/public`);
@@ -50,3 +51,18 @@ export const getMe = () => wcaApiFetch( `/me`);
       })
       .then(response => response.json());
   };
+
+  const updateWcif = (competitionId, wcif) =>
+  wcaApiFetch(`/competitions/${competitionId}/wcif`, {
+    method: 'PATCH',
+    body: JSON.stringify(wcif),
+  });
+
+export const saveWcifChanges = (previousWcif, newWcif) => {
+  const keysDiff = Object.keys(newWcif).filter(
+    key => previousWcif[key] !== newWcif[key]
+  );
+  if (keysDiff.length === 0) return Promise.resolve();
+  return updateWcif(newWcif.id, pick(newWcif, keysDiff));
+};
+ 

@@ -21,3 +21,6 @@ export const compDatesToString = (start,end) => {
         return `${moment(start).format('MMM Do')} - ${moment(end).format('Do')}`
     }
 }
+
+export const pick = (obj, keys) =>
+  keys.reduce((newObj, key) => ({ ...newObj, [key]: obj[key] }), {});

@@ -9,6 +9,7 @@ import AppsIcon from '@material-ui/icons/Apps';
 import VideocamIcon from '@material-ui/icons/Videocam';
 import GroupIcon from '@material-ui/icons/Group';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import NotesIcon from '@material-ui/icons/Notes';
 
 export default function DashboardList({user,onClick}) {
     const getIcon = (text) => {
@@ -21,6 +22,8 @@ export default function DashboardList({user,onClick}) {
                 return <NotificationsIcon/>
             case 'Admin':
                 return <SupervisorAccountIcon/>
+            case 'Incidents':
+                return <NotesIcon/>
             default:
                 return <AppsIcon/>
 
@@ -39,7 +42,7 @@ export default function DashboardList({user,onClick}) {
       </List>
       <Divider />
       {user==='admin' && <List>
-        {['Admin'].map((text) => (
+        {['Admin','Incidents'].map((text) => (
           <ListItem button key={text} onClick={()=>onClick(text)}>
             <ListItemIcon>{getIcon(text)}</ListItemIcon>
             <ListItemText primary={text} />

@@ -4,7 +4,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import { makeStyles } from '@material-ui/core/styles';
 import DashboardList from './DashboardList';
-import Competition from './Competition'
+import Competition from '../Competition'
 
 const drawerWidth = 240;
 

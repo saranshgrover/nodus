@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import Notifications from './Notifications'
-import Groups from './Groups'
-import Projector from './Projector'
+import Notifications from './Notifications/Notifications'
+import Groups from './Groups/Groups'
+import Projector from './Projector/Projector'
 import Overview from './Overview'
 import Error from '../common/Error'
-import Admin from './Admin'
+import Admin from './Admin/Admin'
 
 import LinearProgress from '@material-ui/core/LinearProgress'
 
@@ -22,6 +22,9 @@ class Competition extends Component {
       :
       getWcifPublic(props.compId).then(res=>this.setState({wcif:res,loadingWcif:false}))
     }
+    setWcif = (newWcif) => {
+      this.setState({wcif:newWcif})
+    }
     getComponents = () => {
       if(!this.props.component)
         return <Overview/>
@@ -35,8 +38,8 @@ class Competition extends Component {
         case 'projector':
           return <Projector/>
         case 'admin': {
-          if(this.props.user==='admin')
-            return <Admin/>
+          if(this.props.user==='admin') 
+            return <Admin wcif={this.state.wcif} setWcif={this.setWcif}/>
           return <Error/>
         }
         default:
