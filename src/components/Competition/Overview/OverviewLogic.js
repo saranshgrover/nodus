@@ -1,4 +1,3 @@
-import moment from 'moment'
 
 const findEarlierActivityId = (activity1,activity2,schedule) => {
     let aTime
