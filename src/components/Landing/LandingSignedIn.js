@@ -17,7 +17,7 @@ class LandingSignedIn extends Component {
         getMyUpcomingComps(this.props.userInfo.me.id)
         .then(res => {this.setState({myUpcomingComps: sortArrayByDate(res.upcoming_competitions),loadingAll: false})})
         getMyManagableComps()
-        .then(comps => this.setState({myManagableComps: sortArrayByDate(comps), loadingMine: false},()=>{console.log(this.state.myManagableComps)}))
+        .then(comps => this.setState({myManagableComps: sortArrayByDate(comps), loadingMine: false}))
         
     }
 

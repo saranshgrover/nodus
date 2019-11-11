@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import Button from '@material-ui/core/Button'
@@ -9,24 +9,33 @@ import Switch from '@material-ui/core/Switch'
 import NativeSelect from '@material-ui/core/NativeSelect'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import InputLabel from '@material-ui/core/InputLabel'
+import { setExtensionData, getExtensionData } from '../../../server/wcif'
+import {setIn} from '../../../server/tools'
 
-export default function GeneralAdmin({generalConfig,updateGeneralConfig}) {
-    const [localConfig,setLocalConfig] = useState(generalConfig)
+export default function GeneralAdmin({wcif,setWcif,updateGeneralConfig}) {
+    const localConfig = getExtensionData('GeneralConfig',wcif)
     const onValueChange = (name) => (event) => {
-        setLocalConfig({
-            ...localConfig,
-            [name]: event.target.value,
-        })
+        setWcif(
+            setExtensionData(
+                'GeneralConfig',
+                wcif,
+                setIn(getExtensionData('GeneralConfig',wcif),[name],event.target.value)
+            )
+        )
     }
     const onCheckboxChange = (name) => (event) => {
-        setLocalConfig({
-            ...localConfig,
-            [name]: event.target.checked,
-        })
+        setWcif(
+            setExtensionData(
+                'GeneralConfig',
+                wcif,
+                setIn(getExtensionData('GeneralConfig',wcif),[name],event.target.checked)
+            )
+        )
+        console.log(wcif)
+        console.log(getExtensionData('GeneralConfig',wcif))
     }
     const saveWcif = () => {
-
-        updateGeneralConfig(localConfig)
+        updateGeneralConfig()
     }
     return (
     <>

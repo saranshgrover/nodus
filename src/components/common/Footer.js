@@ -14,7 +14,6 @@ const useStyles = makeStyles(theme => ({
   root: {
     position: "absolute",
     bottom: 0,
-    height: "50px",
     width: "100%",
     overflow: "hidden",
     padding: theme.spacing(2),

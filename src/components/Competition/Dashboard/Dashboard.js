@@ -89,7 +89,7 @@ function Dashboard( {match,location,history,container, mobileOpen, setMobileOpen
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {<Competition user={user} compId={match.params.compId} userInfo={userInfo} component={match.params.component} />}
+        {<Competition history={history} user={user} compId={match.params.compId} userInfo={userInfo} component={match.params.component} />}
       </main>
     </div>
   );

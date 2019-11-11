@@ -59,6 +59,7 @@ export const getMe = () => wcaApiFetch( `/me`);
   });
 
 export const saveWcifChanges = (previousWcif, newWcif) => {
+
   const keysDiff = Object.keys(newWcif).filter(
     key => previousWcif[key] !== newWcif[key]
   );

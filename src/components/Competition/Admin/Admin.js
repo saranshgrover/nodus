@@ -5,12 +5,13 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
 import ProjectorAdmin from './ProjectorAdmin'
 import GeneralAdmin from './GeneralAdmin'
 import NotificationsAdmin from './NotificationsAdmin'
-
+import Error from '../../common/Error'  
 import {getExtensionData} from '../../../server/wcif'
+import { saveWcifChanges } from '../../../server/wca-api';
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 
 const useStyles = makeStyles(theme => ({
@@ -21,14 +22,32 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(15),
     fontWeight: theme.typography.fontWeightRegular,
   },
+  mainLoader: {
+    position: 'absolute',
+    left: '55%',
+    top: '50%',
+}
 }));
 
 export default function Admin({wcif,setWcif}) {
   const classes = useStyles();
-  const [localGeneral,setLocalGeneral] = useState(getExtensionData('GeneralConfig',wcif))
-  const [localProjector,setLocalProjector] = useState(getExtensionData('ScheduleConfig',wcif))
+  const [localWcif,setLocalWcif] = useState(wcif)
+  const [loading,setLoading] = useState(false)
+  const onWcifUpdate = () => {
+      setLoading(true)
+      console.log(localWcif)
+      saveWcifChanges(wcif,localWcif).then(()=>{
+      setWcif(localWcif)
+      setLoading(false)
+    })
+    .catch(err=><Error message={err}/>)
+  }
   return (
     <div className={classes.root}>
+      {loading ? 
+      <CircularProgress size={50} className={classes.mainLoader}/>
+      :
+      <>
       <ExpansionPanel>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
@@ -37,9 +56,9 @@ export default function Admin({wcif,setWcif}) {
         >
           <Typography className={classes.heading}>General</Typography>
         </ExpansionPanelSummary>
-        <GeneralAdmin generalConfig={localGeneral} updateGeneralConfig={setLocalGeneral}/>
+        <GeneralAdmin wcif={localWcif} setWcif={setLocalWcif} updateGeneralConfig={onWcifUpdate}/>
       </ExpansionPanel>
-      <ExpansionPanel disabled={!(localGeneral.useProjector)}>
+      <ExpansionPanel disabled={!(getExtensionData('GeneralConfig',wcif).useProjector)}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel2a-content"
@@ -47,9 +66,9 @@ export default function Admin({wcif,setWcif}) {
         >
           <Typography className={classes.heading}>Projector</Typography>
         </ExpansionPanelSummary>
-          <ProjectorAdmin localProjector={localProjector} setProjectorConfig={setLocalProjector} venues={wcif.schedule.venues} id={wcif.id}/>
+          <ProjectorAdmin wcif={localWcif} setWcif={setLocalWcif} updateProjectorConfig={onWcifUpdate} venues={localWcif.schedule.venues} id={localWcif.id}/>
       </ExpansionPanel>
-      <ExpansionPanel disabled={!localGeneral.useTelegramNotif}>
+      <ExpansionPanel disabled={!getExtensionData('GeneralConfig',wcif).useTelegramNotif}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel3a-content"
@@ -58,9 +77,11 @@ export default function Admin({wcif,setWcif}) {
           <Typography className={classes.heading}> Notifications</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-            <NotificationsAdmin/>
+            <NotificationsAdmin wcif={localWcif} setWcif={setLocalWcif} updateNotificationsConfig={onWcifUpdate}/>
         </ExpansionPanelDetails>
       </ExpansionPanel>
+      </>
+      }
     </div>
   );
 }
