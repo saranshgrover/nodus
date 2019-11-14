@@ -98,15 +98,10 @@ class App extends Component {
         <ThemeProvider theme={muiTheme}>
           <CssBaseline />
           <Router history={history}>
-            <Route
-              render={props => (
-                <Header
-                  {...props}
-                  userInfo={userInfo}
-                  onSignOut={this.onSignOut}
-                  setMobileOpen={this.setMobileOpen}
-                />
-              )}
+            <Header
+              userInfo={userInfo}
+              onSignOut={this.onSignOut}
+              setMobileOpen={this.setMobileOpen}
             />
             {(loadingAll || loadingAdmin) && signedIn && <LinearProgress />}
             {!loadingAll && !loadingAdmin && signedIn ? (
@@ -114,28 +109,13 @@ class App extends Component {
                 {
                   <Route
                     exact
-                    path='/'
+                    path='/competitions'
                     render={props => (
                       <LandingSignedIn {...props} userInfo={userInfo} />
                     )}
                   />
                 }
                 <Route
-                  exact
-                  path='/competitions/:compId/:component'
-                  render={props => (
-                    <Dashboard
-                      {...props}
-                      userInfo={userInfo}
-                      mobileOpen={mobileOpen}
-                      setMobileOpen={this.setMobileOpen}
-                      managableComps={managableComps}
-                      upcomingComps={upcomingComps}
-                    />
-                  )}
-                />
-                <Route
-                  exact
                   path='/competitions/:compId/'
                   render={props => (
                     <Dashboard
@@ -148,13 +128,9 @@ class App extends Component {
                     />
                   )}
                 />
-                <Redirect from='/competitions' to='/' />
-                <Redirect from='/:compId' to='/competitions/:compId' />
-                <Redirect
-                  from='/:compId/:component'
-                  to='/competitions/:compId/:component'
-                />
-                <Redirect to='/' />
+                <Route exact path='/'>
+                  <Redirect to='/competitions' />
+                </Route>
               </Switch>
             ) : (
               <Switch>

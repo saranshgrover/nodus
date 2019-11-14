@@ -53,12 +53,12 @@ function Dashboard({
 }) {
   const classes = useStyles()
   const onItemChange = text => {
-    const newUrl =
-      location.pathname.slice(0, location.pathname.lastIndexOf('/')) +
-      '/' +
-      text
-    history.push(newUrl)
+    if (text !== currentComponent) {
+      setCurrentComponent(text)
+      history.push(`/competitions/${match.params.compId}/${text}/`)
+    }
   }
+  const [currentComponent, setCurrentComponent] = useState('overview')
   const [user] = useState(
     managableComps.filter(comp => comp.id === match.params.compId).length > 0
       ? 'admin'
@@ -114,7 +114,6 @@ function Dashboard({
             user={user}
             compId={match.params.compId}
             userInfo={userInfo}
-            component={match.params.component}
           />
         }
       </main>

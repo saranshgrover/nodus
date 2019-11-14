@@ -32,7 +32,7 @@ export default function DashboardList({ user, onClick }) {
     <>
       <Divider />
       <List>
-        {['Overview', 'Projector', 'Notifications', 'Groups'].map(text => (
+        {['Overview', 'Groups', 'Notifications'].map(text => (
           <ListItem button key={text} onClick={() => onClick(text)}>
             <ListItemIcon>{getIcon(text)}</ListItemIcon>
             <ListItemText primary={text} />

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Route } from 'react-router-dom'
 import Notifications from './Notifications/Notifications'
 import Groups from './Groups/Groups'
 import Projector from './Projector/Projector'
@@ -24,7 +24,8 @@ class Competition extends Component {
       wcif: null,
       loadingWcif: true,
       myEvents: [],
-      myAssigments: []
+      myAssigments: [],
+      extensionSetup: false
     }
     props.user === 'admin'
       ? getWcif(this.props.compId).then(res =>
@@ -34,80 +35,81 @@ class Competition extends Component {
           this.setState({ wcif: res, loadingWcif: false })
         )
     if (props.user !== 'spectator' && !this.state.loadingWcif) {
-      console.log('helo?')
       this.setState({
         myEvents: getMyEventsInOrder(props.userInfo, this.state.wcif),
-        myAssigments: getMyAssignmentsInOrder(props.userInfo, this.state.wcif)
+        myAssigments: getMyAssignmentsInOrder(props.userInfo, this.state.wcif),
+        extensionSetup: isExtensionSetup('GeneralConfig', this.state.wcif)
       })
     }
   }
   setWcif = newWcif => this.setState({ wcif: newWcif })
-  getComponents = () => {
-    // IF WCIF EXTENSION NOT SETUP
-    if (!isExtensionSetup('GeneralConfig', this.state.wcif)) {
-      // IF ADMIN, REDIRECT TO ADMIN PAGE
-      if (this.props.user === 'admin')
-        return (
-          <>
-            <Redirect to={`/competitions/${this.props.compId}/admin`} />
-            <MySnackbar
-              variant={'error'}
-              message={'Set up Admin information first'}
-            />
-            <Admin wcif={this.state.wcif} setWcif={this.setWcif} />
-          </>
-        )
-      // ELSE SHOW ERROR
-      else
-        return (
-          <Error message={'This competition is not using WCA Real Time. '} />
-        )
-    }
-    if (!this.props.component)
-      return (
-        <Overview
-          myEvents={getMyEventsInOrder(this.props.userInfo, this.state.wcif)}
-          myAssignments={getMyAssignmentsInOrder(
-            this.props.userInfo,
-            this.state.wcif
-          )}
-          wcif={this.state.wcif}
-          user={this.props.user}
-          userInfo={this.props.userInfo}
-        />
-      )
-    switch (this.props.component.toLowerCase()) {
-      case 'overview':
-        return (
-          <Overview
-            myEvents={getMyEventsInOrder(this.props.userInfo, this.state.wcif)}
-            myAssignments={getMyAssignmentsInOrder(
-              this.props.userInfo,
-              this.state.wcif
-            )}
-            wcif={this.state.wcif}
-            user={this.props.user}
-            userInfo={this.props.userInfo}
-          />
-        )
-      case 'notifications':
-        return <Notifications />
-      case 'groups':
-        return <Groups />
-      case 'projector':
-        return <Projector />
-      case 'admin': {
-        if (this.props.user === 'admin')
-          return <Admin wcif={this.state.wcif} setWcif={this.setWcif} />
-        return <Error />
-      }
-      default:
-        return <Error message={'Invalid URL'} />
-    }
-  }
   render() {
+    const { wcif, loadingWcif } = this.state
     return (
-      <>{this.state.loadingWcif ? <LinearProgress /> : this.getComponents()}</>
+      <div>
+        {!loadingWcif && isExtensionSetup('GeneralConfig', wcif) && (
+          <>
+            <Route
+              path={`/competitions/${wcif.id}/overview`}
+              render={props => (
+                <Overview
+                  {...props}
+                  myEvents={getMyEventsInOrder(this.props.userInfo, wcif)}
+                  myAssignments={getMyAssignmentsInOrder(
+                    this.props.userInfo,
+                    wcif
+                  )}
+                  wcif={wcif}
+                  user={this.props.user}
+                  userInfo={this.props.userInfo}
+                />
+              )}
+            />
+            <Route
+              path={`/competitions/${wcif.id}/groups`}
+              render={props => (
+                <Groups
+                  {...props}
+                  user={this.props.user}
+                  wcif={wcif}
+                  userInfo={this.props.userInfo}
+                />
+              )}
+            />
+            <Route
+              path={`/competitions/${wcif.id}/notifications`}
+              render={props => <Notifications {...props} />}
+            />
+            {this.props.user === 'admin' && (
+              <Route
+                path={`/competitions/${wcif.id}/admin`}
+                render={props => (
+                  <Admin
+                    {...props}
+                    wcif={this.state.wcif}
+                    setWcif={this.setWcif}
+                  />
+                )}
+              />
+            )}
+          </>
+        )}
+        {!loadingWcif &&
+          !isExtensionSetup('GeneralConfig', wcif) &&
+          (this.props.user === 'admin' ? (
+            <>
+              <Redirect to={`/competitions/${this.props.compId}/admin`} />
+              <MySnackbar
+                variant={'error'}
+                message={'Set up Admin information first'}
+              />
+              <Admin wcif={this.state.wcif} setWcif={this.setWcif} />
+            </>
+          ) : (
+            <Error message={'TODO MAKE A useError HOOK!'} />
+          ))}
+        {loadingWcif && <LinearProgress />}
+      </div>
     )
   }
 }
