@@ -78,18 +78,17 @@ class Competition extends Component {
               path={`/competitions/${wcif.id}/notifications`}
               render={props => <Notifications {...props} />}
             />
-            {this.props.user === 'admin' && (
-              <Route
-                path={`/competitions/${wcif.id}/admin`}
-                render={props => (
-                  <Admin
-                    {...props}
-                    wcif={this.state.wcif}
-                    setWcif={this.setWcif}
-                  />
-                )}
-              />
-            )}
+            <Route
+              path={`/competitions/${wcif.id}/admin`}
+              render={props => (
+                <Admin
+                  {...props}
+                  wcif={this.state.wcif}
+                  setWcif={this.setWcif}
+                  user={this.props.user}
+                />
+              )}
+            />
           </>
         )}
         {!loadingWcif &&

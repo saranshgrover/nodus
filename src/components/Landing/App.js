@@ -16,6 +16,7 @@ import { sortArrayByDate } from '../../server/tools'
 import Dashboard from '../Competition/Dashboard/Dashboard'
 import LandingSignedIn from './LandingSignedIn'
 import WelcomeLanding from './WelcomeLanding'
+import Projector from '../Projector/Projector'
 
 const darkTheme = {
   palette: {
@@ -106,15 +107,15 @@ class App extends Component {
             {(loadingAll || loadingAdmin) && signedIn && <LinearProgress />}
             {!loadingAll && !loadingAdmin && signedIn ? (
               <Switch>
-                {
-                  <Route
-                    exact
-                    path='/competitions'
-                    render={props => (
-                      <LandingSignedIn {...props} userInfo={userInfo} />
-                    )}
-                  />
-                }
+                <Route
+                  exact
+                  path='/competitions'
+                  render={props => (
+                    <LandingSignedIn {...props} userInfo={userInfo} />
+                  )}
+                />
+                <Route path='/project/:compId' component={Projector} />
+
                 <Route
                   path='/competitions/:compId/'
                   render={props => (
@@ -139,6 +140,7 @@ class App extends Component {
                   path='/'
                   render={props => <WelcomeLanding {...props} />}
                 />
+                <Route path='/project/:compId' component={Projector} />
               </Switch>
             )}
           </Router>

@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Admin({ wcif, setWcif }) {
+export default function Admin({ user, wcif, setWcif }) {
   const classes = useStyles()
   const [localWcif, setLocalWcif] = useState(wcif)
   const [loading, setLoading] = useState(false)
@@ -44,9 +44,8 @@ export default function Admin({ wcif, setWcif }) {
   }
   return (
     <div className={classes.root}>
-      {loading ? (
-        <CircularProgress size={50} className={classes.mainLoader} />
-      ) : (
+      {loading && <CircularProgress size={50} className={classes.mainLoader} />}
+      {!loading && user === 'admin' && (
         <>
           <ExpansionPanel>
             <ExpansionPanelSummary
@@ -103,6 +102,7 @@ export default function Admin({ wcif, setWcif }) {
           </ExpansionPanel>
         </>
       )}
+      {user !== 'admin' && <Error message={'You are not an administrator'} />}
     </div>
   )
 }
