@@ -1,3 +1,6 @@
+import { getPreciseTime } from '../../../server/tools'
+import moment from 'moment'
+
 const findEarlierActivityId = (activity1, activity2, schedule) => {
   let aTime
   let bTime
@@ -23,10 +26,14 @@ const findEarlierActivityId = (activity1, activity2, schedule) => {
  * @param  userInfo
  * @param  wcif
  */
-export const getMyAssignmentsInOrder = (userInfo, wcif) => {
-  const userAssignments = wcif.persons.find(
-    person => person.wcaId === userInfo.me.wca_id
-  ).assignments
+export const getMyAssignmentsInOrder = (wcaId, wcif) => {
+  const regExp = /\d{4}[A-Z]{4}\d{2}/
+  const isWcaId = regExp.test(wcaId)
+  const user = wcif.persons.find(person =>
+    isWcaId ? person.wcaId === wcaId : person.wcaUserId === parseInt(wcaId)
+  )
+  if (!user) return null
+  const userAssignments = user.assignments
   const schedule = wcif.schedule
   return userAssignments.sort((a, b) =>
     findEarlierActivityId(a.activityId, b.activityId, schedule)
@@ -92,9 +99,9 @@ export const assignedTo = assignment => {
  * @param {*} assignments
  */
 export const getScheduleData = (
-  events,
-  unselectedVenues,
-  unselectedAssignments,
+  events = [],
+  unselectedVenues = [],
+  unselectedAssignments = [],
   assignments,
   activities
 ) => {
@@ -120,4 +127,68 @@ export const getScheduleData = (
       })
   }
   return data
+}
+
+/**
+ *
+ * @param {string} activity
+ */
+export const getEventFromActivity = activity =>
+  `${activityKey[activity.slice(0, activity.indexOf('-'))]} Round ${
+    activity[activity.indexOf('-') + 2]
+  } `
+/**
+ *
+ * @param {string} activity
+ */
+export const getGroupFromActivity = activity =>
+  `Group ${activity.slice(activity.lastIndexOf('-') + 2)}`
+
+export const activityKey = {
+  '222': '2x2',
+  '333': '3x3',
+  '444': '4x4',
+  '555': '5x5',
+  '666': '6x6',
+  '777': '7x7',
+  pyram: 'Pyraminx',
+  '333oh': '3x3 One Handed',
+  '3bld': '3x3 Blindfolded',
+  '4bld': '4x4 Blindfolded',
+  skewb: 'Skewb',
+  clock: 'Clock',
+  '333ft': '3x3 with Feet',
+  '333mbf': '3x3 Multiple Blindfolded',
+  '333fm': 'Fewest Moves',
+  sq1: 'Square 1',
+  minx: 'Megaminx'
+}
+
+export const getActivityIdFromCode = (activityCode, activities) => {
+  const activity = activities.find(
+    activity => activity.activityCode === activityCode
+  )
+  return activity
+}
+
+export const getAssignmentsFromActivityId = (activityCode, wcif) => {
+  let compete = []
+  let staff = []
+  const persons = wcif.persons
+  for (const person of persons) {
+    for (const asssignment of person.assignments) {
+      if (asssignment.activityId === activityCode) {
+        asssignment.assignmentCode === 'competitor'
+          ? compete.push(person)
+          : staff.push(person)
+      }
+    }
+  }
+  return [compete, staff]
+}
+
+export const getPersonalBestFromActivity = (competitor, activityCode) => {
+  const event = activityCode.slice(0, activityCode.indexOf('-'))
+  const activityEvent = competitor.personalBests.find(e => e.eventId === event)
+  return activityEvent ? getPreciseTime(activityEvent.best) : ''
 }

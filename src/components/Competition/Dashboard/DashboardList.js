@@ -29,7 +29,7 @@ export default function DashboardList({ user, onClick }) {
     }
   }
   return (
-    <>
+    <div style={{ marginTop: '15px' }}>
       <Divider />
       <List>
         {['Overview', 'Groups', 'Notifications'].map(text => (
@@ -50,6 +50,6 @@ export default function DashboardList({ user, onClick }) {
           ))}
         </List>
       )}
-    </>
+    </div>
   )
 }

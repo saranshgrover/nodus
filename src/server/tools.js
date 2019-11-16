@@ -40,3 +40,9 @@ export const compDatesToString = (start, end) => {
 
 export const pick = (obj, keys) =>
   keys.reduce((newObj, key) => ({ ...newObj, [key]: obj[key] }), {})
+
+export const getPreciseTime = wcaTime => {
+  const wcaTimeStr = wcaTime.toString()
+  const time = `${wcaTimeStr.slice(0, -2)}.${wcaTimeStr.slice(-2)}`
+  return time
+}

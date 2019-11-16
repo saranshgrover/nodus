@@ -24,7 +24,6 @@ class Competition extends Component {
       wcif: null,
       loadingWcif: true,
       myEvents: [],
-      myAssigments: [],
       extensionSetup: false
     }
     props.user === 'admin'
@@ -37,7 +36,6 @@ class Competition extends Component {
     if (props.user !== 'spectator' && !this.state.loadingWcif) {
       this.setState({
         myEvents: getMyEventsInOrder(props.userInfo, this.state.wcif),
-        myAssigments: getMyAssignmentsInOrder(props.userInfo, this.state.wcif),
         extensionSetup: isExtensionSetup('GeneralConfig', this.state.wcif)
       })
     }
@@ -56,7 +54,7 @@ class Competition extends Component {
                   {...props}
                   myEvents={getMyEventsInOrder(this.props.userInfo, wcif)}
                   myAssignments={getMyAssignmentsInOrder(
-                    this.props.userInfo,
+                    this.props.userInfo.me.wca_id,
                     wcif
                   )}
                   wcif={wcif}

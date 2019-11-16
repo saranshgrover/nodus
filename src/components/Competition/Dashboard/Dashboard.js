@@ -37,6 +37,10 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3)
+  },
+  footerPadding: {
+    width: '100%',
+    height: 50
   }
 }))
 
@@ -107,14 +111,16 @@ function Dashboard({
         </Hidden>
       </nav>
       <main className={classes.content}>
-        <div className={classes.toolbar} />
         {
-          <Competition
-            history={history}
-            user={user}
-            compId={match.params.compId}
-            userInfo={userInfo}
-          />
+          <>
+            <Competition
+              history={history}
+              user={user}
+              compId={match.params.compId}
+              userInfo={userInfo}
+            />
+            <div className={classes.footerPadding} />
+          </>
         }
       </main>
     </div>
