@@ -2,7 +2,7 @@
   "name": "wca-projector",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://realtime.saranshgrover.com/",
+  "homepage": "https://mycomp.app/",
   "dependencies": {
     "@devexpress/dx-react-core": "^2.2.1",
     "@devexpress/dx-react-scheduler": "^2.2.1",

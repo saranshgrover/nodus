@@ -67,8 +67,12 @@ export const signIn = () => {
   window.location = `${WCA_ORIGIN}/oauth/authorize?${params.toString()}`
 }
 
-const oauthRedirectUri = () =>
-  PRODUCTION ? 'https://realtime.saranshgrover.com/' : 'localhost://3000'
+const oauthRedirectUri = () => {
+  const appUri = window.location.origin
+  const searchParams = new URLSearchParams(window.location.search)
+  const stagingParam = searchParams.has('staging')
+  return stagingParam ? `${appUri}?staging=true` : appUri
+}
 
 export const signOut = () =>
   localStorage.removeItem(localStorageKey('accessToken'))
