@@ -48,7 +48,7 @@ export const initializeAuth = () => {
   }
   /* If non-signed in user tries accessing a competition path, redirect to OAuth sign in straightaway. */
   const path = window.location.pathname
-  if (path !== '/WCARealTime' && !isSignedIn()) {
+  if (path !== '/' && !isSignedIn()) {
     localStorage.setItem(localStorageKey('redirectPath'), path)
     signIn()
   }
