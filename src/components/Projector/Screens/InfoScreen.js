@@ -1,5 +1,5 @@
 import React from 'react'
 
-export default function GroupScreen() {
+export default function InfoScreen() {
   return <div></div>
 }

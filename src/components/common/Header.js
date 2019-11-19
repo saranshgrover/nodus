@@ -46,7 +46,7 @@ const Header = ({ setMobileOpen, userInfo, onSignOut }) => {
           component={Link}
           to={'/'}
         >
-          WCA Real Time
+          myComp
         </Typography>
         {userInfo && isSignedIn() ? (
           <Fragment>

@@ -43,6 +43,7 @@ class Competition extends Component {
   setWcif = newWcif => this.setState({ wcif: newWcif })
   render() {
     const { wcif, loadingWcif } = this.state
+    const { user, userInfo, compId } = this.props
     return (
       <div>
         {!loadingWcif && isExtensionSetup('GeneralConfig', wcif) && (
@@ -52,14 +53,14 @@ class Competition extends Component {
               render={props => (
                 <Overview
                   {...props}
-                  myEvents={getMyEventsInOrder(this.props.userInfo, wcif)}
+                  myEvents={getMyEventsInOrder(userInfo, wcif)}
                   myAssignments={getMyAssignmentsInOrder(
-                    this.props.userInfo.me.wca_id,
+                    userInfo.me.wca_id,
                     wcif
                   )}
                   wcif={wcif}
-                  user={this.props.user}
-                  userInfo={this.props.userInfo}
+                  user={user}
+                  userInfo={userInfo}
                 />
               )}
             />
@@ -68,9 +69,9 @@ class Competition extends Component {
               render={props => (
                 <Groups
                   {...props}
-                  user={this.props.user}
+                  user={user}
                   wcif={wcif}
-                  userInfo={this.props.userInfo}
+                  userInfo={userInfo}
                 />
               )}
             />
@@ -83,9 +84,9 @@ class Competition extends Component {
               render={props => (
                 <Admin
                   {...props}
+                  user={user}
                   wcif={this.state.wcif}
                   setWcif={this.setWcif}
-                  user={this.props.user}
                 />
               )}
             />
@@ -93,14 +94,18 @@ class Competition extends Component {
         )}
         {!loadingWcif &&
           !isExtensionSetup('GeneralConfig', wcif) &&
-          (this.props.user === 'admin' ? (
+          (user === 'admin' ? (
             <>
-              <Redirect to={`/competitions/${this.props.compId}/admin`} />
+              <Redirect to={`/competitions/${compId}/admin`} />
               <MySnackbar
                 variant={'error'}
                 message={'Set up Admin information first'}
               />
-              <Admin wcif={this.state.wcif} setWcif={this.setWcif} />
+              <Admin
+                user={user}
+                wcif={this.state.wcif}
+                setWcif={this.setWcif}
+              />
             </>
           ) : (
             <Error message={'TODO MAKE A useError HOOK!'} />
