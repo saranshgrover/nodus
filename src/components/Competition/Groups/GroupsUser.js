@@ -45,14 +45,13 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'none'
   }
 }))
-export default function GroupsUser({ match, userInfo, wcif }) {
+export default function GroupsUser({ WCAID, match, userInfo, wcif }) {
   console.log(userInfo)
   // TODO: FIX ON MOBILE
-  const myAssignments = getMyAssignmentsInOrder(match.params.wcaId, wcif)
+  const wcaId = match ? match.params.wcaId : WCAID ? WCAID : null
+  const myAssignments = getMyAssignmentsInOrder(wcaId, wcif)
   const user = wcif.persons.find(
-    person =>
-      person.wcaId === match.params.wcaId ||
-      person.wcaUserId === parseInt(match.params.wcaId)
+    person => person.wcaId === wcaId || person.wcaUserId === parseInt(wcaId)
   )
   const mySchedule =
     myAssignments &&

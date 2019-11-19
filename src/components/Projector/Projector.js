@@ -34,10 +34,10 @@ const useStyles = makeStyles(theme => ({
   },
   root: {
     minWidth: '100%',
-    height: '20%'
+    height: '15%'
   },
   name: {
-    fontSize: '10vmin'
+    fontSize: 'calc(16px + 5vh)'
   },
   icon: {
     fontSize: '8vmin'

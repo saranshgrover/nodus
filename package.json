@@ -9,6 +9,7 @@
     "@devexpress/dx-react-scheduler-material-ui": "^2.2.1",
     "@material-ui/core": "^4.5.2",
     "@material-ui/icons": "^4.5.1",
+    "@material-ui/lab": "^4.0.0-alpha.32",
     "clsx": "^1.0.4",
     "history": "^4.10.1",
     "moment": "^2.24.0",
