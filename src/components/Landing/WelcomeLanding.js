@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Typography } from '@material-ui/core'
 
 class WelcomeLanding extends Component {
   constructor(props) {
@@ -8,7 +9,9 @@ class WelcomeLanding extends Component {
   render() {
     return (
       <>
-        <p>You ain't signed in</p>
+        <Typography variant='h2' align='center'>
+          myComp
+        </Typography>
       </>
     )
   }

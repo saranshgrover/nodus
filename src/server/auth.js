@@ -1,4 +1,4 @@
-import { PRODUCTION, WCA_ORIGIN, WCA_OAUTH_CLIENT_ID } from './wca-env'
+import { WCA_ORIGIN, WCA_OAUTH_CLIENT_ID } from './wca-env'
 import history from './history'
 
 /* Use separate set of keys for each OAuth client (e.g. for WCA production and staging). */
@@ -48,7 +48,7 @@ export const initializeAuth = () => {
   }
   /* If non-signed in user tries accessing a competition path, redirect to OAuth sign in straightaway. */
   const path = window.location.pathname
-  if (path !== '/' && !isSignedIn()) {
+  if (!isSignedIn()) {
     localStorage.setItem(localStorageKey('redirectPath'), path)
     signIn()
   }
