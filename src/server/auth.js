@@ -43,7 +43,7 @@ export const initializeAuth = () => {
   /* Check if we know what path to redirect to (after OAuth redirect). */
   const redirectPath = localStorage.getItem(localStorageKey('redirectPath'))
   if (redirectPath) {
-    history.replace(redirectPath)
+    window.location.replace(redirectPath)
     localStorage.removeItem(localStorageKey('redirectPath'))
   }
   /* If non-signed in user tries accessing a competition path, redirect to OAuth sign in straightaway. */
@@ -69,6 +69,7 @@ export const signIn = () => {
 
 const oauthRedirectUri = () => {
   const appUri = window.location.origin
+  console.log(appUri)
   const searchParams = new URLSearchParams(window.location.search)
   const stagingParam = searchParams.has('staging')
   return stagingParam ? `${appUri}?staging=true` : appUri
