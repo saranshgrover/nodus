@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Router, Switch, Route, Redirect } from 'react-router-dom'
+import { HashRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Header from '../common/Header'
 import Footer from '../common/Footer'
 
@@ -98,7 +98,7 @@ class App extends Component {
       <>
         <ThemeProvider theme={muiTheme}>
           <CssBaseline />
-          <Router history={history}>
+          <HashRouter history={history}>
             <Header
               userInfo={userInfo}
               onSignOut={this.onSignOut}
@@ -143,7 +143,7 @@ class App extends Component {
                 <Route path='/project/:compId' component={Projector} />
               </Switch>
             )}
-          </Router>
+          </HashRouter>
           <Footer
             currTheme={theme.palette.type}
             onThemeChange={this.toggleDarkTheme}
