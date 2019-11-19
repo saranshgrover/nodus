@@ -114,7 +114,7 @@ class App extends Component {
               <Switch>
                 <Route
                   exact
-                  path='/competitions'
+                  path={`${process.env.PUBLIC_URL}/competitions`}
                   render={props => (
                     <LandingSignedIn {...props} userInfo={userInfo} />
                   )}
