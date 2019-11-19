@@ -87,11 +87,11 @@ export default function Projector({ match }) {
   const [wcif, setWcif] = useState(null)
   const [error, setError] = useState(null)
   const [screens] = useState([
-    'AGENDA'
-    // 'COMPETING',
-    // 'INFO',
-    // 'SPOTLIGHT',
-    // 'RESULTS'
+    'AGENDA',
+    'COMPETING',
+    'INFO',
+    'SPOTLIGHT',
+    'RESULTS'
   ])
   const [currentScreen, setCurrentScreen] = useState(-1)
   const currentScreenRef = React.useRef(currentScreen)
