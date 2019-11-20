@@ -20,7 +20,7 @@ jobs:
       - name: Deploy to GH Pages
         env:
           WCA_CLIENT_ID: ${{secrets.WCA_ID}}
-      run: |
-        git config --global user.email "saransh.grover@stonybrook.edu>"
-        git config --global user.name "saranshgrover>"
-        git remote set-url origin https://${{secrets.DEPLOY_TOKEN}}>@github.com/saranshgrover>/WCARealTime>.git
+        run: |
+          git config --global user.email "saransh.grover@stonybrook.edu>"
+          git config --global user.name "saranshgrover>"
+          git remote set-url origin https://${{secrets.DEPLOY_TOKEN}}>@github.com/saranshgrover>/WCARealTime>.git
