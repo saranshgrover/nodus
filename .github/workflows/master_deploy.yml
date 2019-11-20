@@ -21,7 +21,7 @@ jobs:
         env:
           WCA_CLIENT_ID: ${{secrets.WCA_ID}}
         run: |
-          git config --global user.email "ycubiksrube@gmail.com>"
+          git config --global user.email "saransh.grover@stonybrook.edu>"
           git config --global user.name "saranshgrover>"
           git remote set-url origin https://f912a04eed5a05bd2de003f7471bf4897959a7dd>@github.com/saranshgrover>/WCARealTime>.git
           npm run deploy
