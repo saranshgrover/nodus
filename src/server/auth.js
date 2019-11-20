@@ -77,7 +77,6 @@ const oauthRedirectUri = () => {
 
 export const signOut = () => {
   localStorage.removeItem(localStorageKey('accessToken'))
-  window.location.replace('/')
 }
 
 export const isSignedIn = () => !!wcaAccessToken()
