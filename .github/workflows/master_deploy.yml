@@ -23,5 +23,5 @@ jobs:
         run: |
           git config --global user.email "your_github_email>"
           git config --global user.name "your_github_username>"
-          git remote set-url origin https://f912a04eed5a05bd2de003f7471bf4897959a7dd@github.com/saranshgrover/WCARealTime.git
+          git remote set-url origin https://f912a04eed5a05bd2de003f7471bf4897959a7dd>@github.com/saranshgrover>/WCARealTime>.git
           npm run deploy
