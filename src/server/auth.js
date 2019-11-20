@@ -48,7 +48,7 @@ export const initializeAuth = () => {
   }
   /* If non-signed in user tries accessing a competition path, redirect to OAuth sign in straightaway. */
   const path = window.location.pathname
-  if (!isSignedIn()) {
+  if (path !== '/' && !isSignedIn()) {
     localStorage.setItem(localStorageKey('redirectPath'), path)
     signIn()
   }
@@ -75,7 +75,9 @@ const oauthRedirectUri = () => {
   return stagingParam ? `${appUri}?staging=true` : appUri
 }
 
-export const signOut = () =>
+export const signOut = () => {
   localStorage.removeItem(localStorageKey('accessToken'))
+  window.location.replace('/')
+}
 
 export const isSignedIn = () => !!wcaAccessToken()

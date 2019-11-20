@@ -11,7 +11,14 @@ export default function Error({ message }) {
       root: {
         width: '100%',
         height: '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        color:
+          theme.palette.type === 'light'
+            ? theme.palette.error.dark
+            : theme.palette.error.light
+      },
+      error: {
+        fontSize: '50px'
       }
     })
   )
@@ -19,7 +26,7 @@ export default function Error({ message }) {
   return (
     <Container>
       <div className={classes.root}>
-        <ErrorIcon style={{ fontSize: 50 }} />
+        <ErrorIcon className={classes.error} />
         <Typography variant='h1'>ERROR</Typography>
         <Typography variant='subtitle1'>{message}</Typography>
       </div>

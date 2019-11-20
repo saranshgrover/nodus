@@ -43,7 +43,7 @@ const Footer = ({ currTheme, onThemeChange }) => {
               <Link
                 className={classes.link}
                 variant='body2'
-                href={'https://github.com/saranshgrover/WCAProjector'}
+                href={'https://github.com/saranshgrover/WCARealTime'}
               >
                 <GitHubIcon />
               </Link>
@@ -84,7 +84,7 @@ const Footer = ({ currTheme, onThemeChange }) => {
             <Link
               className={classes.link}
               variant='body2'
-              href={'/about/version-history'}
+              href={'https://github.com/saranshgrover/WCARealTime/releases'}
             >
               {version}
             </Link>

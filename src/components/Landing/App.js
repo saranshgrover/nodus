@@ -23,6 +23,7 @@ import LandingSignedIn from './LandingSignedIn'
 import WelcomeLanding from './WelcomeLanding'
 import Projector from '../Projector/Projector'
 
+// typography
 const typography = {
   fontFamily: [
     'Playfair Display',
@@ -47,10 +48,12 @@ const lightTheme = {
     primary: blue,
     secondary: blueGrey,
     type: 'light'
-  }
+  },
+  typography: typography
 }
 class App extends Component {
   constructor(props) {
+    console.log('hello')
     super(props)
     this.state = {
       userInfo: this.props.userInfo,
@@ -81,14 +84,17 @@ class App extends Component {
     this.setState({ mobileOpen: !this.state.mobileOpen })
   }
   onSignOut = () => {
-    signOut()
-    this.setState({
-      userInfo: null,
-      signedIn: isSignedIn(),
-      loading: isSignedIn()
-    })
-    history.push('/login')
-    this.forceUpdate()
+    this.setState(
+      {
+        userInfo: null,
+        signedIn: false,
+        loadingAll: true,
+        loadingAdmin: true
+      },
+      () => {
+        signOut()
+      }
+    )
   }
 
   toggleDarkTheme = () => {
