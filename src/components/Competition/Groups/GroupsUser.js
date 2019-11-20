@@ -25,6 +25,7 @@ import {
 } from '@material-ui/core'
 
 import InfoIcon from '@material-ui/icons/Info'
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
 
 import Error from '../../common/Error'
 
@@ -85,27 +86,34 @@ export default function GroupsUser({ WCAID, match, userInfo, wcif }) {
             {user.wcaId}
           </Typography>
           <Paper className={classes.paper}>
-            <Grid container direction='column' spacing={2}>
-              {wcif.schedule.venues.map(venue =>
-                venue.rooms.map(room => {
-                  if (roomDelays[room.id] > 0)
-                    return (
-                      <Grid item key={room.id}>
+            {wcif.schedule.venues.map(venue =>
+              venue.rooms.map(room => {
+                if (roomDelays[room.id] > 0)
+                  return (
+                    <Grid
+                      container
+                      spacing={2}
+                      key={room.id}
+                      alignItems='center'
+                    >
+                      <Grid item>
                         <InfoIcon
                           style={{ color: room.color }}
                           fontSize='large'
                         />
+                      </Grid>
+                      <Grid item>
                         <Typography>
                           {`${room.name} is currently delayed by ${
                             roomDelays[room.id]
                           } minute(s).`}
                         </Typography>
                       </Grid>
-                    )
-                  else return <React.Fragment key={room.id}></React.Fragment>
-                })
-              )}
-            </Grid>
+                    </Grid>
+                  )
+                else return <React.Fragment key={room.id}></React.Fragment>
+              })
+            )}
           </Paper>
           <Paper className={classes.paper}>
             <Table className={classes.table}>
@@ -140,17 +148,23 @@ export default function GroupsUser({ WCAID, match, userInfo, wcif }) {
                           )}
                         </Link>
                       </TableCell>
-
                       <TableCell>
-                        {assignedTo(assignment.assignmentCode)}{' '}
+                        {assignedTo(assignment.assignmentCode)}
                       </TableCell>
-                      <TableCell
-                        style={{
-                          backgroundColor: assignment.activity.room.color
-                        }}
-                      >
-                        {' '}
-                        {assignment.activity.room.name}{' '}
+                      <TableCell>
+                        <Grid container alignItems='center'>
+                          <Grid item>
+                            <Typography>
+                              {assignment.activity.room.name}
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            <FiberManualRecordIcon
+                              fontSize='large'
+                              style={{ color: assignment.activity.room.color }}
+                            />
+                          </Grid>
+                        </Grid>
                       </TableCell>
                     </TableRow>
                   ))}
