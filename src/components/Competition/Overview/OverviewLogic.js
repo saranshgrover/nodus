@@ -1,5 +1,6 @@
 import { getPreciseTime } from '../../../server/tools'
 import moment from 'moment'
+import { getExtensionData } from '../../../server/wcif'
 
 const findEarlierActivityId = (activity1, activity2, schedule) => {
   let aTime
@@ -191,4 +192,14 @@ export const getPersonalBestFromActivity = (competitor, activityCode) => {
   const event = activityCode.slice(0, activityCode.indexOf('-'))
   const activityEvent = competitor.personalBests.find(e => e.eventId === event)
   return activityEvent ? getPreciseTime(activityEvent.best) : ''
+}
+
+export const getDelays = schedule => {
+  let delays = []
+  for (const venue of schedule.venues) {
+    for (const room of venue.rooms) {
+      delays[room.id] = parseInt(getExtensionData('ScheduleConfig', room).delay)
+    }
+  }
+  return delays
 }

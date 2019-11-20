@@ -8,13 +8,13 @@ import {
   flattenActivities,
   assignedTo,
   getEventFromActivity,
-  getGroupFromActivity
+  getGroupFromActivity,
+  getDelays
 } from '../Overview/OverviewLogic'
 
 import Table from '@material-ui/core/Table'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
-
 import { makeStyles } from '@material-ui/styles'
 import {
   TableHead,
@@ -24,6 +24,8 @@ import {
   Grid
 } from '@material-ui/core'
 
+import InfoIcon from '@material-ui/icons/Info'
+
 import Error from '../../common/Error'
 
 const useStyles = makeStyles(theme => ({
@@ -32,7 +34,9 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(3)
   },
   paper: {
-    width: '100%'
+    width: '100%',
+    padding: theme.spacing(2),
+    marginBottom: theme.spacing(3)
   },
   text: {
     margin: theme.spacing(3)
@@ -57,6 +61,7 @@ export default function GroupsUser({ WCAID, match, userInfo, wcif }) {
     myAssignments &&
     getScheduleData([], [], [], myAssignments, flattenActivities(wcif.schedule))
   const classes = useStyles()
+  const roomDelays = getDelays(wcif.schedule)
   return (
     <>
       {myAssignments === null ? (
@@ -79,6 +84,29 @@ export default function GroupsUser({ WCAID, match, userInfo, wcif }) {
           >
             {user.wcaId}
           </Typography>
+          <Paper className={classes.paper}>
+            <Grid container direction='column' spacing={2}>
+              {wcif.schedule.venues.map(venue =>
+                venue.rooms.map(room => {
+                  if (roomDelays[room.id] > 0)
+                    return (
+                      <Grid item key={room.id}>
+                        <InfoIcon
+                          style={{ color: room.color }}
+                          fontSize='large'
+                        />
+                        <Typography>
+                          {`${room.name} is currently delayed by ${
+                            roomDelays[room.id]
+                          } minute(s).`}
+                        </Typography>
+                      </Grid>
+                    )
+                  else return <React.Fragment key={room.id}></React.Fragment>
+                })
+              )}
+            </Grid>
+          </Paper>
           <Paper className={classes.paper}>
             <Table className={classes.table}>
               <TableHead>
