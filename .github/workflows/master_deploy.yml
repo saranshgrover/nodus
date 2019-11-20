@@ -21,4 +21,6 @@ jobs:
         env:
           WCA_CLIENT_ID: ${{secrets.WCA_ID}}
         run: |
+        git config --global user.email "saransh.grover@stonybrook.edu"
+        git config --global user.name "saranshgrover"
           npm run deploy
