@@ -84,17 +84,13 @@ class App extends Component {
     this.setState({ mobileOpen: !this.state.mobileOpen })
   }
   onSignOut = () => {
-    this.setState(
-      {
-        userInfo: null,
-        signedIn: false,
-        loadingAll: true,
-        loadingAdmin: true
-      },
-      () => {
-        signOut()
-      }
-    )
+    this.setState({
+      userInfo: null,
+      signedIn: false,
+      loadingAll: true,
+      loadingAdmin: true
+    })
+    signOut()
   }
 
   toggleDarkTheme = () => {
