@@ -23,12 +23,24 @@ import LandingSignedIn from './LandingSignedIn'
 import WelcomeLanding from './WelcomeLanding'
 import Projector from '../Projector/Projector'
 
+const typography = {
+  fontFamily: [
+    'Playfair Display',
+    'Open Sans',
+    '"Helvetica Neue"',
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
+    '"Segoe UI Symbol"'
+  ].join(',')
+}
+
 const darkTheme = {
   palette: {
     primary: blue,
     secondary: blueGrey,
     type: 'dark'
-  }
+  },
+  typography: typography
 }
 const lightTheme = {
   palette: {

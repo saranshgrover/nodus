@@ -7,6 +7,7 @@ import {
   getPersonalBestFromActivity,
   assignedTo
 } from '../Overview/OverviewLogic'
+
 import {
   LinearProgress,
   Typography,
@@ -16,8 +17,13 @@ import {
   TableCell,
   TableBody,
   Grid,
-  makeStyles
+  makeStyles,
+  Tooltip,
+  IconButton
 } from '@material-ui/core'
+
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
+
 import Error from '../../common/Error'
 
 const useStyles = makeStyles(theme => ({
@@ -63,34 +69,56 @@ export default function GroupsActivity({ match, userInfo, wcif }) {
       )
     )
     setLoading(false)
-  }, [])
+  }, [activityCode, wcif])
   const classes = useStyles()
   return (
     <>
       {loading && <LinearProgress />}
       {!loading && groupInfo[0] && (
         <div className={classes.root}>
-          <Typography
-            className={classes.text}
-            align='center'
-            variant='h4'
-            component='h1'
-          >
-            {' '}
-            {activity.name}{' '}
-          </Typography>
+          <Grid container spacing={2} alignItems='center' justify='center'>
+            <Grid item>
+              <Tooltip
+                disableFocusListener
+                disableTouchListener
+                placement='top'
+                title={`${activity.room.name}`}
+              >
+                <IconButton>
+                  <FiberManualRecordIcon
+                    style={{ color: activity.room.color, fontSize: '60px' }}
+                  />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid item>
+              <Typography
+                className={classes.text}
+                align='center'
+                variant='h4'
+                component='h1'
+              >
+                {activity.name}
+              </Typography>
+            </Grid>
+          </Grid>
           <Table size='small' className={classes.table}>
             <TableHead>
               <TableRow>
                 <TableCell className={classes.top} align='center' colSpan={5}>
-                  {' '}
-                  <Typography> Competitors </Typography>{' '}
+                  <Typography> Competitors </Typography>
                 </TableCell>
               </TableRow>
               <TableRow className={classes.header}>
-                <TableCell> Competitor </TableCell>
-                <TableCell> WCA ID </TableCell>
-                <TableCell> Seed Time </TableCell>
+                <TableCell>
+                  <Typography>Competitor</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>WCA ID</Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography>Seed Time</Typography>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -105,15 +133,19 @@ export default function GroupsActivity({ match, userInfo, wcif }) {
                           : competitor.wcaUserId
                       }`}
                     >
-                      {competitor.name}
+                      <Typography> {competitor.name}</Typography>
                     </Link>
                   </TableCell>
-                  <TableCell>{competitor.wcaId}</TableCell>
                   <TableCell>
-                    {getPersonalBestFromActivity(
-                      competitor,
-                      activity.activityCode
-                    )}
+                    <Typography>{competitor.wcaId}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>
+                      {getPersonalBestFromActivity(
+                        competitor,
+                        activity.activityCode
+                      )}
+                    </Typography>
                   </TableCell>
                 </TableRow>
               ))}
@@ -125,9 +157,15 @@ export default function GroupsActivity({ match, userInfo, wcif }) {
                 </TableCell>
               </TableRow>
               <TableRow className={classes.header}>
-                <TableCell> Competitor </TableCell>
-                <TableCell> WCA ID </TableCell>
-                <TableCell> Duty </TableCell>
+                <TableCell>
+                  <Typography> Competitor </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography> WCA ID </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography> Duty </Typography>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -143,16 +181,20 @@ export default function GroupsActivity({ match, userInfo, wcif }) {
                           : competitor.wcaUserId
                       }`}
                     >
-                      {competitor.name}
+                      <Typography>{competitor.name}</Typography>
                     </Link>
                   </TableCell>
-                  <TableCell>{competitor.wcaId}</TableCell>
                   <TableCell>
-                    {assignedTo(
-                      competitor.assignments.find(
-                        assignment => assignment.activityId === activity.id
-                      ).assignmentCode
-                    )}
+                    <Typography>{competitor.wcaId}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>
+                      {assignedTo(
+                        competitor.assignments.find(
+                          assignment => assignment.activityId === activity.id
+                        ).assignmentCode
+                      )}
+                    </Typography>
                   </TableCell>
                 </TableRow>
               ))}

@@ -26,6 +26,7 @@ import {
 
 import InfoIcon from '@material-ui/icons/Info'
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
+import DoneAllIcon from '@material-ui/icons/DoneAll'
 
 import Error from '../../common/Error'
 
@@ -114,16 +115,38 @@ export default function GroupsUser({ WCAID, match, userInfo, wcif }) {
                 else return <React.Fragment key={room.id}></React.Fragment>
               })
             )}
+            {roomDelays.filter(delay => delay !== 0).length === 0 && (
+              <Grid container spacing={2} alignItems='center'>
+                <Grid item>
+                  <DoneAllIcon style={{ color: '#00ff00' }} fontSize='large' />
+                </Grid>
+                <Grid item>
+                  <Typography>
+                    {`${wcif.name} is running on schedule!`}
+                  </Typography>
+                </Grid>
+              </Grid>
+            )}
           </Paper>
           <Paper className={classes.paper}>
             <Table className={classes.table}>
               <TableHead>
                 <TableRow>
-                  <TableCell size='small'> Time </TableCell>
-                  <TableCell> Event </TableCell>
-                  <TableCell size='small'> Group </TableCell>
-                  <TableCell size='small'> Activity </TableCell>
-                  <TableCell> Room </TableCell>
+                  <TableCell size='small'>
+                    <Typography>{`Time`} </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>{`Event`} </Typography>
+                  </TableCell>
+                  <TableCell size='small'>
+                    <Typography>{`Group`} </Typography>
+                  </TableCell>
+                  <TableCell size='small'>
+                    <Typography>{`Activity`} </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>{`Room`} </Typography>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -131,25 +154,35 @@ export default function GroupsUser({ WCAID, match, userInfo, wcif }) {
                   mySchedule.map(assignment => (
                     <TableRow key={assignment.title}>
                       <TableCell>
-                        {moment(assignment.startDate)
-                          .tz(wcif.schedule.venues[0].timezone)
-                          .format('hh:mm a')}
+                        <Typography>
+                          {moment(assignment.startDate)
+                            .tz(wcif.schedule.venues[0].timezone)
+                            .format('hh:mm a')}
+                        </Typography>
                       </TableCell>
                       <TableCell>
-                        {getEventFromActivity(assignment.activity.activityCode)}
+                        <Typography>
+                          {getEventFromActivity(
+                            assignment.activity.activityCode
+                          )}
+                        </Typography>
                       </TableCell>
                       <TableCell>
                         <Link
                           className={classes.link}
                           to={`/competitions/${wcif.id}/groups/${assignment.activity.room.id}/${assignment.activity.activityCode}`}
                         >
-                          {getGroupFromActivity(
-                            assignment.activity.activityCode
-                          )}
+                          <Typography>
+                            {getGroupFromActivity(
+                              assignment.activity.activityCode
+                            )}
+                          </Typography>
                         </Link>
                       </TableCell>
                       <TableCell>
-                        {assignedTo(assignment.assignmentCode)}
+                        <Typography>
+                          {assignedTo(assignment.assignmentCode)}
+                        </Typography>
                       </TableCell>
                       <TableCell>
                         <Grid container alignItems='center'>
@@ -160,8 +193,10 @@ export default function GroupsUser({ WCAID, match, userInfo, wcif }) {
                           </Grid>
                           <Grid item>
                             <FiberManualRecordIcon
-                              fontSize='large'
-                              style={{ color: assignment.activity.room.color }}
+                              style={{
+                                fontSize: '50px',
+                                color: assignment.activity.room.color
+                              }}
                             />
                           </Grid>
                         </Grid>
