@@ -28,13 +28,15 @@ export default function Groups({ user, wcif, userInfo }) {
       /> */}
       {user !== 'spectator' && (
         <Redirect
-          to={`/competitions/${wcif.id}/groups/competitors/${
+          to={`/competitions/${wcif.id}/Groups/competitors/${
             userInfo.me.wca_id ? userInfo.me.wca_id : userInfo.me.id
           }`}
         />
       )}
       {user === 'spectator' && (
-        <Redirect to={`/competitions/${wcif.id}/Groups/competitors`} />
+        <Redirect
+          to={`/competitions/${wcif.id}/Groups/competitors/2015LARS01`}
+        />
       )}
     </Switch>
   )
