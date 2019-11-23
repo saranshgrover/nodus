@@ -34,7 +34,7 @@ export default function CompList({ comps, subheader, date = false }) {
       ? setQueryComps(comps)
       : setQueryComps(
           comps.filter(comp =>
-            comp.name.toLowerCase().includes(event.target.value)
+            comp.name.toLowerCase().includes(event.target.value.toLowerCase())
           )
         )
   }

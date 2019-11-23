@@ -1,6 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/styles'
-import { Grid, IconButton } from '@material-ui/core'
+import { Grid, IconButton, Typography } from '@material-ui/core'
+import { activityKey } from '../Competition/Overview/OverviewLogic'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,12 +33,12 @@ export default function EventList({
   alignment = 'row',
   size = 2,
   user = 'spectator',
-  userInfo
+  showName = false
 }) {
   const classes = useStyles()
   return (
     <div className={classes.root}>
-      <Grid container direction={alignment} justify={justify}>
+      <Grid spacing={4} container direction={alignment} justify={justify}>
         {events.map(event => (
           <Grid item key={event}>
             <IconButton variant='inherit' onClick={() => onClick(event)}>
@@ -49,6 +50,11 @@ export default function EventList({
                 }
               />
             </IconButton>
+            {showName && (
+              <Grid item>
+                <Typography align='center'>{activityKey[event]}</Typography>
+              </Grid>
+            )}
           </Grid>
         ))}
       </Grid>

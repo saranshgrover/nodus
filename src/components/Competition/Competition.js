@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import Notifications from './Notifications/Notifications'
 import Groups from './Groups/Groups'
-import Projector from './Projector/Projector'
 import Overview from './Overview/Overview'
 import Error from '../common/Error'
 import Admin from './Admin/Admin'
@@ -108,7 +107,9 @@ class Competition extends Component {
               />
             </>
           ) : (
-            <Error message={'TODO MAKE A useError HOOK!'} />
+            <Error
+              message={"😞😞😞 This competition isn't using myComp 😞😞😞 "}
+            />
           ))}
         {loadingWcif && <LinearProgress />}
       </div>

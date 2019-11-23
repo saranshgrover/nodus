@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
 import 'moment-timezone'
@@ -8,9 +8,9 @@ import {
   flattenActivities,
   assignedTo,
   getEventFromActivity,
-  getGroupFromActivity,
-  getDelays
+  getGroupFromActivity
 } from '../Overview/OverviewLogic'
+import { activityUrl } from '../../logic/activity'
 
 import Table from '@material-ui/core/Table'
 import Paper from '@material-ui/core/Paper'
@@ -24,9 +24,7 @@ import {
   Grid
 } from '@material-ui/core'
 
-import InfoIcon from '@material-ui/icons/Info'
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
-import DoneAllIcon from '@material-ui/icons/DoneAll'
 
 import Error from '../../common/Error'
 
@@ -37,114 +35,52 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     width: '100%',
+    maxHeight: '100%',
+    overflow: 'auto',
     padding: theme.spacing(2),
     marginBottom: theme.spacing(3)
   },
   text: {
     margin: theme.spacing(3)
   },
-  table: {
-    overflowX: 'auto'
+  tableCell: {
+    paddingRight: 4,
+    paddingLeft: 5
   },
   link: {
     color: theme.palette.primary.light,
     textDecoration: 'none'
   }
 }))
-export default function GroupsUser({ WCAID, match, userInfo, wcif }) {
-  console.log(userInfo)
-  // TODO: FIX ON MOBILE
-  const wcaId = match ? match.params.wcaId : WCAID ? WCAID : null
+export default function GroupsUser({ wcaId, userInfo, wcif }) {
   const myAssignments = getMyAssignmentsInOrder(wcaId, wcif)
-  const user = wcif.persons.find(
-    person => person.wcaId === wcaId || person.wcaUserId === parseInt(wcaId)
-  )
   const mySchedule =
     myAssignments &&
     getScheduleData([], [], [], myAssignments, flattenActivities(wcif.schedule))
   const classes = useStyles()
-  const roomDelays = getDelays(wcif.schedule)
   return (
     <>
       {myAssignments === null ? (
         <Error message={'Invalid ID'} />
       ) : (
         <Grid item className={classes.root} xs={12}>
-          <Typography
-            className={classes.text}
-            align='center'
-            variant='h3'
-            component='h1'
-          >
-            {user.name}
-          </Typography>
-          <Typography
-            className={classes.text}
-            align='center'
-            variant='h4'
-            component='h1'
-          >
-            {user.wcaId}
-          </Typography>
-          <Paper className={classes.paper}>
-            {wcif.schedule.venues.map(venue =>
-              venue.rooms.map(room => {
-                if (roomDelays[room.id] > 0)
-                  return (
-                    <Grid
-                      container
-                      spacing={2}
-                      key={room.id}
-                      alignItems='center'
-                    >
-                      <Grid item>
-                        <InfoIcon
-                          style={{ color: room.color }}
-                          fontSize='large'
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Typography>
-                          {`${room.name} is currently delayed by ${
-                            roomDelays[room.id]
-                          } minute(s).`}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  )
-                else return <React.Fragment key={room.id}></React.Fragment>
-              })
-            )}
-            {roomDelays.filter(delay => delay !== 0).length === 0 && (
-              <Grid container spacing={2} alignItems='center'>
-                <Grid item>
-                  <DoneAllIcon style={{ color: '#00ff00' }} fontSize='large' />
-                </Grid>
-                <Grid item>
-                  <Typography>
-                    {`${wcif.name} is running on schedule!`}
-                  </Typography>
-                </Grid>
-              </Grid>
-            )}
-          </Paper>
           <Paper className={classes.paper}>
             <Table className={classes.table}>
               <TableHead>
                 <TableRow>
-                  <TableCell size='small'>
+                  <TableCell className={classes.tableCell} size='small'>
                     <Typography>{`Time`} </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className={classes.tableCell}>
                     <Typography>{`Event`} </Typography>
                   </TableCell>
-                  <TableCell size='small'>
+                  <TableCell className={classes.tableCell} size='small'>
                     <Typography>{`Group`} </Typography>
                   </TableCell>
-                  <TableCell size='small'>
+                  <TableCell className={classes.tableCell} size='small'>
                     <Typography>{`Activity`} </Typography>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className={classes.tableCell}>
                     <Typography>{`Room`} </Typography>
                   </TableCell>
                 </TableRow>
@@ -153,24 +89,28 @@ export default function GroupsUser({ WCAID, match, userInfo, wcif }) {
                 {mySchedule &&
                   mySchedule.map(assignment => (
                     <TableRow key={assignment.title}>
-                      <TableCell>
+                      <TableCell className={classes.tableCell}>
                         <Typography>
                           {moment(assignment.startDate)
                             .tz(wcif.schedule.venues[0].timezone)
                             .format('hh:mm a')}
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className={classes.tableCell}>
                         <Typography>
                           {getEventFromActivity(
                             assignment.activity.activityCode
                           )}
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className={classes.tableCell}>
                         <Link
                           className={classes.link}
-                          to={`/competitions/${wcif.id}/groups/${assignment.activity.room.id}/${assignment.activity.activityCode}`}
+                          to={`/competitions/${
+                            wcif.id
+                          }/groups/events/${activityUrl(
+                            assignment.activity.activityCode
+                          )}`}
                         >
                           <Typography>
                             {getGroupFromActivity(
@@ -179,12 +119,12 @@ export default function GroupsUser({ WCAID, match, userInfo, wcif }) {
                           </Typography>
                         </Link>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className={classes.tableCell}>
                         <Typography>
                           {assignedTo(assignment.assignmentCode)}
                         </Typography>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className={classes.tableCell}>
                         <Grid container alignItems='center'>
                           <Grid item>
                             <Typography>

@@ -1,5 +1,11 @@
 import moment from 'moment'
 
+export const isHappening = schedule => {
+  const startDate = moment(schedule.startDate)
+  const endDate = moment(schedule.startDate).add(schedule.numberOfDays, 'days')
+  return moment().isBetween(startDate, endDate, 'days', '[]')
+}
+
 export const updateIn = (object, [property, ...properyChain], updater) =>
   properyChain.length === 0
     ? { ...object, [property]: updater(object[property]) }

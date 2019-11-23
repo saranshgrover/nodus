@@ -191,7 +191,7 @@ export const getAssignmentsFromActivityId = (activityCode, wcif) => {
 export const getPersonalBestFromActivity = (competitor, activityCode) => {
   const event = activityCode.slice(0, activityCode.indexOf('-'))
   const activityEvent = competitor.personalBests.find(e => e.eventId === event)
-  return activityEvent ? getPreciseTime(activityEvent.best) : ''
+  return activityEvent ? getPreciseTime(activityEvent.best) : '--'
 }
 
 export const getDelays = schedule => {
