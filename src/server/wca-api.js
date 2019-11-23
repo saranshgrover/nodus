@@ -13,7 +13,7 @@ export const getMyUpcomingComps = userId => {
   return wcaApiFetch(`/users/${userId}?upcoming_competitions=true`)
 }
 
-export const getAllUpcomingComps = pageNum => {
+export const getAllCompsToday = pageNum => {
   let today = moment().startOf('day')
   let nextWeek = moment()
     .add(7, 'days')

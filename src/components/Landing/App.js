@@ -130,7 +130,11 @@ class App extends Component {
                   exact
                   path={`${process.env.PUBLIC_URL}/competitions`}
                   render={props => (
-                    <LandingSignedIn {...props} userInfo={userInfo} />
+                    <LandingSignedIn
+                      {...props}
+                      userInfo={userInfo}
+                      myUpcomingComps={this.state.upcomingComps}
+                    />
                   )}
                 />
                 <Route path='/project/:compId' component={Projector} />

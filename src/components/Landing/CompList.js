@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -11,16 +11,62 @@ import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 import FlagIconFactory from 'react-flag-icon-css'
 import { compDatesToString } from '../../server/tools'
+import { makeStyles } from '@material-ui/styles'
+import { TextField } from '@material-ui/core'
 const FlagIcon = FlagIconFactory(React, { useCssModules: false })
 
-export default function CompList({ myUpcomingComps }) {
+const useStyles = makeStyles(them => ({
+  paper: {
+    height: 400,
+    overflow: 'auto'
+  },
+  list: {
+    textAlign: 'center'
+  }
+}))
+
+export default function CompList({ comps, subheader, date = false }) {
+  const [query, setQuery] = useState('')
+  const [queryComps, setQueryComps] = useState(comps)
+  const handleSearchChange = event => {
+    setQuery(event.target.value)
+    event.target.value === ''
+      ? setQueryComps(comps)
+      : setQueryComps(
+          comps.filter(comp =>
+            comp.name.toLowerCase().includes(event.target.value)
+          )
+        )
+  }
+  const classes = useStyles()
   return (
     <Paper>
-      <List subheader={<ListSubheader>Upcoming Competitions</ListSubheader>}>
-        {myUpcomingComps.map(comp => {
+      <List
+        className={classes.list}
+        style={{ overflow: 'auto' }}
+        subheader={
+          <ListSubheader disableSticky={true}>{subheader}</ListSubheader>
+        }
+      >
+        {comps.length === 0 ? (
+          <ListItem>
+            <ListItemText>You have no upcoming comps!</ListItemText>
+          </ListItem>
+        ) : (
+          <ListItem className={classes.list}>
+            <TextField
+              value={query}
+              onChange={handleSearchChange}
+              fullWidth={true}
+              label='Search'
+              id='outlined-basic'
+            ></TextField>
+          </ListItem>
+        )}
+        {queryComps.map(comp => {
           return (
             <ListItem
-              alignItems='flex-start'
+              alignItems='center'
               key={comp.id}
               button
               component={Link}
@@ -38,16 +84,20 @@ export default function CompList({ myUpcomingComps }) {
                 key={comp.id + '-about'}
                 primary={comp.name}
                 secondary={
-                  <React.Fragment key={comp.id + '-fragment'}>
-                    <Typography
-                      key={comp.id + 'date'}
-                      component='span'
-                      variant='body2'
-                      color='textPrimary'
-                    >
-                      {compDatesToString(comp.start_date, comp.end_date)}
-                    </Typography>
-                  </React.Fragment>
+                  date ? (
+                    <React.Fragment key={comp.id + '-fragment'}>
+                      <Typography
+                        key={comp.id + 'date'}
+                        component='span'
+                        variant='body2'
+                        color='textPrimary'
+                      >
+                        {compDatesToString(comp.start_date, comp.end_date)}
+                      </Typography>
+                    </React.Fragment>
+                  ) : (
+                    <> </>
+                  )
                 }
               />
             </ListItem>

@@ -37,10 +37,6 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3)
-  },
-  footerPadding: {
-    width: '100%',
-    height: 50
   }
 }))
 
@@ -119,7 +115,6 @@ function Dashboard({
               compId={match.params.compId}
               userInfo={userInfo}
             />
-            <div className={classes.footerPadding} />
           </>
         }
       </main>

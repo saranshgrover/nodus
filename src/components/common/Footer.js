@@ -28,70 +28,80 @@ const useStyles = makeStyles(theme => ({
       textDecoration: 'none',
       opacity: 0.7
     }
+  },
+  footerPadding: {
+    width: '100%',
+    height: 50
   }
 }))
 
 const Footer = ({ currTheme, onThemeChange }) => {
   const classes = useStyles()
   return (
-    <Grid container className={classes.root}>
-      <Grid item className={classes.grow} />
-      <Grid item>
-        <Grid container spacing={2}>
-          <Tooltip title={'Gitub'}>
-            <Grid item key='Github'>
-              <Link
-                className={classes.link}
-                variant='body2'
-                href={'https://github.com/saranshgrover/WCARealTime'}
-              >
-                <GitHubIcon />
-              </Link>
-            </Grid>
-          </Tooltip>
-          <Tooltip title={'Contact'}>
-            <Grid item key='Contact'>
-              <Link
-                className={classes.link}
-                variant='body2'
-                href={'mailto:ycubiksrube@gmail.com'}
-              >
-                <ContactMailIcon />
-              </Link>
-            </Grid>
-          </Tooltip>
-          <Tooltip
-            title={currTheme === 'light' ? 'Switch to Dark' : 'Switch to Light'}
-          >
-            <Grid item key='Theme'>
-              <Link
-                className={classes.link}
-                variant='body2'
-                onClick={onThemeChange}
-              >
-                <EmojiObjectsIcon />
-              </Link>
-            </Grid>
-          </Tooltip>
-          <Tooltip title={'About'}>
-            <Grid item key='Info'>
-              <Link className={classes.link} variant='body2' href={'/about'}>
-                <InfoIcon size={20} />
-              </Link>
-            </Grid>
-          </Tooltip>
-          <Grid item key='Version'>
-            <Link
-              className={classes.link}
-              variant='body2'
-              href={'https://github.com/saranshgrover/WCARealTime/releases'}
+    <>
+      <div className={classes.footerPadding} />
+
+      <Grid container className={classes.root}>
+        <Grid item className={classes.grow} />
+        <Grid item>
+          <Grid container spacing={2}>
+            <Tooltip title={'Gitub'}>
+              <Grid item key='Github'>
+                <Link
+                  className={classes.link}
+                  variant='body2'
+                  href={'https://github.com/saranshgrover/WCARealTime'}
+                >
+                  <GitHubIcon />
+                </Link>
+              </Grid>
+            </Tooltip>
+            <Tooltip title={'Contact'}>
+              <Grid item key='Contact'>
+                <Link
+                  className={classes.link}
+                  variant='body2'
+                  href={'mailto:ycubiksrube@gmail.com'}
+                >
+                  <ContactMailIcon />
+                </Link>
+              </Grid>
+            </Tooltip>
+            <Tooltip
+              title={
+                currTheme === 'light' ? 'Switch to Dark' : 'Switch to Light'
+              }
             >
-              {version}
-            </Link>
+              <Grid item key='Theme'>
+                <Link
+                  className={classes.link}
+                  variant='body2'
+                  onClick={onThemeChange}
+                >
+                  <EmojiObjectsIcon />
+                </Link>
+              </Grid>
+            </Tooltip>
+            <Tooltip title={'About'}>
+              <Grid item key='Info'>
+                <Link className={classes.link} variant='body2' href={'/about'}>
+                  <InfoIcon size={20} />
+                </Link>
+              </Grid>
+            </Tooltip>
+            <Grid item key='Version'>
+              <Link
+                className={classes.link}
+                variant='body2'
+                href={'https://github.com/saranshgrover/WCARealTime/releases'}
+              >
+                {version}
+              </Link>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </>
   )
 }
 

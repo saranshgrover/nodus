@@ -1,52 +1,43 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import CompList from './CompList'
-import { getMyManagableComps, getMyUpcomingComps } from '../../server/wca-api'
-import { sortArrayByDate } from '../../server/tools'
+import { getAllCompsToday } from '../../server/wca-api'
+import { Tabs, Tab } from '@material-ui/core'
+import { isExtensionSetup } from '../../server/wcif'
 
-class LandingSignedIn extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      allUpcomingComps: null,
-      myManagableComps: null,
-      loadingAll: true,
-      loadingMine: true,
-      myUpcomingComps: null
-    }
-    getMyUpcomingComps(this.props.userInfo.me.id).then(res => {
-      this.setState({
-        myUpcomingComps: sortArrayByDate(res.upcoming_competitions),
-        loadingAll: false
-      })
+function LandingSignedIn({ myUpcomingComps }) {
+  const [allCompsToday, setAllCompsToday] = useState([])
+  const [loadingToday, setLoadingToday] = useState(true)
+  const [value, setValue] = React.useState(-1)
+
+  useEffect(() => {
+    getAllCompsToday(1).then(comps => {
+      setAllCompsToday(comps)
+      setLoadingToday(false)
     })
-    getMyManagableComps().then(comps =>
-      this.setState({
-        myManagableComps: sortArrayByDate(comps),
-        loadingMine: false
-      })
-    )
-  }
+    allCompsToday.length > myUpcomingComps.length ? setValue(0) : setValue(1)
+  }, [allCompsToday.length, myUpcomingComps.length])
 
-  render() {
-    const {
-      myUpcomingComps,
-      myManagableComps,
-      loadingAll,
-      loadingMine
-    } = this.state
-    return (
-      <>
-        {!loadingAll && !loadingMine && (
-          <CompList
-            myUpcomingComps={myUpcomingComps}
-            myManagableComps={myManagableComps}
-          />
-        )}
-        {loadingMine && loadingAll && <LinearProgress />}
-      </>
-    )
-  }
+  return (
+    <>
+      {!loadingToday ? (
+        <>
+          <Tabs
+            value={value}
+            onChange={(event, index) => setValue(index)}
+            variant='fullWidth'
+          >
+            <Tab label='Happening Now' />
+            <Tab label='Upcoming' />
+          </Tabs>
+          {value === 0 && <CompList comps={allCompsToday} />}
+          {value === 1 && <CompList date={true} comps={myUpcomingComps} />}
+        </>
+      ) : (
+        <LinearProgress />
+      )}
+    </>
+  )
 }
 
 export default LandingSignedIn
