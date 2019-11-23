@@ -17,7 +17,7 @@ export default function GroupsUsers({ history, wcif, match }) {
       ? persons.find(person => person.wcaId === id)
       : persons.find(person => person.wcaUserId === parseInt(id))
   const [person, setPerson] = useState(
-    match.params.wcaId ? getUser(match.params.wcaId) : null
+    match.params.wcaId ? getUser(match.params.wcaId) : persons[0]
   )
   const handleChange = (event, values) => {
     setPerson(values)
