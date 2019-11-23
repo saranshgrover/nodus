@@ -34,7 +34,6 @@ export default function Admin({ user, wcif, setWcif }) {
   const [loading, setLoading] = useState(false)
   const onWcifUpdate = () => {
     setLoading(true)
-    console.log(localWcif)
     saveWcifChanges(wcif, localWcif)
       .then(() => {
         setWcif(localWcif)

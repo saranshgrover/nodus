@@ -9,7 +9,6 @@ import { isHappening } from '../../../server/tools'
 import CompetitionStatus from '../Status/CompetitionStatus'
 
 export default function GroupsActivities({ match, wcif, userInfo, history }) {
-  console.log('YEEHAH')
   const [activities, setActivities] = useState(undefined)
   useEffect(() => {
     setActivities(flattenActivities(wcif.schedule))
@@ -23,7 +22,6 @@ export default function GroupsActivities({ match, wcif, userInfo, history }) {
   const [event, setEvent] = useState(match.params.event)
   const [group, setGroup] = useState(match.params.group)
   const [round, setRound] = useState(match.params.round)
-  console.log(round)
   return (
     <Grid
       container

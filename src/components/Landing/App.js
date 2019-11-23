@@ -53,7 +53,6 @@ const lightTheme = {
 }
 class App extends Component {
   constructor(props) {
-    console.log('hello')
     super(props)
     this.state = {
       userInfo: this.props.userInfo,

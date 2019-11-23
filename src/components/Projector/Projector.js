@@ -63,7 +63,6 @@ const ICON = {
 const getIndex = (currentScreen, length) =>
   currentScreen === length - 1 ? 0 : currentScreen + 1
 const DURATION = screen => {
-  console.log(screen)
   switch (screen) {
     case 'AGENDA':
       return 5000

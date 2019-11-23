@@ -40,7 +40,6 @@ export default function ProjectorAdmin({
   id
 }) {
   const projectorConfigUpdate = newRoom => {
-    console.log(newRoom)
     setWcif(
       mapIn(wcif, ['schedule', 'venues'], venue =>
         mapIn(venue, ['rooms'], room =>

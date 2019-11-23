@@ -10,7 +10,6 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import { isHappening } from '../../../server/tools'
 
 export default function GroupsUsers({ history, wcif, match }) {
-  console.log(wcif.schedule)
   const persons = wcif.persons
   const getUserLink = user => (user.wcaId ? user.wcaId : user.wcaUserId)
   const getUser = id =>

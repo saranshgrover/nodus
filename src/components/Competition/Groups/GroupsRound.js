@@ -59,7 +59,6 @@ export default function GroupsRound({
   useEffect(() => {
     const activity = `${event}-r${round}`
     const [groups, rooms] = getGroupsOf(activity, activities)
-    console.log(groups)
     setGroups(groups)
     setRooms(rooms)
   }, [activities, event, round])

@@ -6,7 +6,6 @@ import GroupsActivities from './GroupsActivities'
 import GroupsUsers from './GroupsUsers'
 
 export default function Groups({ user, wcif, userInfo }) {
-  console.log(userInfo)
   return (
     <Switch>
       <Route
