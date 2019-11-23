@@ -6,8 +6,8 @@ const useStyles = makeStyles(theme => ({
   box: {
     borderRadius: '25px',
     margin: 'auto',
-    height: '80vh',
-    maxWidth: '80%',
+    height: '80%',
+    width: '80%',
     padding: theme.spacing(2)
   },
   icon: {
@@ -15,6 +15,9 @@ const useStyles = makeStyles(theme => ({
   },
   grid: {
     padding: theme.spacing(3)
+  },
+  body: {
+    margin: theme.spacing(3)
   }
 }))
 export default function WelcomeLanding() {
@@ -42,6 +45,48 @@ export default function WelcomeLanding() {
           </Grid>
         </Grid>
         <Divider />
+        <Typography
+          algin='center'
+          className={classes.body}
+          color='textPrimary'
+          variant='h6'
+        >
+          {`myComp is an open source 3rd party WCA Application currently in beta designed to aid WCA Competition Organizers, Delegates, Competitors & Spectators during the event, real-time. It will support features like `}
+        </Typography>
+        <Typography
+          className={classes.body}
+          align='left'
+          variant='h6'
+        >{` ✔️ Group Assignments and Easy Visibility`}</Typography>
+        <Typography
+          className={classes.body}
+          align='left'
+          variant='h6'
+        >{` ✔️ Live Automated Projector`}</Typography>
+        <Typography
+          className={classes.body}
+          align='left'
+          variant='h6'
+        >{` ✔️ Push notifications via SMS & Telegram `}</Typography>
+        <Typography
+          className={classes.body}
+          align='left'
+          variant='h6'
+        >{` ✔️ Incident Reporting and Management`}</Typography>
+        <Typography
+          className={classes.body}
+          align='left'
+          variant='h6'
+        >{` ✔️ E-Certificates `}</Typography>
+        <Typography
+          className={classes.body}
+          align='left'
+          variant='h6'
+        >{` and much more!`}</Typography>
+        <Typography className={classes.body} variant='h6'>
+          {`If you're an organizer/delegate and would like to use myComp, or you have any feedback/bugs with the beta,`}{' '}
+          <Typography var></Typography>
+        </Typography>
       </Box>
     </>
   )

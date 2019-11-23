@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const Header = ({ setMobileOpen, userInfo, onSignOut }) => {
+const Header = ({ history, setMobileOpen, userInfo, onSignOut }) => {
   const classes = useStyles()
   return (
     <AppBar position='sticky' color='primary' className={classes.appBar}>
@@ -50,9 +50,6 @@ const Header = ({ setMobileOpen, userInfo, onSignOut }) => {
         </Typography>
         {userInfo && isSignedIn() ? (
           <Fragment>
-            <Typography variant='subtitle1' className={classes.username}>
-              {userInfo.name}
-            </Typography>
             <Button color='inherit' onClick={onSignOut}>
               Hello, {userInfo.me.name}
             </Button>

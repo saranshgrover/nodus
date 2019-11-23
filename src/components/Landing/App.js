@@ -117,10 +117,15 @@ class App extends Component {
         <ThemeProvider theme={muiTheme}>
           <CssBaseline />
           <Router basename={process.env.PUBLIC_URL}>
-            <Header
-              userInfo={userInfo}
-              onSignOut={this.onSignOut}
-              setMobileOpen={this.setMobileOpen}
+            <Route
+              render={props => (
+                <Header
+                  {...props}
+                  userInfo={userInfo}
+                  onSignOut={this.onSignOut}
+                  setMobileOpen={this.setMobileOpen}
+                />
+              )}
             />
             {(loadingAll || loadingAdmin) && signedIn && <LinearProgress />}
             {!loadingAll && !loadingAdmin && signedIn ? (
@@ -154,14 +159,12 @@ class App extends Component {
                 <Route exact path='/'>
                   <Redirect to='/competitions' />
                 </Route>
+                <Route exact path='/about' component={WelcomeLanding} />
               </Switch>
             ) : (
               <Switch>
-                <Route
-                  exact
-                  path='/'
-                  render={props => <WelcomeLanding {...props} />}
-                />
+                <Route exact path='/about' component={WelcomeLanding} />
+                <Route exact path='/' component={WelcomeLanding} />
                 <Route path='/project/:compId' component={Projector} />
               </Switch>
             )}
