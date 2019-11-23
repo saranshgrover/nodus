@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { Typography, Box, makeStyles, Grid, Divider } from '@material-ui/core'
+import {
+  Typography,
+  Box,
+  makeStyles,
+  Grid,
+  Divider,
+  Link
+} from '@material-ui/core'
 import FlipCameraAndroidIcon from '@material-ui/icons/FlipCameraAndroid'
 
 const useStyles = makeStyles(theme => ({
@@ -7,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: '25px',
     margin: 'auto',
     height: '80%',
-    width: '80%',
+    width: '100%',
     padding: theme.spacing(2)
   },
   icon: {
@@ -85,7 +92,9 @@ export default function WelcomeLanding() {
         >{` and much more!`}</Typography>
         <Typography className={classes.body} variant='h6'>
           {`If you're an organizer/delegate and would like to use myComp, or you have any feedback/bugs with the beta,`}{' '}
-          <Typography var></Typography>
+          <Link href='mailto:saransh.grover@stonybrook.edu'>
+            {`shoot me an email`}
+          </Link>
         </Typography>
       </Box>
     </>
