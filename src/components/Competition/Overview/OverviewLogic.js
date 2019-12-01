@@ -41,9 +41,11 @@ export const getMyAssignmentsInOrder = (wcaId, wcif) => {
   )
 }
 
-export const getMyEventsInOrder = (userInfo, wcif) => {
-  const userEvents = wcif.persons.find(
-    person => person.wcaId === userInfo.me.wca_id
+export const getMyEventsInOrder = (wcaId, wcif) => {
+  const regExp = /\d{4}[A-Z]{4}\d{2}/
+  const isWcaId = regExp.test(wcaId)
+  const userEvents = wcif.persons.find(person =>
+    isWcaId ? person.wcaId === wcaId : person.wcaUserId === wcaId
   ).registration.eventIds
   const schedule = wcif.schedule
   return userEvents.sort((a, b) => findEarlierEventId(a, b, schedule))

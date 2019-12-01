@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import moment from 'moment'
 import {
   makeStyles,
   Table,
@@ -6,8 +7,7 @@ import {
   TableHead,
   TableCell,
   TableRow,
-  Typography,
-  LinearProgress
+  Typography
 } from '@material-ui/core'
 import Error from '../../common/Error'
 import { parseGroupFromActivity, getGroupsOf } from '../../logic/activity'
@@ -55,12 +55,13 @@ export default function GroupsRound({
     )
   }
   const [groups, setGroups] = useState(null)
-  const [rooms, setRooms] = useState([])
   useEffect(() => {
     const activity = `${event}-r${round}`
-    const [groups, rooms] = getGroupsOf(activity, activities)
+    const groups = getGroupsOf(activity, activities)
+    groups.sort((a, b) =>
+      a.startTime > b.startTime ? 1 : b.startTime > a.startTime ? -1 : 0
+    )
     setGroups(groups)
-    setRooms(rooms)
   }, [activities, event, round])
   const classes = useStyles()
   return (
@@ -75,23 +76,31 @@ export default function GroupsRound({
               <TableCell className={classes.tableCell}>
                 <Typography>Room</Typography>
               </TableCell>
+              <TableCell className={classes.tableCell}>
+                <Typography>Start Time</Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {groups.map((group, index) => (
-              <TableRow key={group}>
+              <TableRow key={index}>
                 <TableCell className={classes.tableCell}>
                   <Typography
                     onClick={() =>
-                      handleChangeGroup(parseGroupFromActivity(group))
+                      handleChangeGroup(parseGroupFromActivity(group.activity))
                     }
                     className={classes.link}
                   >
-                    {`Group ${parseGroupFromActivity(group)}`}
+                    {`Group ${parseGroupFromActivity(group.activity)}`}
                   </Typography>
                 </TableCell>
                 <TableCell className={classes.tableCell}>
-                  <Typography> {rooms[index]}</Typography>
+                  <Typography> {group.room}</Typography>
+                </TableCell>
+                <TableCell className={classes.tableCell}>
+                  <Typography>
+                    {moment.utc(group.startTime).format('hh:mm a')}
+                  </Typography>
                 </TableCell>
               </TableRow>
             ))}

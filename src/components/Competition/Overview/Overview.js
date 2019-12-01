@@ -1,14 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import EventList from '../../common/EventList'
-import { makeStyles, Paper } from '@material-ui/core'
+import {
+  makeStyles,
+  Paper,
+  LinearProgress,
+  Grid,
+  TextField
+} from '@material-ui/core'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import { ViewState } from '@devexpress/dx-react-scheduler'
 import {
   Scheduler,
   DayView,
   Appointments
 } from '@devexpress/dx-react-scheduler-material-ui'
-import { getScheduleData, flattenActivities } from './OverviewLogic'
+import {
+  getScheduleData,
+  flattenActivities,
+  getMyEventsInOrder,
+  getMyAssignmentsInOrder
+} from './OverviewLogic'
 import OverviewFilterChips from './OverviewFilterChips'
+import { isHappening } from '../../../server/tools'
+import CompetitionStatus from '../Status/CompetitionStatus'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,17 +49,28 @@ const Appointment = props => {
   )
 }
 
-export default function Overview({
-  myEvents,
-  myAssignments,
-  wcif,
-  user,
-  userInfo
-}) {
+export default function Overview({ wcif, user, userInfo }) {
   const classes = useStyles()
+  const [selectedUser, setSelectedUser] = useState(
+    user === 'spectator'
+      ? wcif.persons[0]
+      : wcif.persons.find(person => person.wcaUserId === userInfo.me.id)
+  )
+  const [MyEvents, setMyEvents] = useState([])
+  const [MyAssignments, setMyAssignemnts] = useState([])
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    setLoading(true)
+    setMyEvents(getMyEventsInOrder(selectedUser.wcaUserId, wcif))
+    setMyAssignemnts(getMyAssignmentsInOrder(selectedUser.wcaUserId, wcif))
+  }, [selectedUser, wcif])
   const [selectedEvents, setSelectedEvents] = useState([])
   const [unselectedRooms, setUnselectedRooms] = useState([])
   const [unselectedAssignments, setUnselectedAssignments] = useState([])
+  const [activties, setActivities] = useState(null)
+  useEffect(() => {
+    setActivities(flattenActivities(wcif.schedule))
+  }, [wcif])
   const [data, setData] = useState([])
   useEffect(() => {
     setData(
@@ -53,48 +78,79 @@ export default function Overview({
         selectedEvents,
         unselectedRooms,
         unselectedAssignments,
-        myAssignments,
-        flattenActivities(wcif.schedule)
+        MyAssignments,
+        activties
       )
     )
+    setLoading(false)
   }, [
+    user,
     selectedEvents,
     unselectedRooms,
     unselectedAssignments,
-    myAssignments,
-    wcif
+    MyAssignments,
+    wcif,
+    activties
   ])
   const addSelectedEvent = eventId => {
     selectedEvents.includes(eventId)
       ? setSelectedEvents(selectedEvents.filter(event => !(event === eventId)))
       : setSelectedEvents([...selectedEvents, eventId])
   }
-  const changeFilter = () => {}
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <EventList
-          selected={selectedEvents}
-          onClick={addSelectedEvent}
-          justify='center'
-          events={myEvents}
-          user={user}
-          userInfo={userInfo}
-        />
-        <OverviewFilterChips
-          venues={wcif.schedule.venues}
-          unselectedRooms={unselectedRooms}
-          setUnselectedRooms={setUnselectedRooms}
-          unselectedAssignments={unselectedAssignments}
-          setUnselectedAssignments={setUnselectedAssignments}
-          changeFilter={changeFilter}
-        />
-        <Scheduler data={data}>
-          <ViewState currentDate={wcif.schedule.startDate} />
-          <DayView startDayHour={8} endDayHour={19} cellDuration={30} />
-          <Appointments appointmentComponent={Appointment} />
-        </Scheduler>
-      </Paper>
+      {isHappening(wcif.schedule) && <CompetitionStatus wcif={wcif} />}
+      {loading ? (
+        <LinearProgress />
+      ) : (
+        <Paper className={classes.paper}>
+          <Grid container justify='center' alignItems='center' direction='row'>
+            <Grid item>
+              <Autocomplete
+                onChange={(event, value) => setSelectedUser(value)}
+                options={wcif.persons}
+                getOptionLabel={person =>
+                  `${person.name} ${person.wcaId ? `- ${person.wcaId}` : ''}`
+                }
+                style={{ width: 300 }}
+                value={selectedUser}
+                renderInput={params => (
+                  <TextField
+                    style={{ textAlign: 'center' }}
+                    {...params}
+                    label='Select Competitor'
+                    variant='outlined'
+                    fullWidth
+                  />
+                )}
+              />
+              <EventList
+                selected={selectedEvents}
+                onClick={addSelectedEvent}
+                justify='center'
+                events={MyEvents}
+                user={user}
+              />
+            </Grid>
+            <Grid item>
+              <OverviewFilterChips
+                venues={wcif.schedule.venues}
+                unselectedRooms={unselectedRooms}
+                setUnselectedRooms={setUnselectedRooms}
+                unselectedAssignments={unselectedAssignments}
+                setUnselectedAssignments={setUnselectedAssignments}
+              />
+            </Grid>
+            <Grid item>
+              <Scheduler data={data}>
+                <ViewState currentDate={wcif.schedule.startDate} />
+                <DayView startDayHour={8} endDayHour={19} cellDuration={30} />
+                <Appointments appointmentComponent={Appointment} />
+              </Scheduler>
+            </Grid>
+          </Grid>
+        </Paper>
+      )}
     </div>
   )
 }

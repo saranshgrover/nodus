@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import {
   makeStyles,
   Table,
@@ -11,7 +10,6 @@ import {
   LinearProgress
 } from '@material-ui/core'
 import Error from '../../common/Error'
-import { activityKey } from '../Overview/OverviewLogic'
 import { parseRoundFromActivity } from '../../logic/activity'
 import { parseAdvancementCondition, parseCutoff } from '../../logic/event'
 
@@ -58,7 +56,7 @@ export default function GroupsEvent({
   useEffect(() => {
     const localEvent = wcif.events.find(e => e.id === event)
     setEventInfo(localEvent)
-  }, [])
+  }, [event, wcif])
 
   const classes = useStyles()
   return (

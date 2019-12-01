@@ -22,6 +22,17 @@ export default function GroupsActivities({ match, wcif, userInfo, history }) {
   const [event, setEvent] = useState(match.params.event)
   const [group, setGroup] = useState(match.params.group)
   const [round, setRound] = useState(match.params.round)
+
+  const handleChange = (noEvent, noRound, noGroup) => {
+    noEvent && setEvent(undefined)
+    noRound && setRound(undefined)
+    noGroup && setGroup(undefined)
+    let link = `/competitions/${wcif.id}/groups/events/`
+    if (!noEvent) link += `${event}/`
+    if (!noGroup) link += `${group}/`
+    if (!noRound) link += `${round}/`
+    history.push(link)
+  }
   return (
     <Grid
       container
@@ -33,29 +44,39 @@ export default function GroupsActivities({ match, wcif, userInfo, history }) {
       {isHappening(wcif.schedule) && <CompetitionStatus wcif={wcif} />}
       <Grid item>
         <Breadcrumbs style={{ fontSize: '5vmin' }}>
-          <Link color='inherit' href={`/competitions/${wcif.id}/groups/events`}>
+          <Link
+            style={{ fontSize: '5vmin' }}
+            component='button'
+            color='inherit'
+            onClick={() => handleChange(true, true, true)}
+          >
             Events
           </Link>
           {event && (
             <Link
+              style={{ fontSize: '5vmin' }}
+              component='button'
               color='inherit'
-              href={`/competitions/${wcif.id}/groups/events/${event}`}
+              onClick={() => handleChange(false, true, true)}
             >
               <span className={`cubing-icon event-${event}`} />
             </Link>
           )}
           {round && (
             <Link
+              style={{ fontSize: '5vmin' }}
+              component='button'
               color='inherit'
-              href={`/competitions/${wcif.id}/groups/events/${event}/${round}`}
+              onClick={() => handleChange(false, false, true)}
             >
               Round {round}
             </Link>
           )}
           {group && (
             <Link
+              style={{ fontSize: '5vmin' }}
               color='inherit'
-              href={`/competitions/${wcif.id}/groups/events/${event}/${round}/${group}`}
+              onClick={() => handleChange(false, false, false)}
             >
               Group {group}
             </Link>
@@ -92,7 +113,10 @@ export default function GroupsActivities({ match, wcif, userInfo, history }) {
         <EventList
           events={events}
           showName={true}
-          onClick={event => setEvent(event)}
+          onClick={event => {
+            setEvent(event)
+            history.push(`/competitions/${wcif.id}/groups/events/${event}`)
+          }}
         />
       ) : (
         <LinearProgress />

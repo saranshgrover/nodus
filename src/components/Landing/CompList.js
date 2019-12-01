@@ -15,7 +15,7 @@ import { makeStyles } from '@material-ui/styles'
 import { TextField } from '@material-ui/core'
 const FlagIcon = FlagIconFactory(React, { useCssModules: false })
 
-const useStyles = makeStyles(them => ({
+const useStyles = makeStyles(theme => ({
   paper: {
     height: 400,
     overflow: 'auto'

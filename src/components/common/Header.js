@@ -51,7 +51,7 @@ const Header = ({ history, setMobileOpen, userInfo, onSignOut }) => {
         {userInfo && isSignedIn() ? (
           <Fragment>
             <Button color='inherit' onClick={onSignOut}>
-              Hello, {userInfo.me.name}
+              {userInfo.me.name}
             </Button>
           </Fragment>
         ) : (

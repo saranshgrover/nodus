@@ -23,11 +23,6 @@ function Competition({ user, history, localWcif, compId, userInfo }) {
             render={props => (
               <Overview
                 {...props}
-                myEvents={getMyEventsInOrder(userInfo, wcif)}
-                myAssignments={getMyAssignmentsInOrder(
-                  userInfo.me.wca_id,
-                  wcif
-                )}
                 wcif={wcif}
                 user={user}
                 userInfo={userInfo}

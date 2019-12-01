@@ -59,40 +59,46 @@ function Dashboard({
     setCurrentComponent(text)
     history.push(`/competitions/${match.params.compId}/${text.toLowerCase()}/`)
   }
-  const [currentComponent, setCurrentComponent] = useState('overview')
-  const [wcif, setWcif] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState('spectator')
   const [error, setError] = useState(null)
+  const [currentComponent, setCurrentComponent] = useState('overview')
+  const [wcifPublic, setWcifPublic] = useState(null)
   useEffect(() => {
     getWcifPublic(match.params.compId)
-      .then(wcifPublic => {
-        const person = wcifPublic.persons.find(
-          person => person.wcaUserId === userInfo.me.id
-        )
-        if (person && person.roles.length > 0) {
-          getWcif(match.params.compId).then(wcif => {
-            setWcif(wcif)
-            setUser('admin')
-            setLoading(false)
-          })
-        } else if (person && person.roles.length === 0) {
-          setUser('competitor')
-          setWcif(wcifPublic)
-          setLoading(false)
-        }
-      })
-      .catch(err => {
-        setError(err.message)
+      .then(wcifPublic => setWcifPublic(wcifPublic))
+      .catch(err => setError(err.message))
+  }, [match.params.compId])
+  const [user, setUser] = useState(null)
+  useEffect(() => {
+    if (wcifPublic) {
+      const person = wcifPublic.persons.find(
+        person => person.wcaUserId === userInfo.me.id
+      )
+      person
+        ? person.roles.length > 0
+          ? setUser('admin')
+          : setUser('competitor')
+        : setUser('spectator')
+    }
+  }, [userInfo, wcifPublic])
+  const [wcif, setWcif] = useState(null)
+  useEffect(() => {
+    if (user === 'admin') {
+      getWcif(match.params.compId).then(wcif => {
+        setWcif(wcif)
         setLoading(false)
       })
-  }, [match.params.compId, userInfo])
+    } else {
+      setWcif(wcifPublic)
+      setLoading(false)
+    }
+  }, [user, match.params.compId, wcifPublic])
 
   return (
     <div className={classes.root}>
       {error ? (
         <Error message={error} />
-      ) : loading ? (
+      ) : !user || loading ? (
         <LinearProgress />
       ) : (
         <>

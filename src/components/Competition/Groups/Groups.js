@@ -20,23 +20,15 @@ export default function Groups({ user, wcif, userInfo }) {
           <GroupsActivities {...props} wcif={wcif} userInfo={userInfo} />
         )}
       />
-      {/* <Route
-        path={`/competitions/${wcif.id}/groups/:roomId/:activityCode`}
-        render={props => (
-          <GroupsActivity {...props} wcif={wcif} userInfo={userInfo} />
-        )}
-      /> */}
       {user !== 'spectator' && (
         <Redirect
-          to={`/competitions/${wcif.id}/Groups/competitors/${
+          to={`/competitions/${wcif.id}/groups/competitors/${
             userInfo.me.wca_id ? userInfo.me.wca_id : userInfo.me.id
           }`}
         />
       )}
       {user === 'spectator' && (
-        <Redirect
-          to={`/competitions/${wcif.id}/Groups/competitors/2015LARS01`}
-        />
+        <Redirect to={`/competitions/${wcif.id}/groups/competitors/`} />
       )}
     </Switch>
   )

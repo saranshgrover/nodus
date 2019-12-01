@@ -1,12 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import Button from '@material-ui/core/Button'
 import FormGroup from '@material-ui/core/FormGroup'
-import TextField from '@material-ui/core/TextField'
-import { getRoomColors } from '../../../server/wcif'
 import { Typography } from '@material-ui/core'
-import Divider from '@material-ui/core/Divider'
 import { makeStyles } from '@material-ui/core/styles'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
 import { mapIn } from '../../../server/tools'
@@ -76,25 +73,13 @@ export default function ProjectorAdmin({
             >
               Slideshow
             </Button>
-            <Button
+            {/* <Button
               className={classes.link}
               variant='outlined'
               href={`/project/${id}/pin`}
             >
               Pinned Messages
-            </Button>
-            {venues.map(venue =>
-              venue.rooms.map(room => (
-                <Button
-                  className={classes.link}
-                  key={room.id}
-                  variant='outlined'
-                  href={`/project/${room.id}`}
-                >
-                  {room.name}
-                </Button>
-              ))
-            )}
+            </Button> */}
           </ButtonGroup>
         </FormGroup>
       </ExpansionPanelDetails>

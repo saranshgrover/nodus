@@ -68,7 +68,9 @@ export default function Admin({ user, wcif, setWcif }) {
               aria-controls='panel2a-content'
               id='panel2a-header'
             >
-              <Typography className={classes.heading}>Projector</Typography>
+              <Typography className={classes.heading}>
+                Venue Configuration
+              </Typography>
             </ExpansionPanelSummary>
             <ProjectorAdmin
               wcif={localWcif}
@@ -86,10 +88,7 @@ export default function Admin({ user, wcif, setWcif }) {
               aria-controls='panel3a-content'
               id='panel3a-header'
             >
-              <Typography className={classes.heading}>
-                {' '}
-                Notifications
-              </Typography>
+              <Typography className={classes.heading}>Notifications</Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
               <NotificationsAdmin

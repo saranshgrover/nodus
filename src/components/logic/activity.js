@@ -15,18 +15,20 @@ export const parseGroupFromActivity = activity =>
 
 export const getGroupsOf = (roundActivity, activities) => {
   let groups = []
-  let rooms = []
   for (const activity of activities) {
     if (
       activity.activityCode.includes(roundActivity) &&
       !groups.includes(activity.activityCode) &&
       activity.childActivities.length === 0
     ) {
-      groups.push(activity.activityCode)
-      rooms.push(activity.room.name)
+      groups.push({
+        activity: activity.activityCode,
+        room: activity.room.name,
+        startTime: activity.startTime
+      })
     }
   }
-  return [groups, rooms]
+  return groups
 }
 
 export const activityUrl = activity => {

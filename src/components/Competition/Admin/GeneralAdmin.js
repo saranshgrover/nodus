@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import Button from '@material-ui/core/Button'
@@ -55,8 +55,13 @@ export default function GeneralAdmin({ wcif, setWcif, updateGeneralConfig }) {
                 onChange={onCheckboxChange('useProjector')}
               />
             }
-            label='Use Projector'
+            label='Use myComp for Sharing Groups'
           />
+          <FormHelperText>
+            Selecting this means that a competitor will be able to access their
+            groups and assignments on mycomp. Please make sure to add a delay if
+            the competition is running behind schedule at any point.
+          </FormHelperText>
           <FormControlLabel
             control={
               <Switch
@@ -67,7 +72,7 @@ export default function GeneralAdmin({ wcif, setWcif, updateGeneralConfig }) {
             }
             label='Use Telegram Notifications'
           />
-          <FormControlLabel
+          {/* <FormControlLabel
             control={
               <Switch
                 checked={localConfig.showGroups}
@@ -77,6 +82,9 @@ export default function GeneralAdmin({ wcif, setWcif, updateGeneralConfig }) {
             }
             label='Show Groups & Assignments'
           />
+          <FormHelperText>
+            
+          </FormHelperText> */}
           {
             <FormControl
               required

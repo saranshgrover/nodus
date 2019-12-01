@@ -14,14 +14,12 @@ export const getMyUpcomingComps = userId => {
 }
 
 export const getAllCompsToday = pageNum => {
-  let today = moment().startOf('day')
-  let nextWeek = moment()
-    .add(7, 'days')
-    .startOf('day')
+  let today = moment()
   const params = new URLSearchParams({
     start: today.toISOString(),
-    end: nextWeek.toISOString(),
-    page: pageNum
+    end: today.add(7, 'days').toISOString(),
+    page: pageNum,
+    sort: 'start_date'
   })
   return wcaApiFetch(`/competitions?${params.toString()}`)
 }
