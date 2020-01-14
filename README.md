@@ -1,6 +1,6 @@
-# WCA Real Time
+# myComp
 
-WCA Real Time is designed to be a one stop resource for anything required by competitors and organizers during a WCA Event. Its aim is to support functionality like live Projectors, Group assignments and easy visibility, push notifications via SMS & Telegram, incident reporting and management.
+muComp is designed to be a one stop resource for anything required by competitors and organizers during a WCA Event. Its aim is to support functionality like live Projectors, Group assignments and easy visibility, push notifications via SMS & Telegram, incident reporting and management.
 
 ## Getting Started
 
