@@ -156,7 +156,7 @@ export const activityKey = {
   '777': '7x7',
   pyram: 'Pyraminx',
   '333oh': '3x3 One Handed',
-  '3bld': '3x3 Blindfolded',
+  '333bf': '3x3 Blindfolded',
   '4bld': '4x4 Blindfolded',
   skewb: 'Skewb',
   clock: 'Clock',
