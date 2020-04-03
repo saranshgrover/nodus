@@ -1,22 +1,14 @@
 const { ApolloServer, gql } = require('apollo-server-express')
 const express = require('express')
 const mongoose = require('mongoose')
-const { resolvers } = require('./resolvers')
+const resolvers = require('./resolvers')
 const { MONGODB_URI } = require('./env.js')
+const { importSchema } = require('graphql-import')
+const graphqlHTTP = require('express-graphql')
 
 const initialize = async () => {
-	const typeDefs = gql`
-		type Query {
-			hello: String!
-		}
-		type Cat {
-			id: ID!
-		}
-		type Mutation {
-			createCate(name: String!): Cat!
-		}
-	`
 	const app = express()
+	const typeDefs = importSchema('./schema.graphql')
 	const server = new ApolloServer({
 		typeDefs,
 		resolvers
