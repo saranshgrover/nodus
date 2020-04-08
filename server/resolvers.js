@@ -3,6 +3,8 @@ var { schemaComposer } = require('graphql-compose')
 var { WcifModel } = require('./models/Wcif')
 var axios = require('axios')
 
+// Query
+
 const WcifTC = composeWithMongoose(WcifModel)
 WcifTC.addResolver({
 	kind: 'query',
@@ -33,8 +35,9 @@ WcifTC.addResolver({
 schemaComposer.Query.addFields({
 	WcifCompetition: WcifTC.getResolver('findByCompetitionId'),
 	WcifCompetitions: WcifTC.getResolver('findAll'),
-	// userOne: WcifTC.getResolver('findOne'),
 })
+
+// Mutations
 
 WcifTC.addResolver({
 	kind: 'mutation',
@@ -54,8 +57,32 @@ WcifTC.addResolver({
 		return savedWcif
 	},
 })
+
+WcifTC.addResolver({
+	kind: 'mutation',
+	name: 'deleteWcif',
+	type: WcifTC,
+	args: {
+		competitionId: 'String',
+	},
+	resolve: async ({ args, info }) => {
+		const data = await WcifModel.findOneAndRemove(
+			{
+				id: args.competitionId,
+			},
+			{ useFindAndModify: false }
+		).exec()
+		if (!data)
+			throw new Error(
+				`Error finding competition with ID ${args.competitionId}`
+			)
+		return data
+	},
+})
+
 schemaComposer.Mutation.addFields({
 	createWcif: WcifTC.getResolver('createWcif'),
+	deleteWcif: WcifTC.getResolver('deleteWcif'),
 })
 
 const graphqlSchema = schemaComposer.buildSchema()
