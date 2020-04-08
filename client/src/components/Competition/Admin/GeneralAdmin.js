@@ -10,69 +10,70 @@ import NativeSelect from '@material-ui/core/NativeSelect'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import InputLabel from '@material-ui/core/InputLabel'
 import { setExtensionData, getExtensionData } from '../../../server/wcif'
-import { setIn } from '../../../server/tools'
+import { setIn } from '../../../logic/tools'
 
 export default function GeneralAdmin({ wcif, setWcif, updateGeneralConfig }) {
-  const localConfig = getExtensionData('GeneralConfig', wcif)
-  const onValueChange = name => event => {
-    setWcif(
-      setExtensionData(
-        'GeneralConfig',
-        wcif,
-        setIn(
-          getExtensionData('GeneralConfig', wcif),
-          [name],
-          event.target.value
-        )
-      )
-    )
-  }
-  const onCheckboxChange = name => event => {
-    setWcif(
-      setExtensionData(
-        'GeneralConfig',
-        wcif,
-        setIn(
-          getExtensionData('GeneralConfig', wcif),
-          [name],
-          event.target.checked
-        )
-      )
-    )
-  }
-  const saveWcif = () => {
-    updateGeneralConfig()
-  }
-  return (
-    <>
-      <ExpansionPanelDetails>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={localConfig.useProjector}
-                value='useProjector'
-                onChange={onCheckboxChange('useProjector')}
-              />
-            }
-            label='Use myComp for Sharing Groups'
-          />
-          <FormHelperText>
-            Selecting this means that a competitor will be able to access their
-            groups and assignments on mycomp. Please make sure to add a delay if
-            the competition is running behind schedule at any point.
-          </FormHelperText>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={localConfig.useTelegramNotif}
-                value='useTelegramNotif'
-                onChange={onCheckboxChange('useTelegramNotif')}
-              />
-            }
-            label='Use Telegram Notifications'
-          />
-          {/* <FormControlLabel
+	const localConfig = getExtensionData('GeneralConfig', wcif)
+	const onValueChange = (name) => (event) => {
+		setWcif(
+			setExtensionData(
+				'GeneralConfig',
+				wcif,
+				setIn(
+					getExtensionData('GeneralConfig', wcif),
+					[name],
+					event.target.value
+				)
+			)
+		)
+	}
+	const onCheckboxChange = (name) => (event) => {
+		setWcif(
+			setExtensionData(
+				'GeneralConfig',
+				wcif,
+				setIn(
+					getExtensionData('GeneralConfig', wcif),
+					[name],
+					event.target.checked
+				)
+			)
+		)
+	}
+	const saveWcif = () => {
+		updateGeneralConfig()
+	}
+	return (
+		<>
+			<ExpansionPanelDetails>
+				<FormGroup>
+					<FormControlLabel
+						control={
+							<Switch
+								checked={localConfig.useProjector}
+								value='useProjector'
+								onChange={onCheckboxChange('useProjector')}
+							/>
+						}
+						label='Use myComp for Sharing Groups'
+					/>
+					<FormHelperText>
+						Selecting this means that a competitor will be able to
+						access their groups and assignments on mycomp. Please
+						make sure to add a delay if the competition is running
+						behind schedule at any point.
+					</FormHelperText>
+					<FormControlLabel
+						control={
+							<Switch
+								checked={localConfig.useTelegramNotif}
+								value='useTelegramNotif'
+								onChange={onCheckboxChange('useTelegramNotif')}
+							/>
+						}
+						label='Use Telegram Notifications'
+					/>
+					{/* <FormControlLabel
             control={
               <Switch
                 checked={localConfig.showGroups}
@@ -85,42 +86,46 @@ export default function GeneralAdmin({ wcif, setWcif, updateGeneralConfig }) {
           <FormHelperText>
             
           </FormHelperText> */}
-          {
-            <FormControl
-              required
-              style={{
-                margin: 20,
-                minWidth: 120
-              }}
-              control={
-                <div>
-                  <InputLabel htmlFor='group-tool-helper'>
-                    Group Tool Used
-                  </InputLabel>
-                  <NativeSelect
-                    value={localConfig.groupTool}
-                    onChange={onValueChange('groupTool')}
-                  >
-                    <option value=''>None</option>
-                    <option value='groupifier'>Groupifier</option>
-                  </NativeSelect>
-                  <FormHelperText>
-                    Select the tool you used to generate groups. Only programs
-                    that communicate with WCIF are usable. If not selected,
-                    competitors will be unable to view their groups and you will
-                    have to manually proceed groups on the projector.
-                  </FormHelperText>
-                </div>
-              }
-            />
-          }
-        </FormGroup>
-      </ExpansionPanelDetails>
-      <ExpansionPanelActions>
-        <Button size='small' color='primary' onClick={() => saveWcif()}>
-          Save
-        </Button>
-      </ExpansionPanelActions>
-    </>
-  )
+					{
+						<FormControl
+							required
+							style={{
+								margin: 20,
+								minWidth: 120,
+							}}
+							control={
+								<div>
+									<InputLabel htmlFor='group-tool-helper'>
+										Group Tool Used
+									</InputLabel>
+									<NativeSelect
+										value={localConfig.groupTool}
+										onChange={onValueChange('groupTool')}
+									>
+										<option value=''>None</option>
+										<option value='groupifier'>
+											Groupifier
+										</option>
+									</NativeSelect>
+									<FormHelperText>
+										Select the tool you used to generate
+										groups. Only programs that communicate
+										with WCIF are usable. If not selected,
+										competitors will be unable to view their
+										groups and you will have to manually
+										proceed groups on the projector.
+									</FormHelperText>
+								</div>
+							}
+						/>
+					}
+				</FormGroup>
+			</ExpansionPanelDetails>
+			<ExpansionPanelActions>
+				<Button size='small' color='primary' onClick={() => saveWcif()}>
+					Save
+				</Button>
+			</ExpansionPanelActions>
+		</>
+	)
 }
