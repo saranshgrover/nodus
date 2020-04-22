@@ -1,25 +1,40 @@
 var { composeWithMongoose } = require('graphql-compose-mongoose/node8')
-var { schemaComposer } = require('graphql-compose')
-var { WcifModel } = require('./models/wcif/Wcif')
+var { schemaComposer, SchemaComposer } = require('graphql-compose')
+var { WcifModel, VenueModel, PersonSchema } = require('./models/wcif/Wcif')
 var axios = require('axios')
+var mongoose = require('mongoose')
 
-// Query
+mongoose.set('useFindAndModify', false)
 
 const WcifTC = composeWithMongoose(WcifModel)
 WcifTC.addResolver({
     kind: 'query',
     name: 'findByCompetitionId',
     args: {
-        id: 'String',
+        competitionId: 'String!',
     },
     type: WcifTC,
     resolve: async ({ args, info }) => {
-        const data = await WcifModel.findOne({ id: args.id }).exec()
-        if (!data)
-            throw new Error(`Error finding competition with ID ${args.id}`)
+        const data = await WcifModel.findOne({ id: args.competitionId }).exec()
+        if (!data) throw new Error(`Error finding competition with ID ${args.competitionId}`)
         return data
     },
 })
+
+WcifTC.addResolver({
+    kind: 'query',
+    name: 'findById',
+    args: {
+        _id: 'String!',
+    },
+    type: WcifTC,
+    resolve: async ({ args, info }) => {
+        const data = await WcifModel.findById(args._id).exec()
+        if (!data) throw new Error(`Error finding competition with _ID ${args._id}`)
+        return data
+    },
+})
+
 WcifTC.addResolver({
     kind: 'query',
     name: 'findAll',
@@ -33,8 +48,9 @@ WcifTC.addResolver({
 })
 
 schemaComposer.Query.addFields({
-    WcifCompetition: WcifTC.getResolver('findByCompetitionId'),
-    WcifCompetitions: WcifTC.getResolver('findAll'),
+    getWcifById: WcifTC.getResolver('findById'),
+    getWcifByCompetitionId: WcifTC.getResolver('findByCompetitionId'),
+    getAllWcifs: WcifTC.getResolver('findAll'),
 })
 
 // Mutations
@@ -47,6 +63,10 @@ WcifTC.addResolver({
         competitionId: 'String',
     },
     resolve: async ({ source, args }) => {
+        // const competition = await WcifModel.findOne({ id: args.competitionId })
+        // if (competition) {
+        //     throw new Error(`Error: Document with '${args.competitionId}' already exists.`)
+        // }
         const res = await axios.get(
             `https://www.worldcubeassociation.org/api/v0/competitions/${args.competitionId}/wcif/public`
         )
@@ -72,18 +92,83 @@ WcifTC.addResolver({
             },
             { useFindAndModify: false }
         ).exec()
-        if (!data)
-            throw new Error(
-                `Error finding competition with ID ${args.competitionId}`
-            )
+        if (!data) throw new Error(`Error finding competition with ID ${args.competitionId}`)
         return data
+    },
+})
+
+WcifTC.addResolver({
+    kind: 'mutation',
+    name: 'updateWcifInfo',
+    type: WcifTC,
+    args: {
+        _id: 'String!',
+        // newCompetitionId: 'String',
+        newName: 'String',
+        newShortName: 'String',
+        newCompetitorLimit: 'Int',
+    },
+    resolve: async ({ args }) => {
+        console.log(args._id)
+        const comp = await WcifModel.findById(args._id).exec()
+        if (!comp) {
+            throw new Error(
+                `Error: Couldn't find venue with name "${args.venueName}" for competition with _ID "${args._id}"`
+            )
+        }
+        // Found comp
+        // if (args.newCompetitionId) {
+        //     // Check if newCompetitionId is unique
+        //     const compCheck = await WcifModel.findOne({
+        //         id: args.newCompetitionId,
+        //     }).exec()
+        //     if (compCheck) {
+        //         throw new Error(`Error: Competition already exists with ID '${args.newCompetitionId}'`)
+        //     }
+        //     comp.id = args.newCompetitionId
+        // }
+        if (args.newName) {
+            comp.name = args.newName
+        }
+        if (args.newShortName) {
+            comp.shortName = args.newShortName
+        }
+        if (args.newCompetitorLimit) {
+            comp.competitorLimit = args.newCompetitorLimit
+        }
+        const savedComp = await comp.save()
+        return savedComp
+    },
+})
+
+WcifTC.addResolver({
+    kind: 'mutation',
+    name: 'updateWcifCompetitors',
+    type: WcifTC,
+    args: {
+        _id: 'String!',
+        updatedCompetitors: 'String',
+    },
+    resolve: async ({ args }) => {
+        const comp = await WcifModel.findById(args._id).exec()
+        if (!comp) {
+            throw new Error(`Couldn't find venue with name "${args.venueName}" for competition with ID "${args._id}"`)
+        }
+        // Found comp
+        const parsedCompetitors = JSON.parse(args.updateWcifCompetitors)
+        comp.persons = { ...comp.persons, parsedCompetitors }
+        const savedComp = await comp.save()
+        return savedComp
     },
 })
 
 schemaComposer.Mutation.addFields({
     createWcif: WcifTC.getResolver('createWcif'),
     deleteWcif: WcifTC.getResolver('deleteWcif'),
+    updateWcifInfo: WcifTC.getResolver('updateWcifInfo'),
+    updateWcifCompetitors: WcifTC.getResolver('updateWcifCompetitors'),
 })
 
 const graphqlSchema = schemaComposer.buildSchema()
+console.log(graphqlSchema)
 module.exports = graphqlSchema
