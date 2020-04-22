@@ -9,7 +9,7 @@ import Switch from '@material-ui/core/Switch'
 import NativeSelect from '@material-ui/core/NativeSelect'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import InputLabel from '@material-ui/core/InputLabel'
-import { setExtensionData, getExtensionData } from '../../../server/wcif'
+import { setExtensionData, getExtensionData } from '../../../logic/wcif'
 import { setIn } from '../../../logic/tools'
 
 export default function GeneralAdmin({ wcif, setWcif, updateGeneralConfig }) {

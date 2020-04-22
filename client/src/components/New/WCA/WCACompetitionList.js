@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import Button from '@material-ui/core/Button'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -10,9 +10,9 @@ import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 import FlagIconFactory from 'react-flag-icon-css'
-import { compDatesToString } from '../../logic/tools'
-import { makeStyles } from '@material-ui/styles'
-import { TextField } from '@material-ui/core'
+import { compDatesToString } from '../../../logic/tools'
+import makeStyles from '@material-ui/styles/makeStyles'
+import TextField from '@material-ui/core/TextField'
 const FlagIcon = FlagIconFactory(React, { useCssModules: false })
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-export default function CompList({ comps, subheader, date = false }) {
+export default function CompList({ comps, subheader, date = false, onClick }) {
 	const [query, setQuery] = useState('')
 	const [queryComps, setQueryComps] = useState(comps)
 	const handleSearchChange = (event) => {
@@ -73,8 +73,8 @@ export default function CompList({ comps, subheader, date = false }) {
 							alignItems='center'
 							key={comp.id}
 							button
-							component={Link}
-							to={`/competitions/${comp.id}/overview`}
+							component={Button}
+							onClick={() => onClick(comp.id)}
 						>
 							<ListItemIcon
 								children={
