@@ -183,7 +183,7 @@ WcifTC.addResolver({
     type: WcifTC,
     args: {
         _id: 'String!',
-        schedule: [ScheduleITC],
+        schedule: ScheduleITC,
     },
     resolve: async ({ args }) => {
         const comp = await WcifModel.findById(args._id).exec()
