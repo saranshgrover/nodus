@@ -7,9 +7,15 @@ import { getMe } from './logic/wca-api'
 import { isSignedIn } from './logic/auth'
 import { initializeAuth } from './logic/auth'
 import ApolloClient from 'apollo-boost'
+import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloProvider } from 'react-apollo'
 
-const client = new ApolloClient({ uri: 'http://localhost:3000/graphql' })
+const client = new ApolloClient({
+	uri: 'http://localhost:3000/graphql',
+	cache: new InMemoryCache({
+		addTypename: false,
+	}),
+})
 
 initializeAuth()
 if (isSignedIn()) {

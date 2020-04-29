@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import StepActions from './StepActions'
+import StepActions from '../StepActions'
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import { activityKey } from '../../Competition/Overview/OverviewLogic'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import EventCard from './EventCard'
 
 const COMPETITION_EVENTS_QUERY = gql`
 	query getWcifById($id: String!) {
@@ -14,6 +13,20 @@ const COMPETITION_EVENTS_QUERY = gql`
 				id
 				rounds {
 					id
+					format
+					advancementCondition {
+						type
+						level
+					}
+					timeLimit {
+						centiseconds
+						cumulativeRoundIds
+					}
+					cutoff {
+						numberOfAttempts
+						attemptResult
+					}
+					scrambleSetCount
 				}
 				competitorLimit
 				qualification {
@@ -28,8 +41,8 @@ const COMPETITION_EVENTS_QUERY = gql`
 `
 
 const UPDATE_COMPETITION_EVENTS_MUTATION = gql`
-	mutation updateWcifEvents($id: String!, $updatedCompetitors: [EventsInput]!) {
-		updateWcifEvents(_id: $id, updatedEvents: $updatedEvents) {
+	mutation updateWcifEvents($id: String!, $events: [EventInput]!) {
+		updateWcifEvents(_id: $id, events: $events) {
 			id
 			name
 		}
@@ -55,39 +68,30 @@ export default function EventsSetup({ id, onComplete, handleBack }) {
 	if (query.error) console.error(query.error)
 
 	const handleComplete = () => {
-		updateWcifInfo({ variables: { ...localData, id } }).then(() => onComplete())
+		updateWcifInfo({ variables: { id, events: localData } }).then(() =>
+			onComplete()
+		)
 	}
 
 	const handleReset = () => {}
 	return (
-		<Grid container direction='column' justify='space-around'>
-			<Grid
-				container
-				spacing={1}
-				direction='column'
-				justify='center'
-				xs={12}
-				alignItems='center'
-				alignContent='center'
-				wrap='nowrap'
-			>
-				{localData.map((event) => (
-					<Grid item key={event.id}>
-						<Grid container direction='row' spacing={3}>
-							<Grid item>
-								<span
-									style={{ fontSize: '3vh' }}
-									className={`cubing-icon event-${event.id}`}
-								/>
+		<Grid
+			style={{ marginTop: '2vh' }}
+			spacing={2}
+			container
+			direction='column'
+			justify='space-around'
+		>
+			<Grid item>
+				<Grid container spacing={2}>
+					{localData
+						.sort((a, b) => b.rounds.length - a.rounds.length)
+						.map((event, index) => (
+							<Grid key={index} item xs={12} sm={6} lg={4}>
+								<EventCard event={event} editable={true} />
 							</Grid>
-							<Grid item>
-								<Typography variant='h6' color='initial'>
-									{activityKey[event.id]}
-								</Typography>
-							</Grid>
-						</Grid>
-					</Grid>
-				))}
+						))}
+				</Grid>
 			</Grid>
 			<Grid item>
 				<StepActions
