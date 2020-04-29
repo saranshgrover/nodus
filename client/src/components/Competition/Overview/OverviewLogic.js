@@ -116,10 +116,7 @@ export const getScheduleData = (
 		)
 		if (
 			!events.includes(
-				activity.activityCode.slice(
-					0,
-					activity.activityCode.indexOf('-')
-				)
+				activity.activityCode.slice(0, activity.activityCode.indexOf('-'))
 			) &&
 			!unselectedVenues.includes(activity.room.id) &&
 			!unselectedAssignments.includes(assignment.assignmentCode)
@@ -127,9 +124,7 @@ export const getScheduleData = (
 			data.push({
 				startDate: activity.startTime,
 				endDate: activity.endTime,
-				title: `${assignedTo(assignment.assignmentCode)} in ${
-					activity.name
-				}`,
+				title: `${assignedTo(assignment.assignmentCode)} in ${activity.name}`,
 				assignmentCode: assignment.assignmentCode,
 				activity: activity,
 			})
@@ -162,7 +157,8 @@ export const activityKey = {
 	pyram: 'Pyraminx',
 	'333oh': '3x3 One Handed',
 	'333bf': '3x3 Blindfolded',
-	'4bld': '4x4 Blindfolded',
+	'444bf': '4x4 Blindfolded',
+	'555bf': '5x5 Blindfolded',
 	skewb: 'Skewb',
 	clock: 'Clock',
 	'333ft': '3x3 with Feet',
@@ -207,9 +203,7 @@ export const getDelays = (schedule) => {
 	let delays = []
 	for (const venue of schedule.venues) {
 		for (const room of venue.rooms) {
-			delays[room.id] = parseInt(
-				getExtensionData('ScheduleConfig', room).delay
-			)
+			delays[room.id] = parseInt(getExtensionData('ScheduleConfig', room).delay)
 		}
 	}
 	return delays

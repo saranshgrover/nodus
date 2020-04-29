@@ -21,6 +21,7 @@ import SaveAlt from '@material-ui/icons/SaveAlt'
 import Search from '@material-ui/icons/Search'
 import ViewColumn from '@material-ui/icons/ViewColumn'
 import StepActions from './StepActions'
+import Grid from '@material-ui/core/Grid'
 
 const tableIcons = {
 	Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -147,23 +148,33 @@ export default function CompetitorsSetup({
 	if (query.loading || !localData) return <LinearProgress />
 	if (query.error) console.error(query.error)
 	return (
-		<>
-			<MaterialTable
-				icons={tableIcons}
-				columns={columns}
-				data={localData}
-				title='Edit Competitors'
-				editable={{
-					onRowAdd: handleAdd,
-					onRowUpdate: handleUpdate,
-				}}
-			/>
-			<StepActions
-				handleBack={handleBack}
-				loading={mutationOptions.loading}
-				handleComplete={handleComplete}
-				handleReset={handleReset}
-			/>
-		</>
+		<Grid
+			xs={12}
+			container
+			direction='column'
+			spacing={1}
+			justify='space-around'
+		>
+			<Grid item>
+				<MaterialTable
+					icons={tableIcons}
+					columns={columns}
+					data={localData}
+					title='Edit Competitors'
+					editable={{
+						onRowAdd: handleAdd,
+						onRowUpdate: handleUpdate,
+					}}
+				/>
+			</Grid>
+			<Grid item>
+				<StepActions
+					handleBack={handleBack}
+					loading={mutationOptions.loading}
+					handleComplete={handleComplete}
+					handleReset={handleReset}
+				/>
+			</Grid>
+		</Grid>
 	)
 }
