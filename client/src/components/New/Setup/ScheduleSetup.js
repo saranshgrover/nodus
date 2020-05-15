@@ -7,6 +7,7 @@ import StepActions from "./StepActions";
 import CompetitionCalendar from "./ManageSchedule/CompetitionCalendar";
 import ScheduleTopForm from "./ManageSchedule/ScheduleTopForm";
 import moment from "moment-timezone";
+import { Typography } from "@material-ui/core";
 
 const COMPETITION_SCHEDULE_QUERY = gql`
 	query getWcifById($id: String!) {
@@ -114,6 +115,10 @@ export default function ScheduleSetup({
 					/>
 				</Grid>
 			</Grid>
+			<Typography style={{ margin: "10px" }}>
+				Note: The timezones are shown in the timezone of the
+				competition: {localData.schedule.venues[0].timezone}
+			</Typography>
 			<Grid item>
 				<CompetitionCalendar
 					schedule={localData.schedule}
