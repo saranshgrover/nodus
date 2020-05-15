@@ -25,7 +25,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-export default function CompList({ comps, subheader, date = false }) {
+export default function CompList({ comps, subheader }) {
+	console.log(comps)
 	const [query, setQuery] = useState('')
 	const [queryComps, setQueryComps] = useState(comps)
 	const handleSearchChange = (event) => {
@@ -34,9 +35,7 @@ export default function CompList({ comps, subheader, date = false }) {
 			? setQueryComps(comps)
 			: setQueryComps(
 					comps.filter((comp) =>
-						comp.name
-							.toLowerCase()
-							.includes(event.target.value.toLowerCase())
+						comp.name.toLowerCase().includes(event.target.value.toLowerCase())
 					)
 			  )
 	}
@@ -47,9 +46,7 @@ export default function CompList({ comps, subheader, date = false }) {
 				className={classes.list}
 				style={{ overflow: 'auto' }}
 				subheader={
-					<ListSubheader disableSticky={true}>
-						{subheader}
-					</ListSubheader>
+					<ListSubheader disableSticky={true}>{subheader}</ListSubheader>
 				}
 			>
 				{comps.length === 0 ? (
@@ -80,7 +77,11 @@ export default function CompList({ comps, subheader, date = false }) {
 								children={
 									<FlagIcon
 										size={'2x'}
-										code={comp.country_iso2.toLowerCase()}
+										code={
+											comp.country_iso2
+												? comp.country_iso2.toLowerCase()
+												: comp.schedule.venues[0].countryIso2?.toLowerCase()
+										}
 									/>
 								}
 							/>
@@ -88,25 +89,19 @@ export default function CompList({ comps, subheader, date = false }) {
 								key={comp.id + '-about'}
 								primary={comp.name}
 								secondary={
-									date ? (
-										<React.Fragment
-											key={comp.id + '-fragment'}
+									<React.Fragment key={comp.id + '-fragment'}>
+										<Typography
+											key={comp.id + 'date'}
+											component='span'
+											variant='body2'
+											color='textPrimary'
 										>
-											<Typography
-												key={comp.id + 'date'}
-												component='span'
-												variant='body2'
-												color='textPrimary'
-											>
-												{compDatesToString(
-													comp.start_date,
-													comp.end_date
-												)}
-											</Typography>
-										</React.Fragment>
-									) : (
-										<> </>
-									)
+											{compDatesToString(
+												comp.schedule.startDate,
+												comp.schedule.numberOfDays
+											)}
+										</Typography>
+									</React.Fragment>
 								}
 							/>
 						</ListItem>

@@ -13,14 +13,13 @@ function ButtonIcon() {
 	)
 }
 
-export default function WCAButton({ text, start, onClick }) {
+export default function WCAButton({ text, start, onClick, ...props }) {
 	return (
 		<Button
 			startIcon={start && <ButtonIcon />}
 			endIcon={!start && <ButtonIcon />}
 			onClick={onClick}
-			variant='contained'
-			color='primary'
+			{...props}
 		>
 			{text}
 		</Button>

@@ -5,14 +5,14 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListSubheader from '@material-ui/core/ListSubheader'
-// eslint-disable-next-line no-unused-vars
-import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 import FlagIconFactory from 'react-flag-icon-css'
 import { compDatesToString } from '../../../logic/tools'
 import makeStyles from '@material-ui/styles/makeStyles'
 import TextField from '@material-ui/core/TextField'
+import moment from 'moment'
+
 const FlagIcon = FlagIconFactory(React, { useCssModules: false })
 
 const useStyles = makeStyles((theme) => ({
@@ -34,22 +34,19 @@ export default function CompList({ comps, subheader, date = false, onClick }) {
 			? setQueryComps(comps)
 			: setQueryComps(
 					comps.filter((comp) =>
-						comp.name
-							.toLowerCase()
-							.includes(event.target.value.toLowerCase())
+						comp.name.toLowerCase().includes(event.target.value.toLowerCase())
 					)
 			  )
 	}
 	const classes = useStyles()
+	console.log(comps)
 	return (
 		<Paper>
 			<List
 				className={classes.list}
 				style={{ overflow: 'auto' }}
 				subheader={
-					<ListSubheader disableSticky={true}>
-						{subheader}
-					</ListSubheader>
+					<ListSubheader disableSticky={true}>{subheader}</ListSubheader>
 				}
 			>
 				{comps.length === 0 ? (
@@ -89,9 +86,7 @@ export default function CompList({ comps, subheader, date = false, onClick }) {
 								primary={comp.name}
 								secondary={
 									date ? (
-										<React.Fragment
-											key={comp.id + '-fragment'}
-										>
+										<React.Fragment key={comp.id + '-fragment'}>
 											<Typography
 												key={comp.id + 'date'}
 												component='span'
@@ -100,7 +95,8 @@ export default function CompList({ comps, subheader, date = false, onClick }) {
 											>
 												{compDatesToString(
 													comp.start_date,
-													comp.end_date
+													moment(comp.end_date).diff(comp.start_date, 'days') +
+														1
 												)}
 											</Typography>
 										</React.Fragment>

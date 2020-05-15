@@ -51,15 +51,11 @@ function Dashboard({
 	mobileOpen,
 	setMobileOpen,
 	userInfo,
-	managableComps,
-	upcomingComps,
 }) {
 	const classes = useStyles()
 	const onItemChange = (text) => {
 		setCurrentComponent(text)
-		history.push(
-			`/competitions/${match.params.compId}/${text.toLowerCase()}/`
-		)
+		history.push(`/competitions/${match.params.compId}/${text.toLowerCase()}/`)
 	}
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState(null)
@@ -105,10 +101,7 @@ function Dashboard({
 			) : (
 				<>
 					<CssBaseline />
-					<nav
-						className={classes.drawer}
-						aria-label='mailbox folders'
-					>
+					<nav className={classes.drawer} aria-label='mailbox folders'>
 						<Hidden smUp implementation='css'>
 							<Drawer
 								container={container}
@@ -125,10 +118,7 @@ function Dashboard({
 							>
 								<div>
 									<div className={classes.toolbar} />
-									<DashboardList
-										user={user}
-										onClick={onItemChange}
-									/>
+									<DashboardList user={user} onClick={onItemChange} />
 								</div>
 							</Drawer>
 						</Hidden>
@@ -142,10 +132,7 @@ function Dashboard({
 							>
 								<div>
 									<div className={classes.toolbar} />
-									<DashboardList
-										user={user}
-										onClick={onItemChange}
-									/>
+									<DashboardList user={user} onClick={onItemChange} />
 								</div>
 							</Drawer>
 						</Hidden>

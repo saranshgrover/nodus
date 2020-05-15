@@ -17,7 +17,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 
-import { getQualified } from '../../../logic/activity'
+import { getQualified } from '../../../logic/groups'
 import { getPreciseTime } from '../../../../logic/tools'
 import SelectCompetitorDialog from './SelectCompetitorDialog'
 

@@ -32,12 +32,7 @@ function Competition({ user, history, localWcif, compId, userInfo }) {
 					<Route
 						path={`/competitions/${wcif.id}/groups`}
 						render={(props) => (
-							<Groups
-								{...props}
-								user={user}
-								wcif={wcif}
-								userInfo={userInfo}
-							/>
+							<Groups {...props} user={user} wcif={wcif} userInfo={userInfo} />
 						)}
 					/>
 					<Route
@@ -47,12 +42,7 @@ function Competition({ user, history, localWcif, compId, userInfo }) {
 					<Route
 						path={`/competitions/${wcif.id}/admin`}
 						render={(props) => (
-							<Admin
-								{...props}
-								user={user}
-								wcif={wcif}
-								setWcif={setWcif}
-							/>
+							<Admin {...props} user={user} wcif={wcif} setWcif={setWcif} />
 						)}
 					/>
 				</>
@@ -69,9 +59,7 @@ function Competition({ user, history, localWcif, compId, userInfo }) {
 					</>
 				) : (
 					<Error
-						message={
-							"😞😞😞 This competition isn't using myComp 😞😞😞 "
-						}
+						message={"😞😞😞 This competition isn't using Nodus 😞😞😞 "}
 					/>
 				))}
 			<Route exact path={`/competitions/${wcif.id}`}>

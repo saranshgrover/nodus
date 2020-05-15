@@ -55,13 +55,12 @@ export default function GeneralAdmin({ wcif, setWcif, updateGeneralConfig }) {
 								onChange={onCheckboxChange('useProjector')}
 							/>
 						}
-						label='Use myComp for Sharing Groups'
+						label='Use Nodus for Sharing Groups'
 					/>
 					<FormHelperText>
-						Selecting this means that a competitor will be able to
-						access their groups and assignments on mycomp. Please
-						make sure to add a delay if the competition is running
-						behind schedule at any point.
+						Selecting this means that a competitor will be able to access their
+						groups and assignments on Nodus. Please make sure to add a delay if
+						the competition is running behind schedule at any point.
 					</FormHelperText>
 					<FormControlLabel
 						control={
@@ -103,17 +102,13 @@ export default function GeneralAdmin({ wcif, setWcif, updateGeneralConfig }) {
 										onChange={onValueChange('groupTool')}
 									>
 										<option value=''>None</option>
-										<option value='groupifier'>
-											Groupifier
-										</option>
+										<option value='groupifier'>Groupifier</option>
 									</NativeSelect>
 									<FormHelperText>
-										Select the tool you used to generate
-										groups. Only programs that communicate
-										with WCIF are usable. If not selected,
-										competitors will be unable to view their
-										groups and you will have to manually
-										proceed groups on the projector.
+										Select the tool you used to generate groups. Only programs
+										that communicate with WCIF are usable. If not selected,
+										competitors will be unable to view their groups and you will
+										have to manually proceed groups on the projector.
 									</FormHelperText>
 								</div>
 							}

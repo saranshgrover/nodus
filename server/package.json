@@ -1,28 +1,32 @@
 {
-    "name": "server",
-    "version": "0.0.0",
-    "private": true,
-    "scripts": {
-        "start": "node ./bin/www"
-    },
-    "dependencies": {
-        "axios": "^0.19.2",
-        "bluebird": "^3.5.4",
-        "cookie-parser": "~1.4.3",
-        "cors": "^2.8.5",
-        "debug": "~2.6.9",
-        "express": "^4.16.4",
-        "express-graphql": "^0.8.0",
-        "graphql": "^14.6.0",
-        "graphql-compose": "^7.14.1",
-        "graphql-compose-mongoose": "^7.3.5",
-        "graphql-date": "^1.0.3",
-        "http-errors": "~1.6.2",
-        "jade": "~1.11.0",
-        "mongoose": "^5.9.7",
-        "morgan": "~1.9.0",
-        "passport": "^0.4.1",
-        "passport-local": "^1.0.0",
-        "passport-wca": "^1.0.3"
-    }
+	"name": "server",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"start": "node ./app.js"
+	},
+	"dependencies": {
+		"axios": "^0.19.2",
+		"bluebird": "^3.5.4",
+		"connect-mongo": "^3.2.0",
+		"cookie-parser": "~1.4.3",
+		"cookie-session": "^1.4.0",
+		"cors": "^2.8.5",
+		"debug": "~2.6.9",
+		"express": "^4.16.4",
+		"express-graphql": "^0.8.0",
+		"express-session": "^1.17.1",
+		"graphql": "^14.6.0",
+		"graphql-compose": "^7.14.1",
+		"graphql-compose-mongoose": "^7.3.5",
+		"graphql-date": "^1.0.3",
+		"http-errors": "~1.6.2",
+		"jade": "~1.11.0",
+		"mongoose": "^5.9.7",
+		"morgan": "~1.9.0",
+		"node-fetch": "^2.6.0",
+		"passport": "^0.4.1",
+		"passport-local": "^1.0.0",
+		"passport-wca": "^1.0.3"
+	}
 }
