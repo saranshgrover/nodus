@@ -4,11 +4,18 @@ Nodus is designed to be a one stop resource for anything required by competitors
 
 ## Getting Started
 
-If you want to test this project locally, clone the code and then run
+Server
 
-```
+```js
 npm install
-npm start
+nodemon
+```
+
+Client
+
+```js
+yarn
+yarn start
 ```
 
 Note that you will need to add an additional wca-env.js with the token as 'example-application-id' and the RedirectURI as 'staging.worldcubeassociation.org' file in order for the WCA Oauth functionality to work locally with the WCA Staging server.

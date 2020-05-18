@@ -51,7 +51,7 @@ export default function CompList({ comps, subheader, date = false, onClick }) {
 			>
 				{comps.length === 0 ? (
 					<ListItem>
-						<ListItemText>You have no upcoming comps!</ListItemText>
+						<ListItemText>You have no upcoming managable competitions!</ListItemText>
 					</ListItem>
 				) : (
 					<ListItem className={classes.list}>

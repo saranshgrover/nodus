@@ -2,17 +2,15 @@ import React, { Fragment, useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
-import IconButton from '@material-ui/core/IconButton'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import FlipCameraAndroidIcon from '@material-ui/icons/FlipCameraAndroid'
-import MenuIcon from '@material-ui/icons/Menu'
-import { isMobile } from 'react-device-detect'
 import { UserContext } from '../../contexts/UserContext'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
 	appBar: {
@@ -32,7 +30,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-export default function Header({ history, setMobileOpen }) {
+export default function Header() {
+	const history = useHistory()
 	const [menuOpen, setMenuOpen] = useState(false)
 	const [anchorEl, setAnchorEl] = useState()
 	const recordButtonPosition = (event) => {
@@ -44,11 +43,6 @@ export default function Header({ history, setMobileOpen }) {
 	return (
 		<AppBar position='sticky' color='primary' className={classes.appBar}>
 			<Toolbar spacing={2} className={classes.titleIcon}>
-				{isMobile && (
-					<IconButton onClick={setMobileOpen} className={classes.titleIcon}>
-						<MenuIcon size={10} />
-					</IconButton>
-				)}
 				<FlipCameraAndroidIcon />
 				<Typography
 					variant='h6'
@@ -63,7 +57,7 @@ export default function Header({ history, setMobileOpen }) {
 						<Button
 							endIcon={<ArrowDropDownIcon />}
 							onClick={recordButtonPosition}
-							variant='text'
+							variant='button'
 							style={{ textTransform: 'none' }}
 						>
 							{user.info.username}
@@ -76,6 +70,9 @@ export default function Header({ history, setMobileOpen }) {
 						>
 							<MenuItem onClick={() => history.push(`/settings`)}>
 								{'Settings'}
+							</MenuItem>
+							<MenuItem onClick={() => history.push('/new')}>
+								{`New Competition`}
 							</MenuItem>
 							<MenuItem onClick={user.signOut}>Sign Out</MenuItem>
 						</Menu>

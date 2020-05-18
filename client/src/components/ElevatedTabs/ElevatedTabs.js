@@ -11,7 +11,6 @@ const useTabsStyles = makeStyles(({ spacing, palette }) => {
 	return {
 		root: {
 			width: '100%',
-			borderRadius: spacing(1),
 			background: tabsBackground,
 			padding: 10,
 			boxShadow: '0px 3px 15px rgba(34, 35, 58, 0.5)',

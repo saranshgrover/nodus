@@ -12,10 +12,10 @@ const CompetitionProvider = ({ competitionId, children }) => {
 		user.info.competitions.find(
 			(competition) => competition.competitionId === competitionId
 		)
-
 	let userRoles = []
 	let userConnectionInfo = {}
 	let competitionType = 'LOCAL'
+	let tabs = ['information', 'groups', 'results', 'notifications']
 	if (userCompetition) {
 		userRoles = userCompetition.roles
 		userConnectionInfo = user.info.connections.find(
@@ -23,6 +23,7 @@ const CompetitionProvider = ({ competitionId, children }) => {
 				connection.connectionType === userCompetition.competitionType
 		)
 		competitionType = userCompetition.competitionType
+		tabs = ['overview', ...tabs]
 	}
 	return (
 		<CompetitionContext.Provider
@@ -31,6 +32,7 @@ const CompetitionProvider = ({ competitionId, children }) => {
 				userRoles: userRoles,
 				userConnectionInfo: userConnectionInfo,
 				competitionType: competitionType,
+				tabs: tabs,
 			}}
 		>
 			{children}

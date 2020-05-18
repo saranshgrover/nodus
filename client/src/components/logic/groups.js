@@ -11,7 +11,7 @@ export const getQualified = (round, number, wcif) => {
 	if (number === 1) {
 		return wcif.persons.filter(
 			(person) =>
-				person.registration.eventIds.includes(
+				person.registration?.eventIds.includes(
 					round.id.substring(0, round.id.indexOf('-'))
 				) && person.registration.status === 'accepted'
 		)

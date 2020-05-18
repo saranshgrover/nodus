@@ -3,9 +3,11 @@ import { findEarlierEventId, findEarlierActivityId } from './schedule'
 export const getMyEventsInOrder = (wcaUserId, wcif) => {
 	const userEvents = wcif.persons.find(
 		(person) => person.wcaUserId === wcaUserId
-	).registration.eventIds
+	).registration?.eventIds
 	const schedule = wcif.schedule
-	return userEvents.sort((a, b) => findEarlierEventId(a, b, schedule))
+	return userEvents
+		? userEvents.sort((a, b) => findEarlierEventId(a, b, schedule))
+		: []
 }
 
 /**
