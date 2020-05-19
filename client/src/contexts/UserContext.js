@@ -28,7 +28,7 @@ UserContext.displayName = 'UserContext'
 export { UserContext }
 
 const UserProvider = ({ children }) => {
-	const [user, setUser] = React.useState(null)
+	const [user, setUser] = React.useState(undefined)
 	const isSignedIn = () => user !== null && user !== undefined
 	const signOut = () =>
 		(window.location.href = 'http://localhost:3000/auth/logout')
@@ -37,7 +37,7 @@ const UserProvider = ({ children }) => {
 	React.useEffect(() => {
 		!loading && !error && setUser(data.getUser)
 	}, [loading, error, data])
-	if (loading) return <LinearProgress />
+	if (loading || user === undefined) return <LinearProgress />
 	return (
 		<UserContext.Provider
 			value={{
