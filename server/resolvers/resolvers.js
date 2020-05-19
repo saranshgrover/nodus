@@ -134,7 +134,33 @@ WcifTC.addResolver({
 	},
 })
 
+WcifTC.addResolver({
+	kind: 'query',
+	name: 'getTopCompetitors',
+	args: {
+		top: 'Int!',
+		_id: 'String!',
+	},
+	type: [PersonTC],
+	resolve: async ({ args }) => {
+		// Find competition first
+		const data = await WcifModel.findById(args._id).exec()
+		if (!data) throw new Error(`Error finding competition with _ID ${args._id}`)
+		// Have comp at this point
+		let persons = data.persons // Persons array
+		persons = persons.filter((person) => {
+			let isTop = false
+			person.personalBests.forEach((best) => {
+				if (best.worldRanking <= args.top) isTop = true
+			})
+			return isTop
+		})
+		return persons
+	},
+})
+
 schemaComposer.Query.addFields({
+	getTopCompetitors: WcifTC.getResolver('getTopCompetitors'),
 	getWcifById: WcifTC.getResolver('findById'),
 	getWcifByCompetitionId: WcifTC.getResolver('getWcifByCompetitionId'),
 	getAllWcifs: WcifTC.getResolver('findAll'),
@@ -314,7 +340,11 @@ WcifTC.addResolver({
 			throw new Error(`Couldn't find competition with ID "${args._id}"`)
 		}
 		// Found comp
-		comp.persons = args.updatedCompetitors
+		for (const index in args.updatedCompetitors) {
+			for (const key of Object.keys(args.updatedCompetitors[index])) {
+				comp.persons[index][key] = args.updatedCompetitors[index][key]
+			}
+		}
 		const savedComp = await comp.save()
 		return savedComp
 	},
@@ -354,7 +384,8 @@ WcifTC.addResolver({
 			throw new Error(`Couldn't find competition with ID "${args._id}"`)
 		}
 		// Found comp
-		comp.schedule = { ...comp.schedule, ...args.schedule }
+		console.log(args.schedule)
+		comp.schedule = args.schedule
 		const savedComp = await comp.save()
 		return savedComp
 	},
