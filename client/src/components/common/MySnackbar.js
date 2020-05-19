@@ -89,15 +89,19 @@ const useStyles2 = makeStyles((theme) => ({
 	},
 }))
 
-export default function MySnackbar({ variant, message }) {
+export default function MySnackbar({
+	variant,
+	message,
+	closeCallback = () => {},
+}) {
 	const classes = useStyles2()
 	const [open, setOpen] = React.useState(true)
 	const handleClose = (event, reason) => {
 		if (reason === 'clickaway') {
 			return
 		}
-
 		setOpen(false)
+		closeCallback()
 	}
 
 	return (

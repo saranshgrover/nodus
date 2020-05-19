@@ -1,5 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { Fragment, useContext, useState, useEffect } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Button from '@material-ui/core/Button'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -10,7 +9,11 @@ import { UserContext } from '../../contexts/UserContext'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useRouteMatch } from 'react-router-dom'
+import LockIcon from '@material-ui/icons/Lock'
+import VisibilityIcon from '@material-ui/icons/Visibility'
+import Link from '@material-ui/core/Link'
+import { isAdmin } from '../../logic/user'
 
 const useStyles = makeStyles((theme) => ({
 	appBar: {
@@ -30,7 +33,14 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-export default function Header() {
+export default function Header({ match: m }) {
+	// TODOp1: This rerenders/remounts EVERY TIME THE LOCATION CHANGES IN WINDOW
+	const match = useRouteMatch('/competitions/:competitionId/:tab?') || {
+		params: {
+			competitionId: '',
+			tab: '',
+		},
+	}
 	const history = useHistory()
 	const [menuOpen, setMenuOpen] = useState(false)
 	const [anchorEl, setAnchorEl] = useState()
@@ -38,31 +48,53 @@ export default function Header() {
 		setAnchorEl(event.currentTarget)
 		setMenuOpen(!menuOpen)
 	}
+	// I don't like how this is done. We need a better way
+	const [admin, setAdmin] = useState(false)
 	const user = useContext(UserContext)
+	useEffect(() => {
+		const competitionId = match?.params?.competitionId
+		isAdmin(user, competitionId) && setAdmin(true)
+	}, [match.params.competitionId, match.params.tab])
 	const classes = useStyles()
 	return (
 		<AppBar position='sticky' color='primary' className={classes.appBar}>
 			<Toolbar spacing={2} className={classes.titleIcon}>
 				<FlipCameraAndroidIcon />
 				<Typography
+					component={Link}
 					variant='h6'
 					className={classes.title}
-					component={Link}
-					to={'/'}
+					href={'/'}
 				>
 					Nodus
 				</Typography>
+				{admin && (
+					<Button
+						variant='text'
+						onClick={() =>
+							history.push(
+								`/competitions/${match.params.competitionId}/${
+									match.params.tab === 'admin' ? '' : 'admin'
+								}`
+							)
+						}
+						startIcon={
+							match.params.tab === 'admin' ? <VisibilityIcon /> : <LockIcon />
+						}
+					>
+						{match.params.tab === 'admin' ? 'Public' : 'Admin'}
+					</Button>
+				)}
 				{user.isSignedIn() ? (
 					<Fragment>
 						<Button
 							endIcon={<ArrowDropDownIcon />}
 							onClick={recordButtonPosition}
-							variant='button'
+							variant='text'
 							style={{ textTransform: 'none' }}
 						>
 							{user.info.username}
 						</Button>
-
 						<Menu
 							anchorEl={anchorEl}
 							open={menuOpen}

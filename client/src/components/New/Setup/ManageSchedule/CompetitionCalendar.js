@@ -49,7 +49,6 @@ export default function CompetitionCalendar({ schedule, updateData }) {
 		let convertedDate = new Date(
 			moment.tz(noTimezone, schedule.venues[0].timezone).toISOString()
 		)
-		console.log(`Converting ${time} -to- ${convertedDate}`)
 		return convertedDate
 	}
 	let appointments = []
@@ -66,7 +65,6 @@ export default function CompetitionCalendar({ schedule, updateData }) {
 		})
 		appointments = appointments.concat(roomArray)
 	})
-	console.log(appointments)
 
 	const getNewId = () => {
 		// IDs in rounds are sequential. New id is largest ID plus 1
@@ -80,11 +78,9 @@ export default function CompetitionCalendar({ schedule, updateData }) {
 	const commitChanges = ({ added, changed, deleted }) => {
 		if (added) {
 			Object.assign(added, { id: getNewId() })
-			console.log(added)
 			appointments.push(added)
 		}
 		if (changed) {
-			console.log(changed)
 			appointments = appointments.map((appointment) =>
 				changed[appointment.id]
 					? { ...appointment, ...changed[appointment.id] }
@@ -125,7 +121,6 @@ export default function CompetitionCalendar({ schedule, updateData }) {
 		schedule.venues[0].rooms.forEach((room) => {
 			formattedArray.push({ id: room.id, text: room.name })
 		})
-		console.log(formattedArray)
 		return formattedArray
 	}
 
@@ -151,17 +146,6 @@ export default function CompetitionCalendar({ schedule, updateData }) {
 			instances: formatRoomsToArray(),
 		},
 	]
-
-	// const formatDayScaleDate = (date, options) => {
-	// 	const momentDate = moment(date);
-	// 	return momentDate.format();
-	// };
-
-	// const DayScaleCell = ({ formatDate, classes, ...restProps }) => (
-	// 	<DayView.DayScaleCell {...restProps} formatDate={formatDayScaleDate} />
-	// );
-
-	console.log(resources)
 
 	return (
 		<Scheduler data={appointments} height={600}>

@@ -1,17 +1,21 @@
-import React, { useContext } from 'react'
+import React, { useContext, Fragment } from 'react'
+import { Switch, Redirect, Route } from 'react-router-dom'
+import AuthenticatedRoute from '../AuthenticatedRoute/AuthenticatedRoute'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Error from '../common/Error'
-import AppBar from '@material-ui/core/AppBar'
-import Box from '@material-ui/core/Box'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme, makeStyles } from '@material-ui/core/styles'
 import Overview from '../Overview/Overview'
 import ElevatedTabs from '../ElevatedTabs/ElevatedTabs'
-import Typography from '@material-ui/core/Typography'
 import { CompetitionContext } from '../../contexts/CompetitionContext'
 import SwipeableViews from 'react-swipeable-views'
+import { isAdmin } from '../../logic/user'
+import CompetitionAdmin from '../CompetitionAdmin/CompetitionAdmin'
+import Groups from '../Groups/Groups'
+import Information from '../Information/Information'
+import TabPanel from '../TabPanel/TabPanel'
 
 const useStyles = makeStyles((theme) => ({}))
 
@@ -26,27 +30,10 @@ const FIND_BY_COMPETITION_ID_QUERY = gql`
 `
 const tabs = {
 	overview: { value: 0, name: 'Overview', component: <Overview /> },
-	information: { value: 1, name: 'Information', component: () => {} },
+	information: { value: 1, name: 'Information', component: <Information /> },
 	notifications: { value: 2, name: 'Notifications', component: () => {} },
 	results: { value: 3, name: 'Results', component: () => {} },
-	groups: { value: 4, name: 'Groups', component: () => {} },
-}
-
-function TabPanel(props) {
-	const { children, value, index, ...other } = props
-
-	return (
-		<Typography
-			component='div'
-			role='tabpanel'
-			hidden={value !== index}
-			id={`simple-tabpanel-${index}`}
-			aria-labelledby={`simple-tab-${index}`}
-			{...other}
-		>
-			{value === index && <Box p={3}>{children}</Box>}
-		</Typography>
-	)
+	groups: { value: 4, name: 'Groups', component: () => <Groups /> },
 }
 
 export default function CompetitionRouting({ match, history }) {
@@ -69,34 +56,45 @@ export default function CompetitionRouting({ match, history }) {
 	if (error) return <Error message={error.toString()} />
 
 	return (
-		<>
-			<ElevatedTabs
-				centered={largeScreen}
-				variant={
-					largeScreen ? 'standard' : mediumScreen ? 'fullWidth' : 'scrollable'
+		<Switch>
+			<AuthenticatedRoute
+				authCallback={(user) => isAdmin(user, competition.competitionId)}
+				RedirectComponent={
+					<Redirect to={`/competitions/${match.params.compId}/`} />
 				}
-				value={competition.tabs.indexOf(value)}
-				onChange={handleChange}
-				tabs={competition.tabs.map((tab, index) => ({
-					key: tabs[tab].value,
-					label: tabs[tab].name,
-				}))}
+				exact
+				path={`/competitions/${match.params.compId}/admin/:adminTab?`}
+				component={CompetitionAdmin}
 			/>
-			<SwipeableViews
-				axis='x'
-				index={tabs[value].value}
-				onChangeIndex={(index) => handleChange({}, index)}
-			>
-				{competition.tabs.map((tab, index) => (
-					<TabPanel
-						value={tabs[value].value}
-						index={tabs[tab].value}
-						key={`tab-${index}`}
-					>
-						{tabs[tab].component}
-					</TabPanel>
-				))}
-			</SwipeableViews>
-		</>
+			<Route>
+				<ElevatedTabs
+					centered={largeScreen}
+					variant={
+						largeScreen ? 'standard' : mediumScreen ? 'fullWidth' : 'scrollable'
+					}
+					value={Math.abs(competition.tabs.indexOf(value))}
+					onChange={handleChange}
+					tabs={competition.tabs.map((tab, index) => ({
+						key: tabs[tab].value,
+						label: tabs[tab].name,
+					}))}
+				/>
+				<SwipeableViews
+					axis='x'
+					index={tabs[value]?.value}
+					onChangeIndex={(index) => handleChange({}, index)}
+				>
+					{competition.tabs.map((tab, index) => (
+						<TabPanel
+							value={tabs[value]?.value}
+							index={tabs[tab].value}
+							key={`tab-${index}`}
+						>
+							{tabs[tab].component}
+						</TabPanel>
+					))}
+				</SwipeableViews>
+			</Route>
+		</Switch>
 	)
 }

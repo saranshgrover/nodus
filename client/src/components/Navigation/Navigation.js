@@ -28,6 +28,7 @@ export default function Navigation() {
 				<Route path='/competitions/:compId/:tab?' component={Competition} />
 				<Route exact path='/about' component={WelcomeLanding} />
 				<Route exact path='/' component={WelcomeLanding} />
+				<Redirect to='/' />
 			</Switch>
 			<Footer />
 		</Router>

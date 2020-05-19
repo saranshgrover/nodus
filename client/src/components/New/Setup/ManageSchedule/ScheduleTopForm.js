@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import DateFnsUtils from "@date-io/date-fns";
+import React, { useState, useEffect } from 'react'
+import Grid from '@material-ui/core/Grid'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import DateFnsUtils from '@date-io/date-fns'
 import {
 	KeyboardDatePicker,
 	MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+} from '@material-ui/pickers'
 
 export default function ScheduleTopForm({
 	date,
@@ -14,8 +14,7 @@ export default function ScheduleTopForm({
 	numberOfDays,
 	handleNumberOfDays,
 }) {
-	const [localDate, setLocalDate] = useState(date);
-	const [localNumDays, setLocalNumDays] = useState(numberOfDays);
+	const [localNumDays, setLocalNumDays] = useState(numberOfDays)
 	return (
 		<>
 			<Grid item>
@@ -24,9 +23,8 @@ export default function ScheduleTopForm({
 						disableToolbar
 						variant='inline'
 						format='MM/dd/yyyy'
-						// margin="normal"
 						fullWidth
-						value={`${localDate}T00:00:00`}
+						value={`${date}T00:00:00`}
 						label='Start Date'
 						name='startDate'
 						onChange={handleDateChange}
@@ -42,17 +40,17 @@ export default function ScheduleTopForm({
 					label='Number of days'
 					name='numberOfDays'
 					type='number'
-					onChange={(e) => setLocalNumDays(e.target.value)}
+					onChange={(e) => setLocalNumDays(parseInt(e.target.value))}
 				/>
 				<Button
 					variant='outlined'
 					onClick={() => {
-						handleNumberOfDays(localNumDays);
+						handleNumberOfDays(localNumDays)
 					}}
 				>
 					Set
 				</Button>
 			</Grid>
 		</>
-	);
+	)
 }

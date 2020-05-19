@@ -20,21 +20,25 @@ export default function StepActions({
 			alignContent='center'
 			wrap='nowrap'
 		>
-			<Grid item>
-				<Button
-					disabled={loading || handleBack === null}
-					variant='outlined'
-					color='default'
-					onClick={handleBack}
-				>
-					{`Back`}
-				</Button>
-			</Grid>
+			{handleBack && (
+				<Grid item>
+					<Button
+						disabled={loading || handleBack === null}
+						variant='outlined'
+						color='default'
+						onClick={handleBack}
+					>
+						{`Back`}
+					</Button>
+				</Grid>
+			)}
 			<Grid item>
 				<ButtonGroup disabled={loading} variant='outlined' color='default'>
-					<Button onClick={handleReset} disabled={loading}>
-						{'Reset'}
-					</Button>
+					{handleReset && (
+						<Button onClick={handleReset} disabled={loading}>
+							{'Reset'}
+						</Button>
+					)}
 					<Button onClick={handleComplete} disabled={loading}>
 						{'Save and Continue'}
 					</Button>
