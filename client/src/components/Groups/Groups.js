@@ -21,26 +21,32 @@ const COMPETITION_GROUPS_QUERY = gql`
 			name
 			shortName
 			id
+			_id
 			events {
 				id
+				_id
 				rounds {
 					id
 				}
 			}
 			persons {
+				_id
 				name
 				wcaUserId
 				wcaId
 				roles
 				registration {
+					_id
 					eventIds
 				}
 				assignments {
+					_id
 					activityId
 					assignmentCode
 					stationNumber
 				}
 				personalBests {
+					_id
 					eventId
 					best
 					worldRanking
@@ -48,22 +54,27 @@ const COMPETITION_GROUPS_QUERY = gql`
 				}
 			}
 			schedule {
+				_id
 				startDate
 				numberOfDays
 				venues {
+					_id
 					timezone
 					name
 					rooms {
+						_id
 						id
 						name
 						color
 						activities {
+							_id
 							id
 							name
 							activityCode
 							startTime
 							endTime
 							childActivities {
+								_id
 								id
 								name
 								activityCode

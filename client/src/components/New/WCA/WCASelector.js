@@ -17,6 +17,7 @@ export default function WCASelector({ setData }) {
 	const FIND_MY_MANAGABLE_COMPETITIONS = gql`
 		{
 			findMyManagableCompetitions {
+				_id
 				name
 				start_date
 				end_date

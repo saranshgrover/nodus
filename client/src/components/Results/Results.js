@@ -13,10 +13,12 @@ import CubingIcon from '../common/CubingIcon'
 import TabPanel from '../TabPanel/TabPanel'
 import UserResults from '../UserResults/UserResults'
 import EventResults from '../EventResults/EventResults'
+import Typography from '@material-ui/core/Typography'
 
 const COMPETITION_OPEN_ROUNDS_QUERY = gql`
 	query getOpenRoundsById($competitionId: String!) {
 		getOpenRounds(competitionId: $competitionId) {
+			_id
 			id
 		}
 	}
@@ -77,8 +79,15 @@ export default function Results() {
 			setTabs([...tabs, ...roundTabs])
 		}
 	}, [rounds])
+	if (rounds?.length === 0)
+		return (
+			<Typography variant='h4' color='initial' style={{ overflow: 'hidden' }}>
+				No Open Rounds
+			</Typography>
+		)
 	if (loading || value === null || rounds === null) return <LinearProgress />
 	if (error) return <Error message={error.toString()} />
+
 	const handleChange = (_, newValue) => {
 		setValue(newValue)
 	}

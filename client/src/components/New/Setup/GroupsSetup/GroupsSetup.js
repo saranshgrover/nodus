@@ -8,9 +8,12 @@ import StepActions from '../StepActions'
 const GET_WCIF_GROUPS_QUERY = gql`
 	query getWcifById($id: String!) {
 		getWcifById(_id: $id) {
+			_id
 			events {
+				_id
 				id
 				rounds {
+					_id
 					id
 					format
 					scrambleSetCount
@@ -26,6 +29,7 @@ const GET_WCIF_GROUPS_QUERY = gql`
 				gender
 				_id
 				registration {
+					_id
 					status
 					eventIds
 				}
@@ -36,23 +40,28 @@ const GET_WCIF_GROUPS_QUERY = gql`
 					_id
 				}
 				personalBests {
+					_id
 					eventId
 					best
 					type
 				}
 			}
 			schedule {
+				_id
 				startDate
 				numberOfDays
 				venues {
+					_id
 					id
 					name
 					timezone
 					rooms {
+						_id
 						id
 						name
 						color
 						activities {
+							_id
 							id
 							name
 							activityCode
@@ -60,6 +69,7 @@ const GET_WCIF_GROUPS_QUERY = gql`
 							endTime
 							scrambleSetId
 							childActivities {
+								_id
 								id
 								name
 								activityCode
@@ -81,6 +91,7 @@ const UPDATE_COMPETITION_GROUPS_MUTATION = gql`
 		$updatedCompetitors: [PersonInput]!
 	) {
 		updateWcifCompetitors(_id: $id, updatedCompetitors: $updatedCompetitors) {
+			_id
 			id
 			name
 		}

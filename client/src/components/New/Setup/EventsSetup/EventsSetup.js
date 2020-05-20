@@ -9,20 +9,26 @@ import EventCard from './EventCard'
 const COMPETITION_EVENTS_QUERY = gql`
 	query getWcifById($id: String!) {
 		getWcifById(_id: $id) {
+			_id
 			events {
+				_id
 				id
 				rounds {
+					_id
 					id
 					format
 					advancementCondition {
+						_id
 						type
 						level
 					}
 					timeLimit {
+						_id
 						centiseconds
 						cumulativeRoundIds
 					}
 					cutoff {
+						_id
 						numberOfAttempts
 						attemptResult
 					}
@@ -30,6 +36,7 @@ const COMPETITION_EVENTS_QUERY = gql`
 				}
 				competitorLimit
 				qualification {
+					_id
 					when
 					type
 					attemptResult
@@ -43,6 +50,7 @@ const COMPETITION_EVENTS_QUERY = gql`
 const UPDATE_COMPETITION_EVENTS_MUTATION = gql`
 	mutation updateWcifEvents($id: String!, $events: [EventInput]!) {
 		updateWcifEvents(_id: $id, events: $events) {
+			_id
 			id
 			name
 		}

@@ -49,7 +49,9 @@ const tableIcons = {
 const GET_WCIF_COMPETITORS_QUERY = gql`
 	query getWcifById($id: String!) {
 		getWcifById(_id: $id) {
+			_id
 			persons {
+				_id
 				name
 				wcaUserId
 				wcaId
@@ -70,6 +72,7 @@ const UPDATE_COMPETITION_COMPETITORS_MUTATION = gql`
 		$updatedCompetitors: [PersonInput]!
 	) {
 		updateWcifCompetitors(_id: $id, updatedCompetitors: $updatedCompetitors) {
+			_id
 			id
 			name
 		}

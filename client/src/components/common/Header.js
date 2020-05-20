@@ -64,7 +64,7 @@ export default function Header({ match: m }) {
 					component={Link}
 					variant='h6'
 					className={classes.title}
-					href={'/'}
+					onClick={() => history.push('/')}
 				>
 					Nodus
 				</Typography>

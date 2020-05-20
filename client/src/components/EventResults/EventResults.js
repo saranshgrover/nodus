@@ -14,6 +14,7 @@ const WCA_ROUND_QUERY = gql`
 			results {
 				_id
 				person {
+					_id
 					name
 					wcaId
 					country {

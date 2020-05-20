@@ -26,22 +26,5 @@ export const client = new ApolloClient({
 			credentials: 'include',
 		}),
 	]),
-	cache: new InMemoryCache({
-		dataIdFromObject: (result) => {
-			if (result.__typename) {
-				if (result._id !== undefined) {
-					return `${result.__typename}:${result._id}`
-				}
-				if (result.id !== undefined) {
-					return `${result.__typename}:${result.id}`
-				}
-			}
-			return null
-		},
-	}),
-	defaultOptions: {
-		watchQuery: {
-			fetchPolicy: 'cache-and-network',
-		},
-	},
+	cache: new InMemoryCache(),
 })

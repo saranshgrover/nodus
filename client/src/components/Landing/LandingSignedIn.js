@@ -14,9 +14,11 @@ const GET_UPCOMING_COMPETITIONS = gql`
 			name
 			id
 			schedule {
+				_id
 				startDate
 				numberOfDays
 				venues {
+					_id
 					countryIso2
 					name
 				}
@@ -31,9 +33,11 @@ const GET_MY_UPCOMING_COMPETITIONS = gql`
 			name
 			id
 			schedule {
+				_id
 				startDate
 				numberOfDays
 				venues {
+					_id
 					countryIso2
 					name
 				}

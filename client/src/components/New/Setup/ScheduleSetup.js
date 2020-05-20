@@ -12,18 +12,23 @@ import { Typography } from '@material-ui/core'
 const COMPETITION_SCHEDULE_QUERY = gql`
 	query getWcifById($id: String!) {
 		getWcifById(_id: $id) {
+			_id
 			schedule {
+				_id
 				startDate
 				numberOfDays
 				venues {
+					_id
 					id
 					name
 					timezone
 					rooms {
+						_id
 						id
 						name
 						color
 						activities {
+							_id
 							id
 							name
 							activityCode

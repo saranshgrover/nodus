@@ -6,15 +6,18 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 const GET_USER = gql`
 	{
 		getUser {
+			_id
 			username
 			email
 			name
 			primaryAuthenticationType
 			connections {
+				_id
 				connectionType
 				content
 			}
 			competitions {
+				_id
 				competitionType
 				competitionId
 				roles

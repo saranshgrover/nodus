@@ -9,6 +9,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 const COMPETITION_INFO_QUERY = gql`
 	query findByCompetitionId($id: String!) {
 		getWcifById(_id: $id) {
+			_id
 			name
 			shortName
 			competitorLimit
@@ -30,6 +31,7 @@ const UPDATE_COMPETITION_INFO_MUTATION = gql`
 			newCompetitorLimit: $competitorLimit
 		) {
 			id
+			_id
 		}
 	}
 `
