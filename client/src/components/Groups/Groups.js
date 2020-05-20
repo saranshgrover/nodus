@@ -83,20 +83,20 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function Groups() {
-	const competition = useContext(CompetitionContext)
+	const { competitionId, userRegistered } = useContext(CompetitionContext)
 	const theme = useTheme()
 	const largeScreen = useMediaQuery(theme.breakpoints.up('lg'))
 	const mediumScreen = useMediaQuery(theme.breakpoints.up('md'))
 
 	const { loading, error, data } = useQuery(COMPETITION_GROUPS_QUERY, {
-		variables: { competitionId: competition.competitionId },
+		variables: { competitionId: competitionId },
 	})
 	const [wcif, setWcif] = useState(null)
 	useEffect(() => {
 		!loading && !error && setWcif(data.getWcifByCompetitionId)
 	}, [data, loading, error])
 	const [tabs, setTabs] = useState(
-		competition.user
+		userRegistered
 			? [
 					{
 						label: 'My Groups',

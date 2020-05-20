@@ -82,7 +82,7 @@ const CompetitionProvider = ({ competitionId, children }) => {
 			value={
 				competitionId
 					? {
-							user: userRoles.length > 0, // this needs to be changed
+							userRegistered: userCompetition !== undefined, // this needs to be changed
 							_id: wcif._id,
 							competitionId: competitionId,
 							name: wcif.name,

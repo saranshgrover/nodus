@@ -24,10 +24,14 @@ export default function EventGroups({ eventId, wcif }) {
 			rounds.push({ ...round, groups: groups })
 		})
 		setRounds(rounds)
-		setSelectedActivty(rounds[0].groups[0].activity)
+		rounds.length > 0 && rounds[0].groups.length > 0
+			? setSelectedActivty(rounds[0].groups[0].activity)
+			: setSelectedActivty(undefined)
 	}, [])
 
 	if (rounds === null || selectedActivty === null) return <LinearProgress />
+	if (selectedActivty === undefined)
+		return <Error message={'No Groups Found'} />
 	return (
 		<Grid container direction='column'>
 			<Grid item container spacing={2} justify='center'>

@@ -47,7 +47,7 @@ export default function CompetitionRouting({ match, history }) {
 	})
 
 	const [value, setValue] = React.useState(
-		Math.abs(competition.tabs.indexOf(match.params.tab))
+		Math.max(0, competition.tabs.indexOf(match.params.tab))
 	)
 	const handleChange = (_, newValue) => {
 		const tab = competition.tabs[newValue]
@@ -55,7 +55,7 @@ export default function CompetitionRouting({ match, history }) {
 		setValue(newValue)
 	}
 	if (loading) return <LinearProgress />
-	if (error) return <Error message={error.toString()} />
+	if (error) return <Error message={error.message} />
 
 	return (
 		<Switch>
