@@ -1,50 +1,55 @@
-import React, { Component, useContext, useState, useEffect } from 'react'
-import { CompetitionContext } from '../../contexts/CompetitionContext'
-import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Grid'
-import gql from 'graphql-tag'
-import { useQuery } from '@apollo/react-hooks'
-import LinearProgress from '@material-ui/core/LinearProgress'
-import Error from '../common/Error'
+import React, { useContext } from "react";
+import { CompetitionContext } from "../../contexts/CompetitionContext";
+import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Grid";
+import TopCompetitors from "./TopCompetitors";
+import GeneralInformation from "./GeneralInformation";
+import UpcomingEvents from "./UpcomingEvents";
 
-const FIND_TOP_COMPETITORS = gql`
-	query getTopCompetitors($top: Int!, $_id: String!) {
-		getTopCompetitors(top: $top, _id: $_id) {
-			name
-			personalBests {
-				eventId
-				best
-				type
-				worldRanking
-			}
-		}
-	}
-`
+const useStyles = makeStyles((theme) => ({
+	root: {
+		flexGrow: 1,
+		padding: theme.spacing(2, 3),
+	},
+	paper: {
+		margin: theme.spacing(2),
+		padding: theme.spacing(3),
+		textAlign: "center",
+	},
+	card: {
+		textAlign: "center",
+		margin: theme.spacing(2),
+		maxHeight: "200px",
+	},
+}));
 
 export default function Information() {
-	const competition = useContext(CompetitionContext)
-	const [topCompetitors, setTopCompetitors] = useState(null)
-	const { loading, error, data } = useQuery(FIND_TOP_COMPETITORS, {
-		variables: { _id: competition._id, top: 50 }, // Gets competitors where world ranking is 50 or lower
-	})
-	useEffect(() => {
-		!loading && !error && setTopCompetitors(data.getTopCompetitors)
-	}, [loading, error, data])
-	if (loading || !topCompetitors) return <LinearProgress />
-	if (error) return <Error message={error.toString()} />
-	console.log(competition)
-	console.log(topCompetitors)
+	const competition = useContext(CompetitionContext);
+	const classes = useStyles();
+	console.log(competition);
 	return (
-		<Paper>
-			<Grid
-				container
-				direction='column'
-				justify='center'
-				alignItems='center'
-				spacing={2}
-			>
-				<Grid item>{/* Top Results */}</Grid>
-			</Grid>
-		</Paper>
-	)
+		<div className={classes.root}>
+			<GeneralInformation
+				_id={competition._id}
+				userConnectionInfo={competition.userConnectionInfo}
+			/>
+			<Paper className={classes.paper}>
+				<Grid
+					container
+					direction='row'
+					justify='center'
+					alignItems='flex-start'
+					spacing={3}
+				>
+					<Grid item md={5}>
+						<UpcomingEvents _id={competition._id} />
+					</Grid>
+					<Grid item md={5}>
+						<TopCompetitors _id={competition._id} />
+					</Grid>
+				</Grid>
+			</Paper>
+		</div>
+	);
 }
