@@ -35,6 +35,15 @@ const COMPETITION_SCHEDULE_QUERY = gql`
 							startTime
 							endTime
 							scrambleSetId
+							childActivities {
+								_id
+								id
+								name
+								activityCode
+								startTime
+								endTime
+								scrambleSetId
+							}
 						}
 					}
 				}

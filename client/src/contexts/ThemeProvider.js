@@ -10,7 +10,7 @@ import {
 	ThemeProvider as MuiThemeProvider,
 } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
-import { blue, blueGrey, pink } from '@material-ui/core/colors'
+import { blue, blueGrey, pink, amber, orange } from '@material-ui/core/colors'
 
 // typography
 const typography = {
@@ -27,7 +27,7 @@ const typography = {
 const themes = {
 	dark: {
 		palette: {
-			primary: blue,
+			primary: orange,
 			secondary: blueGrey,
 			type: 'dark',
 		},
@@ -35,7 +35,7 @@ const themes = {
 	},
 	light: {
 		palette: {
-			primary: blue,
+			primary: orange,
 			secondary: blueGrey,
 			type: 'light',
 		},

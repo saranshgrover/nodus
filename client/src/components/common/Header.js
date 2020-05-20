@@ -14,6 +14,9 @@ import LockIcon from '@material-ui/icons/Lock'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 import Link from '@material-ui/core/Link'
 import { isAdmin } from '../../logic/user'
+import SvgIcon from '@material-ui/core/SvgIcon'
+import IconButton from '@material-ui/core/IconButton'
+import NodusIcon from './nodus-orange'
 
 const useStyles = makeStyles((theme) => ({
 	appBar: {
@@ -59,14 +62,16 @@ export default function Header({ match: m }) {
 	return (
 		<AppBar position='sticky' color='primary' className={classes.appBar}>
 			<Toolbar spacing={2} className={classes.titleIcon}>
-				<FlipCameraAndroidIcon />
 				<Typography
 					component={Link}
 					variant='h6'
 					className={classes.title}
 					onClick={() => history.push('/')}
 				>
-					Nodus
+					<img
+						style={{ width: '64px', height: '64px' }}
+						src={`${process.env.PUBLIC_URL}/nodus-orange.png`}
+					/>
 				</Typography>
 				{admin && (
 					<Button

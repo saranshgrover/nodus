@@ -35,7 +35,7 @@ export const compDatesToString = (start, numberOfDays) => {
 	const startDate = moment(start)
 	const endDate = moment(start).add(numberOfDays - 1, 'days')
 	const today = moment()
-	if (moment().isBetween(startDate, endDate, 'day')) {
+	if (moment().isBetween(startDate, endDate, 'day', '[]')) {
 		return 'Happening Now!'
 	} else if (startDate.isSame(new Date(), 'month')) {
 		return `In ${Math.floor(

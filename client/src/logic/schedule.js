@@ -19,6 +19,7 @@ export const getScheduleData = (
 			(activity) => activity.id === assignment.activityId
 		)
 		if (
+			activity &&
 			!events.includes(
 				activity.activityCode.slice(0, activity.activityCode.indexOf('-'))
 			) &&

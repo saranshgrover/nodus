@@ -46,6 +46,7 @@ const isHappeningNow = (event, minutes) => {
 	const now = moment()
 	const startTime = moment(event.startTime)
 	const endTime = moment(event.endTime)
+
 	if (now.isBetween(startTime, endTime)) {
 		return { bool: true, message: 'Ongoing' }
 	} else if (

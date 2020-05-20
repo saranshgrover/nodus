@@ -18,6 +18,11 @@ const FIND_BY_COMPETITION_ID_QUERY = gql`
 			shortName
 			_id
 			id
+			persons {
+				_id
+				wcaUserId
+				registrantId
+			}
 			schedule {
 				_id
 				startDate
@@ -69,6 +74,12 @@ const CompetitionProvider = ({ competitionId, children }) => {
 	let userConnectionInfo = {}
 	let competitionType = 'LOCAL'
 	let tabs = ['information', 'groups', 'results', 'notifications']
+	let registrantId = null
+	if (loading) return <LinearProgress />
+	if (error) return <Error message={error.toString()} />
+	const wcif = data.getWcifByCompetitionId
+	const activities = flattenActivities(wcif.schedule)
+	console.log(activities)
 	if (userCompetition) {
 		userRoles = userCompetition.roles
 		userConnectionInfo = user.info.connections.find(
@@ -77,11 +88,12 @@ const CompetitionProvider = ({ competitionId, children }) => {
 		)
 		competitionType = userCompetition.competitionType
 		tabs = ['overview', ...tabs]
+		registrantId = parseInt(
+			wcif.persons.find(
+				(person) => person.wcaUserId === userConnectionInfo.content.id
+			)?.registrantId
+		)
 	}
-	if (loading) return <LinearProgress />
-	if (error) return <Error message={error.toString()} />
-	const wcif = data.getWcifByCompetitionId
-	const activities = flattenActivities(wcif.schedule)
 	return (
 		<CompetitionContext.Provider
 			value={
@@ -92,6 +104,7 @@ const CompetitionProvider = ({ competitionId, children }) => {
 							competitionId: competitionId,
 							name: wcif.name,
 							userRoles: userRoles,
+							registrantId: registrantId,
 							userConnectionInfo: userConnectionInfo,
 							competitionType: competitionType,
 							tabs: tabs,
