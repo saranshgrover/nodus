@@ -14,12 +14,21 @@ import Checkbox from '@material-ui/core/Checkbox'
 import { getPreciseTime } from '../../../../logic/tools'
 
 export default function SelectCompetitorDialog({
+	group,
 	competitors,
 	onSubmit,
 	onCancel,
 }) {
-	const [newCompetitors, setNewCompetitors] = React.useState(competitors)
-	const [assignments, setAssignments] = React.useState([])
+	const [assignments, setAssignments] = React.useState(
+		competitors.filter((e) => {
+			if (e.group && e.group == group) return true
+		})
+	)
+	const [newCompetitors, setNewCompetitors] = React.useState(
+		competitors.filter((e) => {
+			if (!e.group) return true
+		})
+	)
 	const handleChange = (checked, competitor) => {
 		if (checked) {
 			setAssignments([...assignments, competitor])
@@ -28,9 +37,10 @@ export default function SelectCompetitorDialog({
 			)
 		} else {
 			setNewCompetitors([...newCompetitors, competitor])
-			setAssignments(
-				assignments.filter((c) => c.wcaUserId !== competitor.wcaUserId)
+			let assignmentFilter = assignments.filter(
+				(c) => c.wcaUserId !== competitor.wcaUserId
 			)
+			setAssignments(assignmentFilter)
 		}
 	}
 	return (
@@ -51,7 +61,7 @@ export default function SelectCompetitorDialog({
 							<TableRow key={competitor.wcaUserId}>
 								<TableCell>
 									<Checkbox
-										checked={newCompetitors.indexOf(competitor) === -1}
+										checked={assignments.indexOf(competitor) >= 0}
 										onChange={(e) => handleChange(e.target.checked, competitor)}
 									/>
 								</TableCell>

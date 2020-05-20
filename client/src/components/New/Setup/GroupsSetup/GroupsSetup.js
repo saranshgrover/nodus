@@ -20,6 +20,7 @@ const GET_WCIF_GROUPS_QUERY = gql`
 			persons {
 				name
 				wcaId
+				wcaUserId
 				registrantId
 				countryIso2
 				gender

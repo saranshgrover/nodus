@@ -7,6 +7,7 @@ var {
 	PersonModel,
 	ScheduleModel,
 	ActivityModel,
+	RoundModel,
 } = require('../models/wcif/Wcif')
 var { UserModel } = require('../models/user/User')
 var axios = require('axios')
@@ -20,8 +21,7 @@ const EventTC = composeWithMongoose(EventModel)
 const EventITC = toInputObjectType(EventTC)
 const ScheduleTC = composeWithMongoose(ScheduleModel)
 const ScheduleITC = toInputObjectType(ScheduleTC)
-const ActivityTC = composeWithMongoose(ActivityModel)
-
+const RoundTC = composeWithMongoose(RoundModel)
 const WcifTC = composeWithMongoose(WcifModel)
 const UserTC = composeWithMongoose(UserModel)
 UserTC.addResolver({
@@ -124,6 +124,31 @@ WcifTC.addResolver({
 
 WcifTC.addResolver({
 	kind: 'query',
+	name: 'getOpenRounds',
+	args: {
+		competitionId: 'String!',
+	},
+	type: [RoundTC],
+	resolve: async ({ args, info }) => {
+		const wcif = await WcifModel.findOne({
+			id: args.competitionId,
+		}).exec()
+		if (!wcif)
+			throw new Error(`Error finding competition with ID ${args.competitionId}`)
+		let rounds = []
+		wcif.events.map(
+			(event) =>
+				(rounds = [
+					...rounds,
+					...event.rounds.filter((round) => round.results.length > 0),
+				])
+		)
+		return rounds
+	},
+})
+
+WcifTC.addResolver({
+	kind: 'query',
 	name: 'findAll',
 	args: {},
 	type: [WcifTC],
@@ -180,6 +205,7 @@ schemaComposer.Query.addFields({
 	),
 	getUser: UserTC.getResolver('getUser'),
 	getMyUpcomingCompetitions: UserTC.getResolver('getMyUpcomingCompetitions'),
+	getOpenRounds: WcifTC.getResolver('getOpenRounds'),
 })
 
 // Mutations

@@ -14,6 +14,7 @@ import SwipeableViews from 'react-swipeable-views'
 import { isAdmin } from '../../logic/user'
 import CompetitionAdmin from '../CompetitionAdmin/CompetitionAdmin'
 import Groups from '../Groups/Groups'
+import Results from '../Results/Results'
 import Information from '../Information/Information'
 import TabPanel from '../TabPanel/TabPanel'
 
@@ -32,7 +33,7 @@ const tabs = {
 	overview: { name: 'Overview', component: <Overview /> },
 	information: { name: 'Information', component: <Information /> },
 	notifications: { name: 'Notifications', component: () => {} },
-	results: { name: 'Results', component: () => {} },
+	results: { name: 'Results', component: <Results /> },
 	groups: { name: 'Groups', component: <Groups /> },
 }
 

@@ -57,13 +57,24 @@ export default function RoundManager({
 		setCompetitors(qualified)
 	}, [round, wcif])
 	const onDialogSubmit = (newCompetitors, newAssignedCompetitors) => {
-		setCompetitors(newCompetitors)
+		setCompetitors(
+			newCompetitors.map((e) => {
+				delete e.group
+				return e
+			})
+		)
 		const withGroup = newAssignedCompetitors.map((competitor) => ({
 			...competitor,
 			group: competitorDialog.group,
 		}))
-		console.log([...assignedCompetitors, ...withGroup])
-		setAssignedCompetitors([...assignedCompetitors, ...withGroup])
+		// Make sure competitors dont repeat
+		const flushedRepeatCompetitors = assignedCompetitors.filter((e) => {
+			let found = withGroup.find((r) => r.wcaUserId == e.wcaUserId)
+			if (found) return false
+			else return true
+		})
+		console.log(withGroup)
+		setAssignedCompetitors([...flushedRepeatCompetitors, ...withGroup])
 		if (newCompetitors.length === 0) {
 			setCompleted(true)
 		}
@@ -77,7 +88,13 @@ export default function RoundManager({
 				<div className={classes.root}>
 					{competitorDialog !== null && (
 						<SelectCompetitorDialog
-							competitors={competitors}
+							group={competitorDialog.group}
+							competitors={[
+								...assignedCompetitors.filter(
+									(e) => e.group == competitorDialog.group
+								),
+								...competitors,
+							]}
 							onSubmit={onDialogSubmit}
 							onCancel={() => setCompetitorDialog(null)}
 						/>
@@ -100,7 +117,7 @@ export default function RoundManager({
 							<Typography
 								style={{
 									textAlign: 'center',
-									marginBottom: '2vh',
+									marginBottoDm: '2vh',
 								}}
 								variant='h4'
 							>
@@ -113,12 +130,13 @@ export default function RoundManager({
 							<ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
 								<Typography className={classes.heading}>
 									<IconButton
-										onClick={() =>
+										onClick={(e) => {
+											e.stopPropagation()
 											setCompetitorDialog({
 												group: index + 1,
 												role: 'competitor',
 											})
-										}
+										}}
 									>
 										<AddCircleIcon />
 									</IconButton>
