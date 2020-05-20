@@ -22,7 +22,7 @@ export const getGroupsOf = (roundActivity, activities) => {
 			activity.childActivities.length === 0
 		) {
 			groups.push({
-				activity: activity.activityCode,
+				id: activity.activityCode,
 				room: activity.room.name,
 				startTime: activity.startTime,
 			})

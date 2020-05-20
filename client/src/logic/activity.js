@@ -29,3 +29,35 @@ export const activityKey = {
 	sq1: 'Square 1',
 	minx: 'Megaminx',
 }
+export const getGroupsOf = (roundActivity, activities) => {
+	let groups = []
+	for (const activity of activities) {
+		if (
+			activity.activityCode.includes(roundActivity) &&
+			!groups.includes(activity.activityCode) &&
+			activity.childActivities === undefined
+		) {
+			groups.push({
+				activity: activity.activityCode,
+				room: activity.room.name,
+				startTime: activity.startTime,
+			})
+		}
+	}
+	return groups
+}
+export const getAssignmentsFromActivityId = (activityId, wcif) => {
+	let compete = []
+	let staff = []
+	const persons = wcif.persons
+	for (const person of persons) {
+		for (const assignment of person.assignments) {
+			if (assignment.activityId === activityId) {
+				assignment.assignmentCode === 'competitor'
+					? compete.push(person)
+					: staff.push(person)
+			}
+		}
+	}
+	return [compete, staff]
+}

@@ -3,7 +3,7 @@ import { Switch, Redirect, Route } from 'react-router-dom'
 import AuthenticatedRoute from '../AuthenticatedRoute/AuthenticatedRoute'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
-import LinearProgress from '@material-ui/core/LinearProgress'
+import LinearProgress from '../LinearProgress/LinearProgress'
 import Error from '../common/Error'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme, makeStyles } from '@material-ui/core/styles'
@@ -29,11 +29,11 @@ const FIND_BY_COMPETITION_ID_QUERY = gql`
 	}
 `
 const tabs = {
-	overview: { value: 0, name: 'Overview', component: <Overview /> },
-	information: { value: 1, name: 'Information', component: <Information /> },
-	notifications: { value: 2, name: 'Notifications', component: () => {} },
-	results: { value: 3, name: 'Results', component: () => {} },
-	groups: { value: 4, name: 'Groups', component: () => <Groups /> },
+	overview: { name: 'Overview', component: <Overview /> },
+	information: { name: 'Information', component: <Information /> },
+	notifications: { name: 'Notifications', component: () => {} },
+	results: { name: 'Results', component: () => {} },
+	groups: { name: 'Groups', component: <Groups /> },
 }
 
 export default function CompetitionRouting({ match, history }) {
@@ -46,11 +46,13 @@ export default function CompetitionRouting({ match, history }) {
 		variables: { competitionId: competition.competitionId },
 	})
 
-	const [value, setValue] = React.useState(match.params.tab || 'information')
+	const [value, setValue] = React.useState(
+		Math.abs(competition.tabs.indexOf(match.params.tab))
+	)
 	const handleChange = (_, newValue) => {
 		const tab = competition.tabs[newValue]
 		history.push(`/competitions/${competition.competitionId}/${tab}`)
-		setValue(tab)
+		setValue(newValue)
 	}
 	if (loading) return <LinearProgress />
 	if (error) return <Error message={error.toString()} />
@@ -72,24 +74,20 @@ export default function CompetitionRouting({ match, history }) {
 					variant={
 						largeScreen ? 'standard' : mediumScreen ? 'fullWidth' : 'scrollable'
 					}
-					value={Math.abs(competition.tabs.indexOf(value))}
+					value={value}
 					onChange={handleChange}
 					tabs={competition.tabs.map((tab, index) => ({
-						key: tabs[tab].value,
+						key: index,
 						label: tabs[tab].name,
 					}))}
 				/>
 				<SwipeableViews
 					axis='x'
-					index={tabs[value]?.value}
+					index={value}
 					onChangeIndex={(index) => handleChange({}, index)}
 				>
 					{competition.tabs.map((tab, index) => (
-						<TabPanel
-							value={tabs[value]?.value}
-							index={tabs[tab].value}
-							key={`tab-${index}`}
-						>
+						<TabPanel value={value} index={index} key={`tab-${index}`}>
 							{tabs[tab].component}
 						</TabPanel>
 					))}

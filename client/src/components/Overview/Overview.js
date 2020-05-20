@@ -2,10 +2,8 @@ import React, { useState, useEffect, useContext } from 'react'
 import EventList from '../common/EventList'
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
-import LinearProgress from '@material-ui/core/LinearProgress'
+import LinearProgress from '../LinearProgress/LinearProgress'
 import Grid from '@material-ui/core/Grid'
-// // import TextField from '@material-ui/core/TextField'
-// import Autocomplete from '@material-ui/lab/Autocomplete'
 import { ViewState } from '@devexpress/dx-react-scheduler'
 import {
 	Scheduler,
@@ -13,7 +11,7 @@ import {
 	Appointments,
 } from '@devexpress/dx-react-scheduler-material-ui'
 import OverviewFilterChips from './OverviewFilterChips'
-import { getScheduleData, flattenActivities } from '../../logic/schedule'
+import { getScheduleData } from '../../logic/schedule'
 import {
 	getMyEventsInOrder,
 	getMyAssignmentsInOrder,
@@ -77,7 +75,6 @@ const FIND_BY_COMPETITION_ID_QUERY = gql`
 const useStyles = makeStyles((theme) => ({
 	root: {
 		flexGrow: 1,
-		padding: theme.spacing(2, 3),
 	},
 	paper: {
 		margin: theme.spacing(2),
@@ -101,34 +98,30 @@ const Appointment = (props) => {
 
 export default function Overview() {
 	const user = useContext(UserContext)
-	const competition = useContext(CompetitionContext)
+	const { competitionId, activities, userConnectionInfo } = useContext(
+		CompetitionContext
+	)
 	const classes = useStyles()
 	const [wcif, setWcif] = useState(null)
 	const { loading, error, data } = useQuery(FIND_BY_COMPETITION_ID_QUERY, {
-		variables: { competitionId: competition.competitionId },
+		variables: { competitionId: competitionId },
 	})
 	const [myEvents, setMyEvents] = useState(null)
 	const [myAssignments, setMyAssignments] = useState(null)
 	useEffect(() => {
 		if (wcif !== null) {
-			setMyEvents(
-				getMyEventsInOrder(competition.userConnectionInfo.content.id, wcif)
-			)
+			setMyEvents(getMyEventsInOrder(userConnectionInfo.content.id, wcif))
 			setMyAssignments(
-				getMyAssignmentsInOrder(competition.userConnectionInfo.content.id, wcif)
+				getMyAssignmentsInOrder(userConnectionInfo.content.id, wcif)
 			)
 		}
-	}, [competition.userConnectionInfo, wcif])
+	}, [userConnectionInfo, wcif])
 	const [selectedEvents, setSelectedEvents] = useState([])
 	const [unselectedRooms, setUnselectedRooms] = useState([])
 	const [unselectedAssignments, setUnselectedAssignments] = useState([])
-	const [activities, setActivities] = useState(null)
 	useEffect(() => {
 		!loading && !error && setWcif(data.getWcifByCompetitionId)
 	}, [loading, error, data])
-	useEffect(() => {
-		wcif !== null && setActivities(flattenActivities(wcif.schedule))
-	}, [wcif])
 	const [scheduleData, setScheduleData] = useState([])
 	useEffect(() => {
 		wcif &&

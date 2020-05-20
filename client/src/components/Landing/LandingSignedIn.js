@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import LinearProgress from '@material-ui/core/LinearProgress'
+import LinearProgress from '../LinearProgress/LinearProgress'
 import CompList from './CompList'
 import { getAllCompsToday } from '../../logic/wca-api'
 import { Tabs, Tab } from '@material-ui/core'
