@@ -1,10 +1,5 @@
-import React from "react";
-import TopCompetitors from "../../Information/TopCompetitors";
+import React from 'react'
+import CompetitorCard from '../../CompetitorCard/CompetitorCard'
 export default function SpotlightScreen({ topCompetitors }) {
-	return (
-		<TopCompetitors
-			style={{ overflow: "hidden" }}
-			topCompetitors={topCompetitors}
-		/>
-	);
+	return <CompetitorCard competitor={topCompetitors} />
 }
