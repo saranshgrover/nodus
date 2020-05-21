@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import gql from 'graphql-tag'
-import { useQuery, useMutation } from '@apollo/react-hooks'
-import LinearProgress from '@material-ui/core/LinearProgress'
-import Grid from '@material-ui/core/Grid'
-import StepActions from './StepActions'
-import CompetitionCalendar from './ManageSchedule/CompetitionCalendar'
-import ScheduleTopForm from './ManageSchedule/ScheduleTopForm'
-import moment from 'moment-timezone'
-import { Typography } from '@material-ui/core'
+import React, { useState, useEffect } from "react";
+import gql from "graphql-tag";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import Grid from "@material-ui/core/Grid";
+import StepActions from "./StepActions";
+import CompetitionCalendar from "./ManageSchedule/CompetitionCalendar";
+import ScheduleTopForm from "./ManageSchedule/ScheduleTopForm";
+import moment from "moment-timezone";
+import { Typography } from "@material-ui/core";
 
 const COMPETITION_SCHEDULE_QUERY = gql`
 	query getWcifById($id: String!) {
@@ -22,6 +22,7 @@ const COMPETITION_SCHEDULE_QUERY = gql`
 					id
 					name
 					timezone
+					countryIso2
 					rooms {
 						_id
 						id
@@ -50,14 +51,14 @@ const COMPETITION_SCHEDULE_QUERY = gql`
 			}
 		}
 	}
-`
+`;
 const UPDATE_COMPETITION_SCHEDULE_MUTATION = gql`
 	mutation updateWcifSchedule($id: String!, $schedule: ScheduleInput!) {
 		updateWcifSchedule(_id: $id, schedule: $schedule) {
 			id
 		}
 	}
-`
+`;
 
 export default function ScheduleSetup({
 	id,
@@ -65,47 +66,47 @@ export default function ScheduleSetup({
 	onComplete,
 	handleBack,
 }) {
-	const [localData, setLocalData] = useState(null)
+	const [localData, setLocalData] = useState(null);
 	const query = useQuery(COMPETITION_SCHEDULE_QUERY, {
 		variables: { id: id },
-	})
+	});
 	useEffect(() => {
-		!query.loading && !query.error && setLocalData(query.data.getWcifById)
-		!query.loading && !query.error && console.table(query.data.getWcifById)
-	}, [query.loading, query.error, query.data])
+		!query.loading && !query.error && setLocalData(query.data.getWcifById);
+		!query.loading && !query.error && console.table(query.data.getWcifById);
+	}, [query.loading, query.error, query.data]);
 
 	const [updateWcifSchedule, mutationOptions] = useMutation(
 		UPDATE_COMPETITION_SCHEDULE_MUTATION
-	)
+	);
 
 	const handleComplete = () => {
 		updateWcifSchedule({
 			variables: { id, schedule: localData.schedule },
-		}).then(() => onComplete())
-	}
+		}).then(() => onComplete());
+	};
 
-	if (query.loading || !localData) return <LinearProgress />
-	if (query.error) console.error(query.error)
+	if (query.loading || !localData) return <LinearProgress />;
+	if (query.error) console.error(query.error);
 
 	const handleDateChange = (e) => {
 		setLocalData({
 			...localData,
 			schedule: {
 				...localData.schedule,
-				startDate: moment(e).format('YYYY-MM-DD'),
+				startDate: moment(e).format("YYYY-MM-DD"),
 			},
-		})
-	}
+		});
+	};
 
 	const handleNumberOfDays = (numberOfDays) => {
 		if (isNaN(numberOfDays) || numberOfDays < 1) {
-			return
+			return;
 		}
 		setLocalData({
 			...localData,
 			schedule: { ...localData.schedule, numberOfDays },
-		})
-	}
+		});
+	};
 
 	return (
 		<Grid container direction='column' justify='space-between'>
@@ -128,9 +129,9 @@ export default function ScheduleSetup({
 					/>
 				</Grid>
 			</Grid>
-			<Typography style={{ margin: '10px' }}>
-				Note: The timezones are shown in the timezone of the competition:{' '}
-				{localData.schedule.venues[0].timezone}
+			<Typography style={{ margin: "10px" }}>
+				Note: The timezones are shown in the timezone of the
+				competition: {localData.schedule.venues[0].timezone}
 			</Typography>
 			<Grid item>
 				<CompetitionCalendar
@@ -147,5 +148,5 @@ export default function ScheduleSetup({
 				/>
 			</Grid>
 		</Grid>
-	)
+	);
 }

@@ -1,5 +1,10 @@
-import React from 'react'
-
-export default function SpotlightScreen() {
-  return <div></div>
+import React from "react";
+import TopCompetitors from "../../Information/TopCompetitors";
+export default function SpotlightScreen({ topCompetitors }) {
+	return (
+		<TopCompetitors
+			style={{ overflow: "hidden" }}
+			topCompetitors={topCompetitors}
+		/>
+	);
 }

@@ -1,25 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import { getExtensionData } from '../../../logic/wcif'
-import { getCurrentEvents } from '../ProjectorLogic'
-import { flattenActivities } from '../../Competition/Overview/OverviewLogic'
-import {
-	Typography,
-	Divider,
-	Grid,
-	makeStyles,
-	List,
-	ListItem,
-	ListItemText,
-	ListSubheader,
-	Paper,
-} from '@material-ui/core'
-
+import React, { useState, useEffect } from "react";
+import UpcomingEvents from "../../Information/UpcomingEvents";
+import { makeStyles } from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
 const useStyles = makeStyles((theme) => ({
 	root: {
-		width: '100%',
+		width: "100%",
 	},
 	title: {
-		fontSize: '6vh',
+		fontSize: "6vh",
 	},
 	paper: {
 		backgroundColor: theme.palette.background.paper,
@@ -27,64 +16,17 @@ const useStyles = makeStyles((theme) => ({
 	list: {
 		backgroundColor: theme.palette.background.paper,
 	},
-}))
+}));
 
-export default function AgendaScreen({ wcif }) {
-	const [delays, setDelays] = useState([])
-	useEffect(() => {
-		const venues = wcif.schedule.venues
-		let delays = []
-		for (const venue of venues) {
-			for (const room of venue.rooms) {
-				delays.push(
-					parseInt(getExtensionData('ScheduleConfig', room).delay)
-				)
-			}
-		}
-		setDelays(delays)
-	}, [wcif])
-	const [currentEvents, setCurrentEvents] = useState([])
-	useEffect(() => {
-		setCurrentEvents(
-			getCurrentEvents(flattenActivities(wcif.schedule), delays)
-		)
-	}, [delays, wcif.schedule])
-	const classes = useStyles()
+export default function AgendaScreen({ wcif, topCompetitors }) {
+	const classes = useStyles();
 	return (
-		<>
-			<Paper className={classes.paper} square elevation={24}>
-				<List
-					className={classes.list}
-					subheader={
-						<ListSubheader>
-							<Typography
-								align='center'
-								className={classes.title}
-							>
-								Happening Now!
-							</Typography>
-						</ListSubheader>
-					}
-				>
-					{currentEvents &&
-						currentEvents.map((event) => (
-							<>
-								<ListItem
-									style={{
-										backgroundColor: event.room.color,
-									}}
-									alignItems='center'
-								>
-									<ListItemText
-										primary={event.name}
-										secondary='Jan 9, 2014'
-									/>
-								</ListItem>
-								<Divider />
-							</>
-						))}
-				</List>
-			</Paper>
-		</>
-	)
+		<Paper className={classes.paper} square elevation={24}>
+			<Grid container direction='column'>
+				<Grid item>
+					<UpcomingEvents wcif={wcif} />
+				</Grid>
+			</Grid>
+		</Paper>
+	);
 }
