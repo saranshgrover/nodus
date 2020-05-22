@@ -6,6 +6,7 @@ const {
 	WCA_OAUTH_CLIENT_ID,
 	WCA_OAUTH_REDIRECT_URI,
 	WCA_OAUTH_SECRET,
+	CLIENT_ORIGIN,
 } = require('../config')
 const { UserModel } = require('../models/user/User')
 const { WcifModel } = require('../models/wcif/Wcif')
@@ -133,13 +134,13 @@ module.exports = (passport) => {
 		function (req, res) {
 			// Successful authentication, redirect home.
 			// console.log(JSON.stringify(req))
-			res.redirect('http://localhost:3001')
+			res.redirect(CLIENT_ORIGIN)
 		}
 	)
 	router.get('/logout', async (req, res) => {
 		await req.logout()
 		await req.session.destroy()
-		res.redirect('http://localhost:3001')
+		res.redirect(CLIENT_ORIGIN)
 	})
 	return router
 }
