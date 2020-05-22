@@ -3,6 +3,7 @@ import ApolloClient from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { HttpLink } from 'apollo-link-http'
 import { ApolloLink } from 'apollo-link'
+import { SERVER_URI } from '../config'
 
 const typenameLink = new ApolloLink((operation, forward) => {
 	if (operation.variables) {
@@ -22,7 +23,7 @@ export const client = new ApolloClient({
 	link: ApolloLink.from([
 		typenameLink,
 		new HttpLink({
-			uri: 'http://localhost:3000/graphql',
+			uri: `${SERVER_URI}/graphql`,
 			credentials: 'include',
 		}),
 	]),

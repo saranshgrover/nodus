@@ -9,7 +9,12 @@ const auth = require('./auth')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const http = require('http')
-const { MONGOLAB_URI, PRODUCTION } = require('./config')
+const {
+	MONGOLAB_URI,
+	PRODUCTION,
+	COOKIE_SECRET,
+	CLIENT_ORIGIN,
+} = require('./config')
 
 const init = async () => {
 	const app = express()
@@ -17,7 +22,7 @@ const init = async () => {
 	app.use(
 		'*',
 		cors({
-			origin: PRODUCTION ? 'http://localhost:3001/' : 'nouds.netlify.app/',
+			origin: CLIENT_ORIGIN,
 			credentials: true,
 		})
 	)
@@ -37,7 +42,7 @@ const init = async () => {
 	// Authentication
 
 	const sessionOptions = {
-		secret: 'd;mg;kdfvkgb',
+		secret: COOKIE_SECRET,
 		saveUninitialized: false, // don't create session until something stored
 		resave: false, // don't save session if unmodified,
 		proxy: true,
@@ -62,7 +67,7 @@ const init = async () => {
 
 	app.use(
 		'/graphql',
-		cors({ origin: 'http://localhost:3001', credentials: true }),
+		cors({ origin: CLIENT_ORIGIN, credentials: true }),
 		graphqlHTTP((req) => {
 			return {
 				schema: schema,

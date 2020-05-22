@@ -6,6 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Button } from '@material-ui/core'
 import WCAButton from '../common/WCAButton'
+import { SERVER_URI } from '../../config'
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -98,7 +99,7 @@ export default function Login({ history }) {
 									<WCAButton
 										text={'Login With WCA'}
 										onClick={() => {
-											window.location.href = 'http://localhost:3000/auth/wca'
+											window.location.href = `${SERVER_URI}/auth/wca`
 										}}
 										variant='contained'
 										color='primary'

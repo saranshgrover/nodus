@@ -13,4 +13,9 @@ module.exports = {
 		process.env.WCA_ORIGIN || 'https://staging.worldcubeassociation.org',
 	WCA_OAUTH_REDIRECT_URI:
 		process.env.WCA_OAUTH_REDIRECT_URI || '/auth/wca/callback',
+	COOKIE_SECRET: process.env.COOKIE_SECRET || 'keyboard cat',
+	CLIENT_ORIGIN:
+		process.env.NODE_ENV === 'production'
+			? 'https://nouds.netlify.app/'
+			: 'http://localhost:3001',
 }
