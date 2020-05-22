@@ -73,9 +73,6 @@ function LandingSignedIn() {
 		// And made sure upcomingCompetitions is not null
 		return <LinearProgress />;
 	if (error1 || error2) console.error(`${error1}\n${error2}`);
-	// console.log(loading1);
-	// console.log(data1);
-	// console.log(upcomingCompetitions);
 	return (
 		<>
 			<Tabs

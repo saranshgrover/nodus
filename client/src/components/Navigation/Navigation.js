@@ -5,6 +5,7 @@ import {
 	Route,
 	Redirect,
 } from "react-router-dom";
+import AuthenticatedRoute from "../AuthenticatedRoute/AuthenticatedRoute";
 import LandingSignedIn from "../Landing/LandingSignedIn";
 import WelcomeLanding from "../Landing/WelcomeLanding";
 import Projector from "../Projector/Projector";
@@ -14,6 +15,7 @@ import Register from "../Authentication/Register";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
 import Competition from "../CompetitionRouting/Competition";
+import UserSettings from "../UserSettings/UserSettings";
 export default function Navigation() {
 	return (
 		<Router basename={process.env.PUBLIC_URL}>
@@ -22,7 +24,13 @@ export default function Navigation() {
 				<Route exact path='/about' component={WelcomeLanding} />
 				<Route exact path='/signin' component={SignIn} />
 				<Route exact path='/register' component={Register} />
-				<Route exact path='/new' component={NewCompetition} />
+				<AuthenticatedRoute
+					authCallback={(user) => user.isSignedIn()}
+					RedirectComponent={<Redirect to='/' />}
+					exact
+					path='/new'
+					component={NewCompetition}
+				/>
 				<Route
 					exact
 					path={`/competitions`}
@@ -33,6 +41,13 @@ export default function Navigation() {
 					component={Competition}
 				/>
 				<Route exact path='/about' component={WelcomeLanding} />
+				<AuthenticatedRoute
+					authCallback={(user) => user.isSignedIn()}
+					RedirectComponent={<Redirect to='/' />}
+					exact
+					path='/settings'
+					component={UserSettings}
+				/>
 				<Route exact path='/' component={WelcomeLanding} />
 				<Redirect to='/' />
 			</Switch>

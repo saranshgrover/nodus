@@ -1,4 +1,10 @@
-import React, { Fragment, useContext, useState, useEffect } from "react";
+import React, {
+	Fragment,
+	useContext,
+	useState,
+	useEffect,
+	useRef,
+} from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -17,6 +23,7 @@ import { isAdmin } from "../../logic/user";
 import SvgIcon from "@material-ui/core/SvgIcon";
 import IconButton from "@material-ui/core/IconButton";
 import NodusIcon from "./nodus-orange";
+import ProfilePopover from "./ProfilePopover";
 
 const useStyles = makeStyles((theme) => ({
 	appBar: {
@@ -45,12 +52,8 @@ export default function Header({ match: m }) {
 		},
 	};
 	const history = useHistory();
+	const profileMenuRef = useRef();
 	const [menuOpen, setMenuOpen] = useState(false);
-	const [anchorEl, setAnchorEl] = useState();
-	const recordButtonPosition = (event) => {
-		setAnchorEl(event.currentTarget);
-		setMenuOpen(!menuOpen);
-	};
 	// I don't like how this is done. We need a better way
 	const [admin, setAdmin] = useState(false);
 	const user = useContext(UserContext);
@@ -98,29 +101,17 @@ export default function Header({ match: m }) {
 					</Button>
 				)}
 				{user.isSignedIn() ? (
-					<Fragment>
+					<>
 						<Button
 							endIcon={<ArrowDropDownIcon />}
-							onClick={recordButtonPosition}
+							ref={profileMenuRef}
+							onClick={() => setMenuOpen(true)}
 							variant='text'
 							style={{ textTransform: "none" }}
 						>
 							{user.info.username}
 						</Button>
-						<Menu
-							anchorEl={anchorEl}
-							open={menuOpen}
-							onClose={() => setMenuOpen(false)}
-						>
-							<MenuItem onClick={() => history.push(`/settings`)}>
-								{"Settings"}
-							</MenuItem>
-							<MenuItem onClick={() => history.push("/new")}>
-								{`New Competition`}
-							</MenuItem>
-							<MenuItem onClick={user.signOut}>Sign Out</MenuItem>
-						</Menu>
-					</Fragment>
+					</>
 				) : (
 					<Button
 						variant='contained'
@@ -131,6 +122,13 @@ export default function Header({ match: m }) {
 					</Button>
 				)}
 			</Toolbar>
+			{user.isSignedIn() && (
+				<ProfilePopover
+					anchorEl={profileMenuRef.current}
+					isOpen={menuOpen}
+					onClose={() => setMenuOpen(false)}
+				/>
+			)}
 		</AppBar>
 	);
 }

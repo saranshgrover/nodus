@@ -10,6 +10,7 @@ import CompetitorsSetup from "../New/Setup/CompetitorsSetup";
 import EventsSetup from "../New/Setup/EventsSetup/EventsSetup";
 import GroupsSetup from "../New/Setup/GroupsSetup/GroupsSetup";
 import ScheduleSetup from "../New/Setup/ScheduleSetup";
+import SettingsSetup from "../New/Setup/SettingsSetup";
 import Projector from "../Projector/Projector";
 import MySnackbar from "../common/MySnackbar";
 
@@ -131,7 +132,12 @@ export default function CompetitionAdmin() {
 					<Route
 						exact
 						path={`/competitions/${competitionId}/admin/settings`}
-					/>
+					>
+						<SettingsSetup
+							id={competition._id}
+							onComplete={handleConfirm}
+						/>
+					</Route>
 				</Switch>
 			</div>
 		</Fragment>

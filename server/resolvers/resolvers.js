@@ -8,6 +8,7 @@ var {
 	ScheduleModel,
 	ActivityModel,
 	RoundModel,
+	SettingModel,
 } = require("../models/wcif/Wcif");
 var { UserModel } = require("../models/user/User");
 var axios = require("axios");
@@ -21,6 +22,8 @@ const EventTC = composeWithMongoose(EventModel);
 const EventITC = toInputObjectType(EventTC);
 const ScheduleTC = composeWithMongoose(ScheduleModel);
 const ScheduleITC = toInputObjectType(ScheduleTC);
+const SettingTC = composeWithMongoose(SettingModel);
+const SettingITC = toInputObjectType(SettingTC);
 const RoundTC = composeWithMongoose(RoundModel);
 const WcifTC = composeWithMongoose(WcifModel);
 const UserTC = composeWithMongoose(UserModel);
@@ -216,6 +219,34 @@ schemaComposer.Query.addFields({
 
 // Mutations
 
+UserTC.addResolver({
+	kind: "mutation",
+	name: "updateUser",
+	type: UserTC,
+	args: {
+		_id: "String",
+		newName: "String",
+		newEmail: "String",
+		newUsername: "String",
+	},
+	resolve: async ({ context, args }) => {
+		if (!context.user) throw new Error("Not logged in");
+		const user = await UserModel.findById(args._id).exec();
+		if (user.username !== args.newUsername) {
+			const usernameAlreadyTaken = await UserModel.exists({
+				username: args.newUsername,
+			});
+			if (usernameAlreadyTaken)
+				throw new Error("Username is already taken");
+		}
+		user.name = args.newName;
+		user.email = args.newEmail;
+		user.username = args.newUsername;
+		await user.save();
+		return user;
+	},
+});
+
 WcifTC.addResolver({
 	kind: "mutation",
 	name: "createWcif",
@@ -257,6 +288,12 @@ WcifTC.addResolver({
 		data.locationName = compInfoData.venue_address;
 		data.registrationOpen = compInfoData.registration_open;
 		data.registrationClose = compInfoData.registration_close;
+		// Attach starting settings data
+		data.settings = {
+			message: "",
+			imageUrl: "",
+			colorTheme: "orange_200", // Orange default
+		};
 		const wcif = new WcifModel(data);
 		const persons = wcif.persons;
 		// TODO: Make this cleaner
@@ -451,7 +488,6 @@ WcifTC.addResolver({
 			throw new Error(`Couldn't find competition with ID "${args._id}"`);
 		}
 		// Found comp
-		console.log(args.schedule);
 		comp.schedule = args.schedule;
 		const savedComp = await comp.save();
 		return savedComp;
@@ -469,7 +505,31 @@ WcifTC.addResolver({
 	},
 });
 
+WcifTC.addResolver({
+	kind: "mutation",
+	name: "updateWcifSettings",
+	type: WcifTC,
+	args: {
+		_id: "String!",
+		settings: SettingITC,
+	},
+	resolve: async ({ args }) => {
+		const comp = await WcifModel.findById(args._id).exec();
+		if (!comp) {
+			throw new Error(`Couldn't find competition with ID "${args._id}"`);
+		}
+		// Found comp
+		// Update what was given in settings
+		for (const key of Object.keys(args.settings)) {
+			comp.settings[key] = args.settings[key];
+		}
+		const savedComp = await comp.save();
+		return savedComp;
+	},
+});
+
 schemaComposer.Mutation.addFields({
+	updateWcifSettings: WcifTC.getResolver("updateWcifSettings"),
 	clearDatabase: WcifTC.getResolver("clearDatabase"),
 	createWcif: WcifTC.getResolver("createWcif"),
 	deleteWcif: WcifTC.getResolver("deleteWcif"),
@@ -477,6 +537,7 @@ schemaComposer.Mutation.addFields({
 	updateWcifCompetitors: WcifTC.getResolver("updateWcifCompetitors"),
 	updateWcifEvents: WcifTC.getResolver("updateWcifEvents"),
 	updateWcifSchedule: WcifTC.getResolver("updateWcifSchedule"),
+	updateUser: UserTC.getResolver("updateUser"),
 });
 
 const graphqlSchema = schemaComposer.buildSchema();

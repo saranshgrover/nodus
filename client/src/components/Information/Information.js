@@ -36,6 +36,11 @@ const GET_COMPETITION_INFORMATION = gql`
 			locationName
 			registrationOpen
 			registrationClose
+			settings {
+				imageUrl
+				message
+				colorTheme
+			}
 			schedule {
 				_id
 				startDate
@@ -92,7 +97,9 @@ export default function Information() {
 			<GeneralInformation
 				wcif={data.getWcifById}
 				userConnectionInfo={competition.userRegistered}
+				competitionId={competition.competitionId}
 				showRegistration={true}
+				showMessage={true}
 			/>
 			<Paper className={classes.paper}>
 				<Grid
