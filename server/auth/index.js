@@ -6,7 +6,7 @@ const {
 	WCA_OAUTH_CLIENT_ID,
 	WCA_CALLBACK_URL,
 	WCA_OAUTH_SECRET,
-} = require('../wca-env')
+} = require('../config')
 const { UserModel } = require('../models/user/User')
 const { WcifModel } = require('../models/wcif/Wcif')
 

@@ -1,3 +1,4 @@
+require('dotenv').config()
 var express = require('express')
 var mongoose = require('mongoose')
 var graphqlHTTP = require('express-graphql')
@@ -8,17 +9,24 @@ const auth = require('./auth')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const http = require('http')
+const { MONGOLAB_URI, PRODUCTION } = require('./config')
 
 const init = async () => {
 	const app = express()
-	app.use('*', cors({ origin: 'http://localhost:3001', credentials: true }))
+	console.log(MONGOLAB_URI)
+	app.use(
+		'*',
+		cors({
+			origin: PRODUCTION ? 'http://localhost:3001/' : 'nouds.netlify.app/',
+			credentials: true,
+		})
+	)
 	// app.use(logger('dev'))
 	app.use(express.json())
 	app.use(express.urlencoded({ extended: true }))
 	// app.use(express.static(path.join(__dirname, 'public')))
-	const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/nodus'
 	await mongoose
-		.connect(MONGODB_URI, {
+		.connect(MONGOLAB_URI, {
 			promiseLibrary: require('bluebird'),
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
