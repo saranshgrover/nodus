@@ -16,6 +16,6 @@ module.exports = {
 	COOKIE_SECRET: process.env.COOKIE_SECRET || 'keyboard cat',
 	CLIENT_ORIGIN:
 		process.env.NODE_ENV === 'production'
-			? 'https://nouds.netlify.app/'
+			? 'https://nouds.netlify.app'
 			: 'http://localhost:3001',
 }
