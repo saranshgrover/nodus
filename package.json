@@ -1,0 +1,9 @@
+{
+	"name": "nodus",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"client_build": "cd client && yarn build",
+		"server_build": "cd server && npm start"
+	}
+}

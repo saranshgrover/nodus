@@ -16,9 +16,9 @@ const init = async () => {
 	app.use(express.json())
 	app.use(express.urlencoded({ extended: true }))
 	// app.use(express.static(path.join(__dirname, 'public')))
-
+	const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/nodus'
 	await mongoose
-		.connect('mongodb://localhost/node-graphql', {
+		.connect(MONGODB_URI, {
 			promiseLibrary: require('bluebird'),
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
