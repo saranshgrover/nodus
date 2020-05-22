@@ -39,7 +39,7 @@ const handleConnect = async (accessToken, refreshToken, profile, done) => {
 			})
 			const resp = await axios({
 				method: 'GET',
-				url: `${WCA_ORIGIN}api/v0/users/${profile.id}?upcoming_competitions=true`,
+				url: `${WCA_ORIGIN}/api/v0/users/${profile.id}?upcoming_competitions=true`,
 				heeaders: {
 					Authorization: `Bearer ${accessToken}`,
 					'Content-Type': 'application/json',
