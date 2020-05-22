@@ -4,7 +4,7 @@ var axios = require('axios')
 const {
 	WCA_ORIGIN,
 	WCA_OAUTH_CLIENT_ID,
-	WCA_CALLBACK_URL,
+	WCA_OAUTH_REDIRECT_URI,
 	WCA_OAUTH_SECRET,
 } = require('../config')
 const { UserModel } = require('../models/user/User')
@@ -100,7 +100,7 @@ module.exports = (passport) => {
 				clientID: WCA_OAUTH_CLIENT_ID,
 				tokenURL: `${WCA_ORIGIN}/oauth/token`,
 				clientSecret: WCA_OAUTH_SECRET,
-				callbackURL: WCA_CALLBACK_URL,
+				callbackURL: WCA_OAUTH_REDIRECT_URI,
 				userProfileURL: `${WCA_ORIGIN}/api/v0/me`,
 				scope: ['email', 'dob', 'public', 'manage_competitions'],
 			},
