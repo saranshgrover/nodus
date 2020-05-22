@@ -65,7 +65,7 @@ UserTC.addResolver({
 		const wcaAccessToken = user.connections.find(
 			(connection) => connection.connectionType === 'WCA'
 		).accessToken
-		const baseApiUrl = `${WCA_ORIGIN}api/v0`
+		const baseApiUrl = `${WCA_ORIGIN}/api/v0`
 		const resp = await axios({
 			url: `${baseApiUrl}/competitions?managed_by_me=true&start=${new Date().toISOString()}`,
 			headers: {
@@ -260,7 +260,7 @@ WcifTC.addResolver({
 			(connection) => connection.connectionType === 'WCA'
 		).accessToken
 		const res = await axios({
-			url: `${WCA_ORIGIN}api/v0/competitions/${args.competitionId}/wcif/`,
+			url: `${WCA_ORIGIN}/api/v0/competitions/${args.competitionId}/wcif/`,
 			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${wcaAccessToken}`,
@@ -270,7 +270,7 @@ WcifTC.addResolver({
 		const data = await res.data
 		// Get more information not stored in the WCIF
 		const compInformation = await axios({
-			url: `${WCA_ORIGIN}api/v0/competitions/${args.competitionId}/`,
+			url: `${WCA_ORIGIN}/api/v0/competitions/${args.competitionId}/`,
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
