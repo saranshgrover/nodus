@@ -4,6 +4,7 @@
 	"private": true,
 	"scripts": {
 		"client_build": "cd client && yarn install && yarn build",
-		"server_build": "cd server && npm start"
+		"server_build": "cd server && npm start",
+		"postinstall": "npm install --prefix ./server"
 	}
 }
