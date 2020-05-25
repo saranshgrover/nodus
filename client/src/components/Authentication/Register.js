@@ -6,6 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Button } from '@material-ui/core'
 import WCAButton from '../common/WCAButton'
+import { SERVER_URI } from '../../config'
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -43,11 +44,32 @@ export default function Register() {
 			error: '',
 		},
 	})
+	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(null)
 
-	const handleSubmit = (event) => {
-		// TODO Implement Local Registering
+	const handleSubmit = async (event) => {
 		event.preventDefault()
+		try {
+			const resp = await fetch(`${SERVER_URI}/auth/local`, {
+				method: 'POST',
+				credentials: 'include',
+				mode: 'cors',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					email: user.email.value,
+					password: user.password.value,
+					name: user.name.value,
+					username: user.username.value,
+				}),
+			})
+			// Get data
+			const data = await resp.json()
+			window.location.href = data.redirect // Move client to server redirect
+		} catch (err) {
+			setError('Error registering')
+		}
 	}
 	const handleUserChange = ({ target: { name, value, ...other } }) =>
 		setUser({ ...user, [name]: { ...user[name], value } })
@@ -62,7 +84,11 @@ export default function Register() {
 					spacing={2}
 				>
 					<Grid item>
-						<Typography className={classes.title} color='primary' variant='h5'>
+						<Typography
+							className={classes.title}
+							color='primary'
+							variant='h5'
+						>
 							Nodus Register
 						</Typography>
 					</Grid>
@@ -70,7 +96,7 @@ export default function Register() {
 						<WCAButton
 							text={'Register With WCA'}
 							onClick={() => {
-								window.location.href = 'http://localhost:3000/auth/wca'
+								window.location.href = `${SERVER_URI}/auth/wca`
 							}}
 							variant='contained'
 							color='primary'
@@ -96,6 +122,13 @@ export default function Register() {
 							/>
 						</Grid>
 					))}
+					{error && (
+						<Grid item>
+							<Typography variant='body1' color='error'>
+								{error}
+							</Typography>
+						</Grid>
+					)}
 					{!loading && (
 						<>
 							<Grid item>

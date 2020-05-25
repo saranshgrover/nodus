@@ -1,3 +1,4 @@
+require('dotenv').config()
 var express = require('express')
 var mongoose = require('mongoose')
 var graphqlHTTP = require('express-graphql')
@@ -8,17 +9,29 @@ const auth = require('./auth')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const http = require('http')
+const {
+	MONGOLAB_URI,
+	PRODUCTION,
+	COOKIE_SECRET,
+	CLIENT_ORIGIN,
+} = require('./config')
 
 const init = async () => {
 	const app = express()
-	app.use('*', cors({ origin: 'http://localhost:3001', credentials: true }))
+	console.log(MONGOLAB_URI)
+	app.use(
+		'*',
+		cors({
+			origin: CLIENT_ORIGIN,
+			credentials: true,
+		})
+	)
 	// app.use(logger('dev'))
 	app.use(express.json())
 	app.use(express.urlencoded({ extended: true }))
 	// app.use(express.static(path.join(__dirname, 'public')))
-
 	await mongoose
-		.connect('mongodb://localhost/node-graphql', {
+		.connect(MONGOLAB_URI, {
 			promiseLibrary: require('bluebird'),
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
@@ -29,14 +42,15 @@ const init = async () => {
 	// Authentication
 
 	const sessionOptions = {
-		secret: 'd;mg;kdfvkgb',
+		secret: COOKIE_SECRET,
 		saveUninitialized: false, // don't create session until something stored
 		resave: false, // don't save session if unmodified,
 		proxy: true,
 		cookie: {
 			httpOnly: true,
 			secure: false,
-			sameSite: 'strict',
+			// Note: This may be temporary. sameSite should be true but requires work to set up server and client on same URL.
+			sameSite: false,
 		},
 		store: new MongoStore({
 			mongooseConnection: mongoose.connection,
@@ -54,7 +68,7 @@ const init = async () => {
 
 	app.use(
 		'/graphql',
-		cors({ origin: 'http://localhost:3001', credentials: true }),
+		cors({ origin: CLIENT_ORIGIN, credentials: true }),
 		graphqlHTTP((req) => {
 			return {
 				schema: schema,
