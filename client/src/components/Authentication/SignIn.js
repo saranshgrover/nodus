@@ -33,8 +33,24 @@ export default function Login({ history }) {
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(null)
 
-	const handleSubmit = (event) => {
+	const handleSubmit = async (event) => {
 		event.preventDefault()
+		try {
+			const resp = await fetch(`${SERVER_URI}/auth/local`, {
+				method: 'POST',
+				credentials: 'include',
+				mode: 'cors',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ email, password }),
+			})
+			// Get data
+			const data = await resp.json()
+			window.location.href = data.redirect // Move client to server redirect
+		} catch (err) {
+			setError('Error logging in. Please try again.')
+		}
 	}
 	return (
 		<>
@@ -62,6 +78,7 @@ export default function Login({ history }) {
 								id='outlined-basic'
 								label='Email'
 								value={email}
+								name='email'
 								onChange={(e) => setEmail(e.target.value)}
 							/>
 						</Grid>
@@ -72,6 +89,7 @@ export default function Login({ history }) {
 								type='password'
 								label='Password'
 								value={password}
+								name='password'
 								onChange={(e) => setPassword(e.target.value)}
 							/>
 						</Grid>
@@ -111,7 +129,9 @@ export default function Login({ history }) {
 										disabled={loading}
 										varaint='text'
 										color='primary'
-										onClick={() => history.push('/register')}
+										onClick={() =>
+											history.push('/register')
+										}
 									>
 										Don't have an account yet? Register
 									</Button>

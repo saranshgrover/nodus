@@ -1,4 +1,5 @@
 const WCAStratergy = require('passport-wca')
+const LocalStrategy = require('passport-local')
 const express = require('express')
 var axios = require('axios')
 const {
@@ -10,6 +11,9 @@ const {
 } = require('../config')
 const { UserModel } = require('../models/user/User')
 const { WcifModel } = require('../models/wcif/Wcif')
+var bcrypt = require('bcryptjs')
+
+const SALT_AMOUNT = 8 // Salt for bcrypt
 
 const handleConnect = async (accessToken, refreshToken, profile, done) => {
 	let user = await UserModel.findOne({
@@ -25,7 +29,9 @@ const handleConnect = async (accessToken, refreshToken, profile, done) => {
 				// TODO Make this a function
 				username: `${profile.displayName
 					.toLowerCase()
-					.replace(/\s/g, '')}${Math.random().toString().slice(2, 6)}`,
+					.replace(/\s/g, '')}${Math.random()
+					.toString()
+					.slice(2, 6)}`,
 				name: profile.displayName,
 				email: profile.emails[0].value,
 				primaryAuthenticationType: 'WCA',
@@ -59,7 +65,9 @@ const handleConnect = async (accessToken, refreshToken, profile, done) => {
 					}
 					let roles = ['competitor']
 					if (
-						competition.delegates.some((delegate) => delegate.id === profile.id)
+						competition.delegates.some(
+							(delegate) => delegate.id === profile.id
+						)
 					)
 						roles.push('delegate')
 					if (
@@ -109,6 +117,73 @@ module.exports = (passport) => {
 		)
 	)
 
+	passport.use(
+		new LocalStrategy(
+			{
+				usernameField: 'email',
+				passwordField: 'password',
+				passReqToCallback: true,
+				session: true,
+			},
+			async function (req, username, password, done) {
+				if (req.headers.referer.indexOf('signin') > 0) {
+					// User is signing in
+					let user
+					try {
+						user = await UserModel.findOne({ email: username })
+					} catch (err) {
+						done(err, null)
+					}
+					if (!user) return done(null, false)
+					// Check password
+					if (bcrypt.compareSync(password, user.password))
+						return done(null, user)
+					// Password is wrong
+					return done(null, false)
+				} else {
+					// User is register for an account
+					let body = req.body
+					// Body should contain name, username, email, and password
+					if (
+						!(
+							body.name &&
+							body.username &&
+							body.email &&
+							body.password
+						)
+					)
+						return done(null, false)
+					// Make sure username and email aren't already used
+					const checkUser = await UserModel.findOne({
+						$or: [
+							{ email: body.email },
+							{ username: body.username },
+						],
+					}).exec()
+					if (checkUser) {
+						// User exists
+						console.log('User already exists. Err')
+						return done(null, false)
+					} else {
+						// User is valid, hash password
+						var hash = bcrypt.hashSync(body.password, SALT_AMOUNT)
+						// Create user
+						let newUser = new UserModel({
+							email: body.email,
+							username: body.username,
+							password: hash,
+							name: body.name,
+							primaryAuthenticationType: 'local',
+						})
+						// Save user to DB
+						await newUser.save()
+						return done(null, newUser)
+					}
+				}
+			}
+		)
+	)
+
 	passport.serializeUser((user, done) => {
 		console.log('serialize')
 		done(null, {
@@ -137,6 +212,9 @@ module.exports = (passport) => {
 			res.redirect(CLIENT_ORIGIN)
 		}
 	)
+	router.post('/local', passport.authenticate('local'), function (req, res) {
+		res.json({ redirect: CLIENT_ORIGIN })
+	})
 	router.get('/logout', async (req, res) => {
 		await req.logout()
 		await req.session.destroy()
