@@ -16,6 +16,7 @@ const ExternalConnection = new mongoose.Schema({
 const User = new mongoose.Schema({
 	// TODOp1
 	username: String,
+	password: String,
 	email: { type: String, required: true },
 	// Prioritize LOCAL always. i.e if user sets a password in the future, primaryAuthType will be LOCAL.
 	primaryAuthenticationType: String,
