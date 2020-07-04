@@ -24,6 +24,8 @@ Note that you will need to add an additional wca-env.js with the token as 'examp
 
 - [React](https://www.reactjs.org)
 - [Material UI](https://www.material-ui.com)
+- Express
+- GraphQL
 
 ## Contributing
 
@@ -37,8 +39,9 @@ This is still currently under development - so if you are interestred in contrib
 ## Authors
 
 - **Saransh Grover** - [saranshgrover](https://saranshgrover.com)
+- **Isaiah Galarza** - [IsaiahGz](https://github.com/isaiahgz)
 
-See also the list of [contributors](https://github.com/WCARealTime/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/nodus/graphs/contributors) who participated in this project.
 
 ## License
 
