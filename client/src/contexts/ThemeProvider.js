@@ -10,7 +10,8 @@ import {
 	ThemeProvider as MuiThemeProvider,
 } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
-import { blue, blueGrey, pink, amber, orange } from '@material-ui/core/colors'
+import { blueGrey, orange } from '@material-ui/core/colors'
+import { useMemo } from 'react'
 
 // typography
 const typography = {
@@ -24,42 +25,64 @@ const typography = {
 	].join(','),
 }
 
-const themes = {
-	dark: {
-		palette: {
-			primary: orange,
-			secondary: blueGrey,
-			type: 'dark',
-		},
-		typography: typography,
-	},
-	light: {
-		palette: {
-			primary: orange,
-			secondary: blueGrey,
-			type: 'light',
-		},
-		typography: typography,
-	},
+const themes = (type, competitionPrimary=orange, competitionSecondary=blueGrey) => {
+	switch(type) {
+		case 'dark':
+			return ({
+					palette: {
+						primary: orange,
+						secondary: blueGrey,
+						competitionPrimary,
+						competitionSecondary,
+						type: 'dark',
+					},
+					typography: typography,
+			})
+		case 'light':
+		 return ({
+			palette: {
+				primary: orange,
+				secondary: blueGrey,
+				competitionPrimary,
+				competitionSecondary,
+				type: 'light',
+			},
+			typography: typography
+		})
+	}
 }
+
+
 export const ToggleThemeContext = createContext()
 
-const storedThemeType = window.localStorage.getItem('themeType')
 
 export default function ThemeProvider({ children }) {
+	const storedThemeType = window.localStorage.getItem('themeType')
 	const prefersDarkMode = useMediaQuery('@media (prefers-color-scheme: dark)')
-	const [theme, setTheme] = useState(
+	const [theme, setTheme] = useState(null)
+	const [overrides, setOverrides] = useState({})
+	const [themeType, setThemeType] = useState(
 		storedThemeType || (prefersDarkMode ? 'dark' : 'light')
 	)
-	const toggleTheme = useCallback(() => {
-		setTheme((theme) => (theme === 'light' ? 'dark' : 'light'))
-	}, [])
 	useEffect(() => {
-		window.localStorage.setItem('themeType', theme)
-	}, [theme])
+		setTheme(createMuiTheme(themes(themeType, overrides.primary || orange, overrides.secondary || blueGrey)))
+		window.localStorage.setItem('themeType', themeType)
+		
+	},[themeType, overrides])
+	const toggleTheme = useCallback(() => {
+		setThemeType((themeType) => (themeType === 'light' ? 'dark' : 'light'))
+	}, [])
+
+	const updateTheme = (overrides) => {
+		setOverrides(overrides)
+	}
+
+	const value = useMemo(() => ({theme, toggleTheme, updateTheme}), [theme])
+
+	if(!theme) return (<></>)
 	return (
-		<MuiThemeProvider theme={createMuiTheme(themes[theme])}>
-			<ToggleThemeContext.Provider value={toggleTheme}>
+		<MuiThemeProvider theme={theme}>
+			<ToggleThemeContext.Provider value={value}>
 				{children}
 			</ToggleThemeContext.Provider>
 		</MuiThemeProvider>

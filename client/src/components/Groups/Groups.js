@@ -130,7 +130,8 @@ export default function Groups() {
 				eventTabs.push({
 					label: `${activityKey[event.id]}`,
 					value: tabs.length + eventTabs.length + 1,
-					Icon: <CubingIcon eventId={event.id} />,
+					Icon: <CubingIcon eventId={event.id} style={{color:`${theme.palette.competitionPrimary.main}`}}
+					/>,
 					Component: EventGroups,
 					id: event.id,
 				})

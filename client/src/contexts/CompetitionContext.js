@@ -1,18 +1,13 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import { UserContext } from "./UserContext";
-import { useRouteMatch } from "react-router-dom";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Error from "../components/common/Error";
 import gql from "graphql-tag";
 import { useQuery } from "@apollo/react-hooks";
 import { flattenActivities } from "../logic/schedule";
-import {
-	createMuiTheme,
-	makeStyles,
-	ThemeProvider,
-} from "@material-ui/core/styles";
 import { themeColors } from "../logic/consts";
 import blueGrey from "@material-ui/core/colors/blueGrey";
+import {ToggleThemeContext} from '../contexts/ThemeProvider'
 
 const CompetitionContext = createContext(null);
 
@@ -76,6 +71,7 @@ const CompetitionProvider = ({ competitionId, children }) => {
 	});
 
 	const user = useContext(UserContext);
+	const {updateTheme} = useContext(ToggleThemeContext)
 	const userCompetition =
 		user.isSignedIn() &&
 		user.info.competitions.find(
@@ -86,11 +82,20 @@ const CompetitionProvider = ({ competitionId, children }) => {
 	let competitionType = "LOCAL";
 	let tabs = ["information", "groups", "results", "notifications"];
 	let registrantId = null;
+	useEffect(() => {
+		if(data && data.getWcifByCompetitionId) {
+			const themeColor = data.getWcifByCompetitionId.settings.colorTheme
+			if(themeColor) {
+				const theme = themeColors[themeColor]
+				// TODO: work on adding more theme customization besides 'main'
+				updateTheme({primary: {main: theme}, secondary: blueGrey})
+			}
+		}
+	},[data])
 	if (loading) return <LinearProgress />;
 	if (error) return <Error message={error.toString()} />;
 	const wcif = data.getWcifByCompetitionId;
 	const activities = flattenActivities(wcif.schedule);
-	console.log(activities);
 	if (userCompetition) {
 		userRoles = userCompetition.roles;
 		userConnectionInfo = user.info.connections.find(
@@ -105,18 +110,7 @@ const CompetitionProvider = ({ competitionId, children }) => {
 			)?.registrantId
 		);
 	}
-	const primary = wcif.settings.colorTheme;
-	const theme = createMuiTheme({
-		palette: {
-			primary: {
-				main: themeColors[primary],
-			},
-			secondary: blueGrey,
-			type: "dark",
-		},
-	});
 	return (
-		<ThemeProvider theme={theme}>
 			<CompetitionContext.Provider
 				value={
 					competitionId
@@ -137,7 +131,6 @@ const CompetitionProvider = ({ competitionId, children }) => {
 			>
 				{children}
 			</CompetitionContext.Provider>
-		</ThemeProvider>
 	);
 };
 

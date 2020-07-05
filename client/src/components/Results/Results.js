@@ -33,7 +33,6 @@ export default function Results() {
 	const theme = useTheme()
 	const largeScreen = useMediaQuery(theme.breakpoints.up('lg'))
 	const mediumScreen = useMediaQuery(theme.breakpoints.up('md'))
-
 	const { loading, error, data } = useQuery(COMPETITION_OPEN_ROUNDS_QUERY, {
 		variables: { competitionId: competitionId },
 	})
@@ -70,6 +69,7 @@ export default function Results() {
 						<CubingIcon
 							eventId={eventId}
 							small={!mediumScreen && !largeScreen}
+							style={{color:`${theme.palette.competitionPrimary.main}`}}
 						/>
 					),
 					Component: EventResults,

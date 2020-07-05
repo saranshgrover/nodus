@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Footer = () => {
-	const toggleTheme = useContext(ToggleThemeContext)
+	const {toggleTheme} = useContext(ToggleThemeContext)
 	const theme = useTheme()
 	const classes = useStyles()
 	return (
