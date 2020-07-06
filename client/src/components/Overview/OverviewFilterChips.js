@@ -2,6 +2,7 @@ import React from 'react'
 import Chip from '@material-ui/core/Chip'
 import Grid from '@material-ui/core/Grid'
 import { assignedTo } from '../../logic/schedule'
+import { useTheme } from '@material-ui/core'
 
 export default function OverviewFilterChips({
 	venues,
@@ -28,6 +29,7 @@ export default function OverviewFilterChips({
 			  )
 			: setUnselectedAssignments([...unselectedAssignments, name])
 	}
+	const theme = useTheme()
 	return (
 		<Grid container direction='column' spacing={2}>
 			<Grid item>
@@ -54,7 +56,10 @@ export default function OverviewFilterChips({
 						onClick={() => updateSelectedAssignments(duty)}
 						key={duty}
 						label={assignedTo(duty)}
-						color={unselectedAssignments.includes(duty) ? 'default' : 'primary'}
+						style={{
+							backgroundColor: `${!unselectedAssignments.includes(duty) ? theme.palette.competitionPrimary.main : theme.palette.action.selected}`,
+							color: `${!unselectedAssignments.includes(duty) ? theme.palette.getContrastText(theme.palette.competitionPrimary.main) : theme.palette.text.primary}`,
+						}}
 					/>
 				))}
 			</Grid>

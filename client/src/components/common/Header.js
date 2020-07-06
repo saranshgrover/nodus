@@ -20,9 +20,8 @@ import LockIcon from "@material-ui/icons/Lock";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import Link from "@material-ui/core/Link";
 import { isAdmin } from "../../logic/user";
-import SvgIcon from "@material-ui/core/SvgIcon";
-import IconButton from "@material-ui/core/IconButton";
-import NodusIcon from "./nodus-orange";
+import useScrollTrigger from '@material-ui/core/useScrollTrigger';
+import Slide from '@material-ui/core/Slide';
 import ProfilePopover from "./ProfilePopover";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,14 +35,31 @@ const useStyles = makeStyles((theme) => ({
 		marginLeft: theme.spacing(1),
 	},
 	titleIcon: {
+		maxHeight:'10%',
 		marginRight: theme.spacing(2),
 	},
 	username: {
 		marginRight: theme.spacing(1),
 	},
+	container: theme.mixins.toolbar
 }));
 
-export default function Header({ match: m }) {
+function HideOnScroll(props) {
+	const { children, window } = props;
+	const trigger = useScrollTrigger({ target: window ? window() : undefined });
+  
+	return (
+	  <Slide appear={false} direction="down" in={!trigger}>
+		{children}
+	  </Slide>
+	);
+  }
+  
+  
+
+
+
+export default function Header() {
 	// TODOp1: This rerenders/remounts EVERY TIME THE LOCATION CHANGES IN WINDOW
 	const match = useRouteMatch("/competitions/:competitionId/:tab?") || {
 		params: {
@@ -63,7 +79,9 @@ export default function Header({ match: m }) {
 	}, [match.params.competitionId, match.params.tab]);
 	const classes = useStyles();
 	return (
-		<AppBar position='sticky' color='primary' className={classes.appBar}>
+		<React.Fragment>
+		<HideOnScroll>
+		<AppBar className={classes.appBar} color='primary'>
 			<Toolbar spacing={2} className={classes.titleIcon}>
 				<Typography
 					component={Link}
@@ -130,5 +148,8 @@ export default function Header({ match: m }) {
 				/>
 			)}
 		</AppBar>
+		</HideOnScroll>
+		<div className={classes.container}/>
+		</React.Fragment>
 	);
 }

@@ -12,13 +12,13 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
     '&:hover': {
       opacity: 0.7,
-      color: theme.palette.primary.main
+      color: theme.palette.competitionPrimary.main
     }
   },
   iconSelect: {
     fontSize: 20,
     padding: theme.spacing(1),
-    color: theme.palette.primary.main,
+    color: theme.palette.competitionPrimary.main,
     '&:hover': {
       opacity: 0.7
     }

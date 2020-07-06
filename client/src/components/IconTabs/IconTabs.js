@@ -5,7 +5,7 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 
 const useTabsStyles = makeStyles(({ spacing, palette }) => {
-	const indicatorBackground = 'rgba(255, 255, 255, .2)'
+	const indicatorBackground = palette.type === 'dark' ? 'rgba(255, 255, 255, .2)' : 'rgba(0,0,0,0.2)'
 	const borderRadius = spacing(1)
 	return {
 		root: {
