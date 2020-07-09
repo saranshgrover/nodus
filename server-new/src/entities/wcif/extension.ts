@@ -1,4 +1,4 @@
-import { ObjectType, Field, InputType, Int } from 'type-graphql'
+import { ObjectType, Field, InputType, Int, Root } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
 
@@ -16,7 +16,11 @@ export class Extension {
 	@Field()
 	specUrl!: string
 
-	@prop()
-	@Field((type) => String)
-	data!: string
+	@prop({
+		set: (data: string) => JSON.parse(data),
+		get: (data: any) => JSON.stringify(data),
+		type: {},
+	})
+	@Field(() => String)
+	data: string
 }
