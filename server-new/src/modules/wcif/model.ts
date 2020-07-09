@@ -1,4 +1,4 @@
-import { getModelForClass } from '@typegoose/typegoose'
+import { getModelForClass, DocumentType } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
 
 import { Wcif } from '../../entities/wcif'
@@ -14,10 +14,10 @@ export default class WcifModel {
 		return WcifMongooseModel.findById(_id).lean().exec()
 	}
 
-	async create(data: Wcif): Promise<Document> {
+	async create(data: Wcif): Promise<DocumentType<Wcif>> {
 		// TODO: Change any
 		const wcif = new WcifMongooseModel(data)
-
-		return wcif.save()
+		await wcif.save()
+		return wcif
 	}
 }

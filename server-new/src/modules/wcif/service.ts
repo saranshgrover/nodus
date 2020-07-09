@@ -14,13 +14,13 @@ export default class WcifService {
 		return this.wcifModel.getById(_id)
 	}
 
-	public async addWcif(data: Wcif): Promise<Document> {
-		const newTodo = await this.wcifModel.create(data)
+	public async addWcif(data: Wcif): Promise<Wcif> {
+		const newWcif = await this.wcifModel.create(data)
 		// this is where we'd fetch the wcif from wca right?
 		// Business logic goes here
 		// Example:
 		// Trigger push notification, analytics, ...
 
-		return newTodo
+		return newWcif
 	}
 }

@@ -10,4 +10,8 @@ export default class UserService {
 	public getById(id: ObjectId) {
 		return this.userModel.getById(id)
 	}
+
+	public findById(id: ObjectId) {
+		return this.userModel.findById(id)
+	}
 }

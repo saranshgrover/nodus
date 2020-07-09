@@ -15,6 +15,14 @@ export class User {
 	username!: string
 
 	@prop()
+	@Field()
+	email!: string
+
+	@prop()
+	@Field()
+	name: string
+
+	@prop()
 	hashedPassword: string
 
 	@prop()
