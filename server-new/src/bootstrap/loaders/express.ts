@@ -2,22 +2,22 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import helmet from 'helmet'
-
+import cookieParser from 'cookie-parser'
 import { config } from '../../config'
 import passportConfig from './passport'
 import sessionConfig from './session'
 
 export default async (app: express.Application) => {
 	// Body parser only needed during POST on the graphQL path
-	app.use(config.graphqlPath, bodyParser.json())
-
+	app.use(bodyParser.json())
+	app.use(cookieParser())
 	// Cors configuration
-	app.use(cors({ credentials: true }))
+	app.use('*', cors({ origin: 'http://localhost:5000/', credentials: true }))
 
 	// Sets various HTTP headers to help protect our app
 	app.use(helmet())
 
-	sessionConfig(app)
+	await sessionConfig(app)
 
-	passportConfig(app)
+	await passportConfig(app)
 }

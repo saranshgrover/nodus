@@ -4,7 +4,6 @@ import WCAStratetgy from 'passport-wca'
 import * as passportLocal from 'passport-local'
 const LocalStrategy = passportLocal.Strategy
 import { ObjectId } from 'mongodb'
-
 import { config } from '../../config'
 import handleConnect from './handleConnect'
 import { User } from '../../entities'
@@ -64,9 +63,9 @@ export default function (passport: passport.PassportStatic) {
 		})
 	})
 
-	passport.deserializeUser((_id: ObjectId, done) => {
+	passport.deserializeUser((user: Partial<User> & { id: ObjectId }, done) => {
 		console.log('deserialize')
-		UserMongooseModel.findOne({ _id }, (err, user) => done(err, user))
+		UserMongooseModel.findOne({ _id: user.id }, (err, user) => done(err, user))
 	})
 
 	router.get('/wca', passport.authenticate('wca'))

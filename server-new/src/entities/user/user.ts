@@ -22,6 +22,10 @@ export class User {
 	primaryAuthenticationType: string
 
 	@prop()
-	@Field(() => [ExternalConnection])
+	@Field(() => [Competition])
 	competitions: Competition[]
+
+	@prop({ type: ExternalConnection })
+	@Field(() => [ExternalConnection])
+	connections: ExternalConnection[]
 }

@@ -24,7 +24,6 @@ interface PassportLocalCallback {
 type PassportCallback = PassportWCACallback | PassportLocalCallback
 
 export default function (type: string, passportCallback: PassportCallback) {
-	console.log('hi')
 	switch (type) {
 		case 'WCA':
 			return handleWCAConnect(passportCallback as PassportWCACallback)
@@ -42,6 +41,8 @@ export async function handleWCAConnect({
 	done,
 }: PassportWCACallback) {
 	const UserModel = UserMongooseModel
+	const users = await UserModel.find()
+	// console.log(users[0].connections[0])
 	let user = await UserModel.findOne({
 		connections: {
 			$elemMatch: {
