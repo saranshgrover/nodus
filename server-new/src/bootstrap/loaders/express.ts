@@ -12,7 +12,7 @@ export default async (app: express.Application) => {
 	app.use(bodyParser.json())
 	app.use(cookieParser())
 	// Cors configuration
-	app.use('*', cors({ origin: 'http://localhost:5000/', credentials: true }))
+	app.use('*', cors({ origin: 'http://localhost:3001', credentials: true }))
 
 	// Sets various HTTP headers to help protect our app
 	app.use(helmet())

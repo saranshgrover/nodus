@@ -14,8 +14,8 @@ export class Wcif {
 	readonly _id!: ObjectId
 
 	@prop()
-	@Field(() => String)
-	competitionid: string
+	@Field()
+	competitionId: string
 
 	@prop()
 	@Field()
@@ -25,9 +25,9 @@ export class Wcif {
 	@Field()
 	shortName: string
 
-	@prop()
+	@prop({ type: Person })
 	@Field(() => [Person])
-	persons: Person[]
+	persons!: Person[]
 
 	@prop()
 	@Field(() => [Event])
@@ -58,6 +58,6 @@ export class Wcif {
 	registrationClose!: string
 
 	@prop()
-	@Field(() => [Setting])
-	settings!: Setting[]
+	@Field(() => Setting)
+	settings!: Setting
 }

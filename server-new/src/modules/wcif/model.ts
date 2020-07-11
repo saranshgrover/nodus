@@ -20,4 +20,12 @@ export default class WcifModel {
 		await wcif.save()
 		return wcif
 	}
+
+	async findByCompetitionId(competitionId: string): Promise<Wcif | null> {
+		return await WcifMongooseModel.findOne({ competitionId })
+	}
+
+	async exists(competitionId: string): Promise<boolean> {
+		return await WcifMongooseModel.exists({ competitionId: competitionId })
+	}
 }

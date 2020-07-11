@@ -56,7 +56,9 @@ export async function handleWCAConnect({
 				// TODO Make this a function
 				username: `${profile.displayName
 					.toLowerCase()
-					.replace(/\s/g, '')}${Math.random().toString().slice(2, 6)}`,
+					.replace(/\s/g, '')}${Math.random()
+					.toString()
+					.slice(2, 6)}`,
 				name: profile.displayName,
 				email: profile.emails[0].value,
 				primaryAuthenticationType: 'WCA',
@@ -80,7 +82,9 @@ export async function handleWCAConnect({
 			if (!resp) done(null, 'Unexpected error')
 			const userCompetitions = resp.data.upcoming_competitions
 			userCompetitions.forEach(async (competition: any) => {
-				const wcif = await WcifMongooseModel.findOne({ id: competition.id })
+				const wcif = await WcifMongooseModel.findOne({
+					id: competition.id,
+				})
 				if (wcif) {
 					const userCompetition = {
 						competitionType: 'WCA',
@@ -121,7 +125,7 @@ export async function handleWCAConnect({
 	} catch (err) {
 		done(err, null)
 	}
-	console.log(user)
+	// console.log(user)
 	done(false, user)
 }
 

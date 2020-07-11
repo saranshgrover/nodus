@@ -13,12 +13,12 @@ export class ExternalConnection {
 	accessToken: string
 
 	@prop({
-		set: (content: any) => {
+		set: (content: Schema.Types.Mixed | string) => {
 			if (typeof content === 'string') {
 				return JSON.parse(content)
 			} else return content
 		},
-		get: (content: any) => JSON.stringify(content),
+		get: (content: Schema.Types.Mixed) => JSON.stringify(content),
 		type: Schema.Types.Mixed,
 	})
 	@Field(() => String)

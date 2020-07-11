@@ -37,7 +37,13 @@ export default function (passport: passport.PassportStatic) {
 				refreshToken: string,
 				profile: any,
 				done: () => void
-			) => handleConnect('WCA', { accessToken, refreshToken, profile, done })
+			) =>
+				handleConnect('WCA', {
+					accessToken,
+					refreshToken,
+					profile,
+					done,
+				})
 		)
 	)
 
@@ -60,12 +66,15 @@ export default function (passport: passport.PassportStatic) {
 			name: user.username,
 			username: user.username,
 			primaryAuthenticationType: user.primaryAuthenticationType,
+			competitions: user.competitions,
 		})
 	})
 
 	passport.deserializeUser((user: Partial<User> & { id: ObjectId }, done) => {
 		console.log('deserialize')
-		UserMongooseModel.findOne({ _id: user.id }, (err, user) => done(err, user))
+		UserMongooseModel.findOne({ _id: user.id }, (err, user) =>
+			done(err, user)
+		)
 	})
 
 	router.get('/wca', passport.authenticate('wca'))

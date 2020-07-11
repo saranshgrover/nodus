@@ -18,4 +18,8 @@ export class Competition {
 	@prop()
 	@Field()
 	endDate: string
+
+	@prop({ type: String })
+	@Field(() => [String])
+	roles: string[]
 }

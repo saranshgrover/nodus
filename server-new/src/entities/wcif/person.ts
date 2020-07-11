@@ -1,4 +1,4 @@
-import { ObjectType, Field, InputType, Int } from 'type-graphql'
+import { ObjectType, Field, InputType, Int, Authorized } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
 import { Registration } from './registration'
@@ -21,8 +21,8 @@ export class Person {
 	wcaUserId!: number
 
 	@prop()
-	@Field()
-	wcaId!: string
+	@Field({ nullable: true })
+	wcaId: string
 
 	@prop()
 	@Field((type) => Int)
@@ -38,10 +38,12 @@ export class Person {
 
 	@prop()
 	@Field()
+	@Authorized(['organizer, delegate, trainee-delegate, staff'])
 	birthdate!: string
 
 	@prop()
 	@Field()
+	@Authorized(['organizer, delegate, trainee-delegate, staff'])
 	email!: string
 
 	@prop()
@@ -52,7 +54,7 @@ export class Person {
 	@Field(() => Avatar)
 	avatar!: Avatar
 
-	@prop()
+	@prop({ type: String })
 	@Field(() => [String])
 	roles!: string[]
 

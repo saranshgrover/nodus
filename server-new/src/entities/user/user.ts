@@ -29,7 +29,7 @@ export class User {
 	@Field()
 	primaryAuthenticationType: string
 
-	@prop()
+	@prop({ type: Competition })
 	@Field(() => [Competition])
 	competitions: Competition[]
 

@@ -6,19 +6,17 @@ import { SERVER_URI } from '../config'
 
 const GET_USER = gql`
 	{
-		getUser {
+		getMe {
 			_id
 			username
 			email
 			name
 			primaryAuthenticationType
 			connections {
-				_id
 				connectionType
 				content
 			}
 			competitions {
-				_id
 				competitionType
 				competitionId
 				roles
@@ -47,8 +45,7 @@ const UserProvider = ({ children }) => {
 				info: user,
 				isSignedIn: isSignedIn,
 				signOut: signOut,
-			}}
-		>
+			}}>
 			{children}
 		</UserContext.Provider>
 	)
