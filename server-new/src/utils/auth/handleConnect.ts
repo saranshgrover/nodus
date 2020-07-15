@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs'
 
 import { config } from '../../config'
 import { WcifMongooseModel } from '../../modules/wcif/model'
+import { Competition } from '../../entities'
 
 interface PassportWCACallback {
 	accessToken: string
@@ -86,31 +87,31 @@ export async function handleWCAConnect({
 					id: competition.id,
 				})
 				if (wcif) {
-					const userCompetition = {
+					const userCompetition: Competition = {
 						competitionType: 'WCA',
 						competitionId: competition.id,
 						startDate: competition.start_date,
 						endDate: competition.end_date,
+						roles: ['competitor'],
 					}
-					let roles = ['competitor']
 					if (
 						competition.delegates.some(
 							(delegate: any) => delegate.id === profile.id
 						)
 					)
-						roles.push('delegate')
+						userCompetition.roles.push('delegate')
 					if (
 						competition.organizers.some(
 							(organizer: any) => organizer.id === profile.id
 						)
 					)
-						roles.push('organizer')
+						userCompetition.roles.push('organizer')
 					if (
 						competition.trainee_delegates.some(
 							(delegate: any) => delegate.id === profile.id
 						)
 					)
-						roles.push('traineeDelegate')
+						userCompetition.roles.push('traineeDelegate')
 					user!.competitions.push(userCompetition)
 					await user!.save()
 				}

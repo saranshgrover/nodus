@@ -1,27 +1,26 @@
 import { AuthChecker, Query } from 'type-graphql'
 import { parse } from 'graphql'
-import gql from 'graphql-tag'
+import { User } from '../entities/'
+import findRolesFor from './findRolesFor'
 
-const customAuthChecker: AuthChecker<Context> = (
+const customAuthChecker: AuthChecker<Context, AuthType> = (
 	{ root, args, context, info },
-	roles
+	authType
 ) => {
-	const query = context.req.body.query
-	// console.log(parse(query))
-	// const ql = gql`
-	// 	${query}
-	// `
-	// console.log('1')
-	// console.log(ql.definitions)
-	// console.log('2')
-	// console.log(ql)
-	// console.log(context.req.user.competitions)
-	context.tempInfo = 'abc'
-	// here you can read user from context
-	// and check his permission in db against `roles` argument
-	// that comes from `@Authorized`, eg. ["ADMIN", "MODERATOR"]
+	switch (authType[0].queryType) {
+		case 'competition':
+			const competitionId = info.variableValues
+				? info.variableValues.competitionId
+				: null
+			if (!competitionId) return false // if no variable named competitionId is found
+			if (!context.req.user) return false // if user isn't logged in
+			const userRoles = findRolesFor(competitionId, context.req.user)
+			return userRoles.some((role) => authType[0].roles.includes(role))
+		case 'user':
+			break
+	}
 
-	return true // or false if access denied
+	return true // Access given
 }
 
 export default customAuthChecker

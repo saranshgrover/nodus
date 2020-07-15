@@ -21,11 +21,23 @@ export default class WcifModel {
 		return wcif
 	}
 
-	async findByCompetitionId(competitionId: string): Promise<Wcif | null> {
+	async findByCompetitionId(
+		competitionId: string
+	): Promise<DocumentType<Wcif> | null> {
 		return await WcifMongooseModel.findOne({ competitionId })
 	}
 
 	async exists(competitionId: string): Promise<boolean> {
 		return await WcifMongooseModel.exists({ competitionId: competitionId })
+	}
+
+	async findAll(): Promise<Wcif[]> {
+		return await WcifMongooseModel.find().lean().exec()
+	}
+
+	async deleteWcif(competitionId: string): Promise<Wcif | null> {
+		return await WcifMongooseModel.findOneAndRemove({
+			competitionId,
+		}).exec()
 	}
 }

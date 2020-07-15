@@ -35,11 +35,15 @@ export default class UserResolver {
 		return user
 	}
 
-	@UseMiddleware(isLoggedIn)
-	@Query((returns) => User)
+	// @UseMiddleware(isLoggedIn)
+	@Query((returns) => User, { nullable: true })
 	async getMe(@Ctx() { req }: Context) {
-		// console.log(req.user)
+		if (!req.user) return null
 		const user = await this.userService.getById(req!.user.id)
+		if (user)
+			user.connections[0].content = JSON.stringify(
+				user?.connections[0].content
+			)
 		return user
 	}
 

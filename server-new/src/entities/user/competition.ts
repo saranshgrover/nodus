@@ -21,5 +21,5 @@ export class Competition {
 
 	@prop({ type: String })
 	@Field(() => [String])
-	roles: string[]
+	roles: RoleType[]
 }

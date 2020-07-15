@@ -37,13 +37,23 @@ export class Person {
 	gender!: string
 
 	@prop()
-	@Field()
-	@Authorized(['organizer, delegate, trainee-delegate, staff'])
+	@Field({ nullable: true })
+	@Authorized<AuthType>([
+		{
+			queryType: 'competition',
+			roles: ['organizer', 'delegate', 'traineeDelegate', 'staff'],
+		},
+	])
 	birthdate!: string
 
 	@prop()
-	@Field()
-	@Authorized(['organizer, delegate, trainee-delegate, staff'])
+	@Field({ nullable: true })
+	@Authorized<AuthType>([
+		{
+			queryType: 'competition',
+			roles: ['organizer', 'delegate', 'traineeDelegate', 'staff'],
+		},
+	])
 	email!: string
 
 	@prop()

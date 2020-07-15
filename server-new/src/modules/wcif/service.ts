@@ -2,12 +2,13 @@ import { Service } from 'typedi'
 import { ObjectId } from 'mongodb'
 
 import WcifModel from './model'
-import { Wcif } from '../../entities/wcif/wcif'
+import { Wcif, Person } from '../../entities'
 import { NewWcifInput } from './input'
 import { Document } from 'mongoose'
 import { UserMongooseModel } from '../user/model'
 import axios, { AxiosResponse } from 'axios'
 import { config } from '../../config'
+import { DocumentType } from '@typegoose/typegoose'
 
 @Service() // Dependencies injection
 export default class WcifService {
@@ -92,14 +93,12 @@ export default class WcifService {
 				endDate.setDate(
 					endDate.getDate() + wcif.schedule.numberOfDays - 1
 				)
-				const roles: string[] = person.roles.map((role) =>
-					['organizer', 'delegate'].includes(role)
-						? role
-						: role === 'trainee_delegate'
-						? 'traineeDelegate'
-						: ''
-				)
-				console.log(person.roles)
+				const roles: RoleType[] = ['competitor']
+				if (person.roles.includes('organizer')) roles.push('organizer')
+				if (person.roles.includes('delegate')) roles.push('delegate')
+				if (person.roles.includes('delegate')) roles.push('delegate')
+				if (person.roles.includes('trainee_delegate'))
+					roles.push('traineeDelegate')
 				user.competitions.push({
 					competitionType: 'WCA',
 					competitionId: wcifId,
@@ -138,7 +137,75 @@ export default class WcifService {
 
 	public async findByCompetitionId(
 		competitionId: string
-	): Promise<Wcif | null> {
-		return await this.wcifModel.findByCompetitionId(competitionId)
+	): Promise<DocumentType<Wcif>> {
+		const competition = await this.wcifModel.findByCompetitionId(
+			competitionId
+		)
+		if (!competition)
+			throw new Error(`Unable to find competition: ${competitionId}`)
+		return competition
+	}
+
+	public async getAllWcifs(): Promise<Wcif[]> {
+		return this.wcifModel.findAll()
+	}
+
+	public async getTopCompetitors(
+		competitionId: string,
+		top: number
+	): Promise<Person[]> {
+		const competition = await this.findByCompetitionId(competitionId)
+		if (!competition)
+			throw new Error(`Error finding competition: ${competitionId}`)
+		let persons = competition.persons
+		let filteredPersons: Person[] = []
+		for (const person of persons) {
+			let isTop = false
+			let personalBests = person.personalBests
+			personalBests = personalBests.filter((best) => {
+				if (best.worldRanking <= top) {
+					isTop = true
+					return true
+				} else return false
+			})
+			if (isTop) {
+				person.personalBests = personalBests
+				filteredPersons.push(person)
+			}
+		}
+		return filteredPersons
+	}
+
+	public async deleteWcif(competitionId: string): Promise<Wcif> {
+		const competition = await this.findByCompetitionId(competitionId)
+		if (!competition)
+			throw new Error(`No Competition found for: ${competitionId}`)
+		const persons = competition.persons
+		for (const person of persons) {
+			const user = await UserMongooseModel.findOne({
+				connections: {
+					$elemMatch: {
+						$and: [
+							{ connectionType: 'WCA' },
+							{ 'content.id': person.wcaUserId },
+						],
+					},
+				},
+			})
+			if (
+				user &&
+				user.competitions &&
+				user.competitions.some(
+					(comp) => comp.competitionId === competition.competitionId
+				)
+			) {
+				user.competitions = user.competitions.filter(
+					(competition) => competition.competitionId !== competitionId
+				)
+				await user.save()
+			}
+		}
+		const deletedWcif = await this.wcifModel.deleteWcif(competitionId)
+		return deletedWcif!
 	}
 }

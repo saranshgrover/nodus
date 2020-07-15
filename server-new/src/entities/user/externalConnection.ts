@@ -18,7 +18,10 @@ export class ExternalConnection {
 				return JSON.parse(content)
 			} else return content
 		},
-		get: (content: Schema.Types.Mixed) => JSON.stringify(content),
+		get: (content: Schema.Types.Mixed) => {
+			console.log('Getting content...')
+			return JSON.stringify(content)
+		},
 		type: Schema.Types.Mixed,
 	})
 	@Field(() => String)

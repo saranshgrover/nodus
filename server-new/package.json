@@ -41,7 +41,6 @@
 		"express": "^4.17.1",
 		"express-session": "^1.17.1",
 		"graphql": "^15.0.0",
-		"graphql-tag": "^2.10.4",
 		"helmet": "^3.22.0",
 		"mongoose": "^5.9.13",
 		"passport": "^0.4.1",
