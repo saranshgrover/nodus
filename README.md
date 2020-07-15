@@ -7,8 +7,8 @@ Nodus is designed to be a one stop resource for anything required by competitors
 Server
 
 ```js
-npm install
-nodemon
+yarn
+yarn start:dev
 ```
 
 Client
@@ -18,7 +18,6 @@ yarn
 yarn start
 ```
 
-Note that you will need to add an additional wca-env.js with the token as 'example-application-id' and the RedirectURI as 'staging.worldcubeassociation.org' file in order for the WCA Oauth functionality to work locally with the WCA Staging server.
 
 ## Built With
 
