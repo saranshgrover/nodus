@@ -35,7 +35,9 @@ export default function CompList({ comps, subheader }) {
 			? setQueryComps(comps)
 			: setQueryComps(
 					comps.filter((comp) =>
-						comp.name.toLowerCase().includes(event.target.value.toLowerCase())
+						comp.name
+							.toLowerCase()
+							.includes(event.target.value.toLowerCase())
 					)
 			  )
 	}
@@ -46,9 +48,10 @@ export default function CompList({ comps, subheader }) {
 				className={classes.list}
 				style={{ overflow: 'auto' }}
 				subheader={
-					<ListSubheader disableSticky={true}>{subheader}</ListSubheader>
-				}
-			>
+					<ListSubheader disableSticky={true}>
+						{subheader}
+					</ListSubheader>
+				}>
 				{comps.length === 0 ? (
 					<ListItem>
 						<ListItemText>You have no upcoming comps!</ListItemText>
@@ -60,19 +63,17 @@ export default function CompList({ comps, subheader }) {
 							onChange={handleSearchChange}
 							fullWidth={true}
 							label='Search'
-							id='outlined-basic'
-						></TextField>
+							id='outlined-basic'></TextField>
 					</ListItem>
 				)}
 				{queryComps.map((comp) => {
 					return (
 						<ListItem
 							alignItems='center'
-							key={comp.id}
+							key={comp.competitionId}
 							button
 							component={Link}
-							to={`/competitions/${comp.id}/overview`}
-						>
+							to={`/competitions/${comp.competitionId}/overview`}>
 							<ListItemIcon
 								children={
 									<FlagIcon
@@ -86,16 +87,16 @@ export default function CompList({ comps, subheader }) {
 								}
 							/>
 							<ListItemText
-								key={comp.id + '-about'}
+								key={comp.competitionId + '-about'}
 								primary={comp.name}
 								secondary={
-									<React.Fragment key={comp.id + '-fragment'}>
+									<React.Fragment
+										key={comp.competitionId + '-fragment'}>
 										<Typography
-											key={comp.id + 'date'}
+											key={comp.competitionId + 'date'}
 											component='span'
 											variant='body2'
-											color='textPrimary'
-										>
+											color='textPrimary'>
 											{compDatesToString(
 												comp.schedule.startDate,
 												comp.schedule.numberOfDays

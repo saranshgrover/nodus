@@ -36,7 +36,15 @@ const UserProvider = ({ children }) => {
 	const { loading, error, data } = useQuery(GET_USER)
 	if (error) console.error(error)
 	React.useEffect(() => {
-		!loading && !error && setUser(data.getUser)
+		if (!loading && !error) {
+			const user = data.getMe
+			if (user) {
+				user.connections[0].content = JSON.parse(
+					data.getMe.connections[0].content
+				)
+			}
+			setUser(user)
+		}
 	}, [loading, error, data])
 	if (loading || user === undefined) return <LinearProgress />
 	return (

@@ -51,7 +51,7 @@ const UPDATE_COMPETITION_EVENTS_MUTATION = gql`
 	mutation updateWcifEvents($id: String!, $events: [EventInput]!) {
 		updateWcifEvents(_id: $id, events: $events) {
 			_id
-			id
+			competitionId
 			name
 		}
 	}
@@ -88,8 +88,7 @@ export default function EventsSetup({ id, onComplete, handleBack }) {
 			spacing={2}
 			container
 			direction='column'
-			justify='space-around'
-		>
+			justify='space-around'>
 			<Grid item>
 				<Grid container spacing={2}>
 					{localData

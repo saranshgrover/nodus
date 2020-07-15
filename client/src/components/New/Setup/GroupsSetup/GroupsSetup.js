@@ -90,9 +90,12 @@ const UPDATE_COMPETITION_GROUPS_MUTATION = gql`
 		$id: String!
 		$updatedCompetitors: [PersonInput]!
 	) {
-		updateWcifCompetitors(_id: $id, updatedCompetitors: $updatedCompetitors) {
+		updateWcifCompetitors(
+			_id: $id
+			updatedCompetitors: $updatedCompetitors
+		) {
 			_id
-			id
+			competitionId
 			name
 		}
 	}

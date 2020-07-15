@@ -20,7 +20,7 @@ const COMPETITION_GROUPS_QUERY = gql`
 		getWcifByCompetitionId(competitionId: $competitionId) {
 			name
 			shortName
-			id
+			competitionId
 			_id
 			events {
 				id
@@ -130,8 +130,14 @@ export default function Groups() {
 				eventTabs.push({
 					label: `${activityKey[event.id]}`,
 					value: tabs.length + eventTabs.length + 1,
-					Icon: <CubingIcon eventId={event.id} style={{color:`${theme.palette.competitionPrimary.main}`}}
-					/>,
+					Icon: (
+						<CubingIcon
+							eventId={event.id}
+							style={{
+								color: `${theme.palette.competitionPrimary.main}`,
+							}}
+						/>
+					),
 					Component: EventGroups,
 					id: event.id,
 				})
@@ -150,7 +156,11 @@ export default function Groups() {
 				onChange={handleChange}
 				centered={largeScreen}
 				variant={
-					largeScreen ? 'standard' : mediumScreen ? 'fullWidth' : 'scrollable'
+					largeScreen
+						? 'standard'
+						: mediumScreen
+						? 'fullWidth'
+						: 'scrollable'
 				}
 				value={value}
 				tabs={tabs}

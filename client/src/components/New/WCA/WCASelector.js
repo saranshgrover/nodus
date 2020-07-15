@@ -20,12 +20,14 @@ export default function WCASelector({ setData }) {
 				name
 				start_date
 				end_date
-				id
+				competitionId
 				country_iso2
 			}
 		}
 	`
-	const [managableCompetitions, setManagableCompetitions] = useState(undefined)
+	const [managableCompetitions, setManagableCompetitions] = useState(
+		undefined
+	)
 	const [createWcif, { error: error2, data }] = useMutation(CREATE_WCIF, {
 		errorPolicy: 'ignore',
 	})
@@ -43,7 +45,8 @@ export default function WCASelector({ setData }) {
 			setManagableCompetitions(data2.findMyManagableCompetitions)
 	}, [loading, error, data2])
 	if (error) console.error(error)
-	if (loading || managableCompetitions === undefined) return <LinearProgress />
+	if (loading || managableCompetitions === undefined)
+		return <LinearProgress />
 	console.log(managableCompetitions)
 	return (
 		<>

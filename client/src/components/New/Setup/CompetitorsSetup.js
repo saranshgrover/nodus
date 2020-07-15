@@ -41,8 +41,12 @@ const tableIcons = {
 	)),
 	ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
 	Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-	SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-	ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+	SortArrow: forwardRef((props, ref) => (
+		<ArrowDownward {...props} ref={ref} />
+	)),
+	ThirdStateCheck: forwardRef((props, ref) => (
+		<Remove {...props} ref={ref} />
+	)),
 	ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 }
 
@@ -60,7 +64,6 @@ const GET_WCIF_COMPETITORS_QUERY = gql`
 				gender
 				birthdate
 				email
-				_id
 			}
 		}
 	}
@@ -71,7 +74,10 @@ const UPDATE_COMPETITION_COMPETITORS_MUTATION = gql`
 		$id: String!
 		$updatedCompetitors: [PersonInput]!
 	) {
-		updateWcifCompetitors(_id: $id, updatedCompetitors: $updatedCompetitors) {
+		updateWcifCompetitors(
+			_id: $id
+			updatedCompetitors: $updatedCompetitors
+		) {
 			_id
 			id
 			name
@@ -155,8 +161,7 @@ export default function CompetitorsSetup({
 			container
 			direction='column'
 			spacing={1}
-			justify='space-around'
-		>
+			justify='space-around'>
 			<Grid item>
 				<MaterialTable
 					icons={tableIcons}

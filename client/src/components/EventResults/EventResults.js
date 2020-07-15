@@ -10,7 +10,7 @@ const WCA_ROUND_QUERY = gql`
 	query round($competitionId: ID!, $roundId: String!) {
 		round(competitionId: $competitionId, roundId: $roundId) {
 			_id
-			id
+			competitionId
 			results {
 				_id
 				person {
@@ -41,6 +41,9 @@ export default function EventResults({ roundId }) {
 	if (loading) return <></>
 	if (error) return <Error message={error.message} />
 	return (
-		<CompetitorResultList competitors={data.round.results} roundId={roundId} />
+		<CompetitorResultList
+			competitors={data.round.results}
+			roundId={roundId}
+		/>
 	)
 }

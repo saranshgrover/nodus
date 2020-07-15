@@ -30,7 +30,7 @@ const UPDATE_COMPETITION_INFO_MUTATION = gql`
 			newShortName: $shortName
 			newCompetitorLimit: $competitorLimit
 		) {
-			id
+			competitionId
 			_id
 		}
 	}
@@ -53,7 +53,9 @@ export default function InfoSetup({ id, onComplete, handleBack }) {
 	if (query.error) console.error(query.error)
 
 	const handleComplete = () => {
-		updateWcifInfo({ variables: { ...localData, id } }).then(() => onComplete())
+		updateWcifInfo({ variables: { ...localData, id } }).then(() =>
+			onComplete()
+		)
 	}
 
 	const handleReset = () => {}
@@ -74,8 +76,7 @@ export default function InfoSetup({ id, onComplete, handleBack }) {
 					xs={12}
 					alignItems='center'
 					alignContent='center'
-					wrap='nowrap'
-				>
+					wrap='nowrap'>
 					<Grid item>
 						<TextField
 							fullWidth

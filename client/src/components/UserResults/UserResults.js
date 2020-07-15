@@ -22,7 +22,7 @@ const WCA_ROUND_QUERY = gql`
 	query competitor($competitionId: ID!, $competitorId: Int!) {
 		competitor(competitionId: $competitionId, competitorId: $competitorId) {
 			_id
-			id
+			competitionId
 			name
 			wcaId
 			results {
@@ -57,8 +57,7 @@ export default function UserResult() {
 			justify='center'
 			alignItems='center'
 			alignContent='center'
-			wrap='nowrap'
-		>
+			wrap='nowrap'>
 			<Grid item>
 				<Typography variant='h3' color='initial'>
 					{person.name}
@@ -72,7 +71,9 @@ export default function UserResult() {
 					<Table aria-label='simple table'>
 						<TableHead>
 							<TableRow>
-								<TableCell size='small' align='left'></TableCell>
+								<TableCell
+									size='small'
+									align='left'></TableCell>
 								<TableCell align='left'></TableCell>
 								<TableCell>Event</TableCell>
 								<TableCell align='left'>Average</TableCell>
@@ -82,18 +83,20 @@ export default function UserResult() {
 						</TableHead>
 						<TableBody>
 							{person.results.map((result) => {
-								const { eventId, roundNumber } = parseActivityCode(
-									result.round.id
-								)
+								const {
+									eventId,
+									roundNumber,
+								} = parseActivityCode(result.round.id)
 								{
 									return (
 										<TableRow key={result.round.id}>
 											<TableCell
 												size='small'
 												style={{
-													backgroundColor: result.advancable && teal[400],
-												}}
-											>
+													backgroundColor:
+														result.advancable &&
+														teal[400],
+												}}>
 												{result.ranking}
 											</TableCell>
 											<TableCell align='left'>
@@ -110,10 +113,19 @@ export default function UserResult() {
 												)}
 											</TableCell>
 											<TableCell align='left'>
-												{formatAttemptResult(result.best || '', eventId, false)}
+												{formatAttemptResult(
+													result.best || '',
+													eventId,
+													false
+												)}
 											</TableCell>
 											<TableCell align='right'>{`${result.attempts.map(
-												(r) => `${formatAttemptResult(r, eventId, false)} `
+												(r) =>
+													`${formatAttemptResult(
+														r,
+														eventId,
+														false
+													)} `
 											)}`}</TableCell>
 										</TableRow>
 									)
