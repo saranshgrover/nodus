@@ -1,9 +1,9 @@
+import connectMongo from 'connect-mongo'
 import express from 'express'
 import session from 'express-session'
-import connectMongo from 'connect-mongo'
 import mongoose from 'mongoose'
-
 import { config } from '../../config'
+
 
 export default async (app: express.Application) => {
 	const MongoStore = connectMongo(session)

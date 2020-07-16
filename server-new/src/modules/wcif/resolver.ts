@@ -1,23 +1,20 @@
+import { ObjectId } from 'mongodb'
+import mongoose from 'mongoose'
 import {
-	Resolver,
 	Arg,
-	Query,
-	Mutation,
-	ID,
-	UseMiddleware,
 	Ctx,
+	Mutation,
+	Query,
+	Resolver,
+	UseMiddleware,
 } from 'type-graphql'
 import { Service } from 'typedi'
-import { ObjectId } from 'mongodb'
-import { isLoggedIn } from '../middleware/isLoggedIn'
-import { Wcif, Round, Person, Schedule, Event, Setting } from '../../entities/'
-import WcifService from './service'
-import { NewWcifInput, WcifCompetitorArgs, WcifEventsArgs } from './input'
-import { hasRole } from '../decorator/hasRole'
-import { UserMongooseModel } from '../user/model'
-import { WcifMongooseModel } from './model'
 import { PRODUCTION } from '../../config'
-import mongoose from 'mongoose'
+import { Person, Round, Schedule, Setting, Wcif } from '../../entities/'
+import { hasRole } from '../decorator/hasRole'
+import { isLoggedIn } from '../middleware/isLoggedIn'
+import { WcifCompetitorArgs, WcifEventsArgs } from './input'
+import WcifService from './service'
 
 /*
   IMPORTANT: Your business logic must be in the service!
@@ -100,9 +97,7 @@ export default class WcifResolver {
 		@Arg('newShortName') shortName: string,
 		@Arg('newCompetitorLimit') competitorLimit: number
 	) {
-		let competition = await this.wcifService.findByCompetitionId(
-			competitionId
-		)
+		let competition = await this.wcifService.findByCompetitionId(competitionId)
 		competition = {
 			...competition,
 			name: name ?? competition.name,
@@ -134,7 +129,8 @@ export default class WcifResolver {
 	}: WcifCompetitorArgs) {
 		const comp = await this.wcifService.findByCompetitionId(competitionId)
 		for (const index in competitors) {
-			for (const key of Object.keys(competitors[index])) {
+			for (let key of Object.keys(competitors[index])) {
+				//@ts-ignore
 				comp.persons[index][key as keyof Person] =
 					competitors[index][key as keyof Person]
 			}
@@ -160,7 +156,8 @@ export default class WcifResolver {
 	) {
 		const comp = await this.wcifService.findByCompetitionId(competitionId)
 		for (const key of Object.keys(settings)) {
-			comp.settings[key] = settings[key as keyof Setting]
+			// @ts-ignore
+			comp.settings[key as keyof Setting] = settings[key as keyof Setting]
 		}
 		const savedComp = await comp.save()
 		return savedComp

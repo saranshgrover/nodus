@@ -1,14 +1,12 @@
-import { Service } from 'typedi'
-import { ObjectId } from 'mongodb'
-
-import WcifModel from './model'
-import { Wcif, Person } from '../../entities'
-import { NewWcifInput } from './input'
-import { Document } from 'mongoose'
-import { UserMongooseModel } from '../user/model'
-import axios, { AxiosResponse } from 'axios'
-import { config } from '../../config'
 import { DocumentType } from '@typegoose/typegoose'
+import axios, { AxiosResponse } from 'axios'
+import { ObjectId } from 'mongodb'
+import { Service } from 'typedi'
+import { config } from '../../config'
+import { Person, Wcif } from '../../entities'
+import { UserMongooseModel } from '../user/model'
+import WcifModel from './model'
+import createModelFromWcif from './utils/createModelFromWcif'
 
 @Service() // Dependencies injection
 export default class WcifService {
@@ -21,13 +19,9 @@ export default class WcifService {
 	public async addWcif(competitionId: string, userId: string): Promise<Wcif> {
 		// Ensure competition is not already in database
 		const competition = await this.wcifModel.exists(competitionId)
-		console.log(competition)
 		if (competition) {
-			throw new Error(
-				`Error: Document with '${competitionId}' already exists.`
-			)
+			throw new Error(`Error: Document with '${competitionId}' already exists.`)
 		}
-
 		const user = await UserMongooseModel.findById(userId)
 		const wcaConnection = user!.connections.find(
 			(connection) => connection.connectionType === 'WCA'
@@ -36,7 +30,7 @@ export default class WcifService {
 			throw new Error('No WCA Connection found')
 		}
 		const wcaAccessToken = wcaConnection.accessToken
-		const res: AxiosResponse<Wcif & { id: string }> = await axios({
+		const res: AxiosResponse<Partial<Wcif> & { id: string }> = await axios({
 			url: `${config.wca.originURL}/api/v0/competitions/${competitionId}/wcif/`,
 			method: 'GET',
 			headers: {
@@ -45,30 +39,8 @@ export default class WcifService {
 			},
 		})
 		const data = await res.data
-		// Get more information not stored in the WCIF
-		const compInformation = await axios({
-			url: `${config.wca.originURL}/api/v0/competitions/${competitionId}/`,
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		})
-		// Attach some data
-		const compInfoData = compInformation.data
-		data.locationName = compInfoData.venue_address
-		data.registrationOpen = compInfoData.registration_open
-		data.registrationClose = compInfoData.registration_close
-		// Attach starting settings data
-		data.settings = {
-			_id: new ObjectId(),
-			message: '',
-			imageUrl: '',
-			colorTheme: 'orange_200', // Orange default
-		}
-		data.competitionId = data.id
-		const wcifId = data.id
-		delete data.id
-		const wcif = await this.wcifModel.create(data)
+		const wcifData = await createModelFromWcif(data, competitionId)
+		const wcif = await this.wcifModel.create(wcifData)
 		const persons = wcif.persons
 		// TODO: Make this cleaner
 		for (const person of persons) {
@@ -86,13 +58,11 @@ export default class WcifService {
 				user &&
 				user.competitions &&
 				!user.competitions.some(
-					(competition) => competition.competitionId === wcifId
+					(competition) => competition.competitionId === wcif.competitionId
 				)
 			) {
 				let endDate = new Date(wcif.schedule.startDate)
-				endDate.setDate(
-					endDate.getDate() + wcif.schedule.numberOfDays - 1
-				)
+				endDate.setDate(endDate.getDate() + wcif.schedule.numberOfDays - 1)
 				const roles: RoleType[] = ['competitor']
 				if (person.roles.includes('organizer')) roles.push('organizer')
 				if (person.roles.includes('delegate')) roles.push('delegate')
@@ -101,7 +71,7 @@ export default class WcifService {
 					roles.push('traineeDelegate')
 				user.competitions.push({
 					competitionType: 'WCA',
-					competitionId: wcifId,
+					competitionId: wcif.competitionId,
 					startDate: wcif.schedule.startDate,
 					endDate: endDate.toISOString().split('T')[0],
 					roles: roles,
@@ -109,7 +79,6 @@ export default class WcifService {
 				await user.save()
 			}
 		}
-		delete wcif.id
 		const savedWcif = await wcif.save()
 		if (!savedWcif) throw new Error('Error saving document')
 		return wcif
@@ -124,9 +93,7 @@ export default class WcifService {
 		const Wcifs: Wcif[] = []
 		if (competitions.length > 0) {
 			for (const competition of competitions) {
-				const wcif = await this.findByCompetitionId(
-					competition.competitionId
-				)
+				const wcif = await this.findByCompetitionId(competition.competitionId)
 				if (wcif) {
 					Wcifs.push(wcif)
 				}
@@ -138,9 +105,7 @@ export default class WcifService {
 	public async findByCompetitionId(
 		competitionId: string
 	): Promise<DocumentType<Wcif>> {
-		const competition = await this.wcifModel.findByCompetitionId(
-			competitionId
-		)
+		const competition = await this.wcifModel.findByCompetitionId(competitionId)
 		if (!competition)
 			throw new Error(`Unable to find competition: ${competitionId}`)
 		return competition
