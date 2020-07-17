@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-export default function CompList({ comps, subheader }) {
+export default function CompList({ date = false, comps, subheader }) {
 	console.log(comps)
 	const [query, setQuery] = useState('')
 	const [queryComps, setQueryComps] = useState(comps)

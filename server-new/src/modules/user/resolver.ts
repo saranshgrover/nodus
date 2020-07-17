@@ -19,6 +19,8 @@ import axios, { AxiosResponse } from 'axios'
 import { UpdateUserInput } from './input'
 import { UserMongooseModel } from './model'
 import session from 'express-session'
+import descriptions from '../descriptions'
+
 /*
   IMPORTANT: Your business logic must be in the service!
 */
@@ -35,12 +37,14 @@ export default class UserResolver {
 		return user
 	}
 
-	// @UseMiddleware(isLoggedIn)
-	@Query((returns) => User, { nullable: true })
+	@Query((returns) => User, {
+		nullable: true,
+		description: descriptions.user.getMe,
+	})
 	async getMe(@Ctx() { req }: Context) {
 		if (!req.user) return null
 		const user = await this.userService.getById(req!.user.id)
-		if (user)
+		if (user && user.primaryAuthenticationType === 'WCA')
 			user.connections[0].content = JSON.stringify(
 				user?.connections[0].content
 			)
