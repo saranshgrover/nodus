@@ -43,7 +43,7 @@ const useTabStyles = makeStyles(({ breakpoints, spacing, palette }) => {
 	}
 })
 
-const ElevatedTabs = ({ tabs, tabProps, ...props }) => {
+const ElevatedTabs = ({ tabs, tabProps = {}, ...props }) => {
 	const tabsClasses = useTabsStyles(props)
 	const tabClasses = useTabStyles(tabProps)
 	return (

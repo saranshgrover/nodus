@@ -25,8 +25,8 @@ export class Person {
 	wcaId: string
 
 	@prop()
-	@Field((type) => Int)
-	registrationId!: number
+	@Field((type) => Int, { nullable: true })
+	registrantId!: number
 
 	@prop()
 	@Field()

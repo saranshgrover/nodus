@@ -6,6 +6,7 @@ import { Tabs, Tab } from '@material-ui/core'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import { UserContext } from '../../contexts/UserContext'
+import { useLandingMyUpcomingCompetitionsQuery } from 'generated/graphql'
 
 const GET_MY_UPCOMING_COMPETITIONS = gql`
 	{
@@ -31,7 +32,7 @@ function LandingSignedIn() {
 	const [upcomingCompetitions, setUpcomingCompetitions] = useState(null) // Set to null to avoid no comps being shown.
 	const user = useContext(UserContext)
 	// fixme
-	const { data, error, loading } = useQuery(GET_MY_UPCOMING_COMPETITIONS)
+	const { data, error, loading } = useLandingMyUpcomingCompetitionsQuery()
 	useEffect(() => {
 		!loading &&
 			!error &&

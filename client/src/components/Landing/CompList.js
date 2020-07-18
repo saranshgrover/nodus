@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -26,7 +26,9 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function CompList({ date = false, comps, subheader }) {
-	console.log(comps)
+	useEffect(() => {
+		setQueryComps(comps)
+	}, [comps])
 	const [query, setQuery] = useState('')
 	const [queryComps, setQueryComps] = useState(comps)
 	const handleSearchChange = (event) => {
@@ -35,9 +37,7 @@ export default function CompList({ date = false, comps, subheader }) {
 			? setQueryComps(comps)
 			: setQueryComps(
 					comps.filter((comp) =>
-						comp.name
-							.toLowerCase()
-							.includes(event.target.value.toLowerCase())
+						comp.name.toLowerCase().includes(event.target.value.toLowerCase())
 					)
 			  )
 	}
@@ -48,9 +48,7 @@ export default function CompList({ date = false, comps, subheader }) {
 				className={classes.list}
 				style={{ overflow: 'auto' }}
 				subheader={
-					<ListSubheader disableSticky={true}>
-						{subheader}
-					</ListSubheader>
+					<ListSubheader disableSticky={true}>{subheader}</ListSubheader>
 				}>
 				{comps.length === 0 ? (
 					<ListItem>
@@ -90,8 +88,7 @@ export default function CompList({ date = false, comps, subheader }) {
 								key={comp.competitionId + '-about'}
 								primary={comp.name}
 								secondary={
-									<React.Fragment
-										key={comp.competitionId + '-fragment'}>
+									<React.Fragment key={comp.competitionId + '-fragment'}>
 										<Typography
 											key={comp.competitionId + 'date'}
 											component='span'
