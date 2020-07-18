@@ -56,7 +56,7 @@ export class Person {
 	])
 	email!: string
 
-	@prop()
+	@prop({ type: Registration })
 	@Field(() => Registration)
 	registration!: Registration
 
@@ -68,11 +68,11 @@ export class Person {
 	@Field(() => [String])
 	roles!: string[]
 
-	@prop()
+	@prop({ type: Assignment })
 	@Field(() => [Assignment])
 	assignments!: Assignment[]
 
-	@prop()
+	@prop({ type: PersonalBest })
 	@Field(() => [PersonalBest])
 	personalBests!: PersonalBest[]
 }

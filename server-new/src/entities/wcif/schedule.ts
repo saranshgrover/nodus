@@ -17,7 +17,7 @@ export class Schedule {
 	@Field((type) => Int)
 	numberOfDays!: number
 
-	@prop()
+	@prop({ type: Venue })
 	@Field((type) => [Venue])
 	venues!: Venue[]
 }

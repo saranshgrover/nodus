@@ -23,7 +23,7 @@ export class Event {
 	@Field(() => Int)
 	competitorLimit!: number
 
-	@prop()
+	@prop({ type: Qualification })
 	@Field(() => Qualification)
 	qualification: Qualification
 }

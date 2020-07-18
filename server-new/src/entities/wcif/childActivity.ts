@@ -33,7 +33,7 @@ export class ChildActivity {
 	@Field((type) => Int)
 	id!: number
 
-	@prop()
+	@prop({ type: Extension })
 	@Field((type) => [Extension])
 	extensions!: Extension[]
 }

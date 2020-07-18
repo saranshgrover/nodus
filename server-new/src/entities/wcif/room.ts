@@ -26,7 +26,7 @@ export class Room {
 	@Field((type) => [Activity])
 	activities!: Activity[]
 
-	@prop()
+	@prop({ type: Extension })
 	@Field((type) => [Extension])
 	extensions!: Extension[]
 }

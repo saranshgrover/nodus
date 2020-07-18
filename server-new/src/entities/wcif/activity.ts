@@ -34,11 +34,11 @@ export class Activity {
 	@Field(() => Int)
 	id!: number
 
-	@prop()
+	@prop({ type: ChildActivity })
 	@Field(() => [ChildActivity])
 	childActivities!: ChildActivity[]
 
-	@prop()
+	@prop({ type: Extension })
 	@Field(() => [Extension])
 	extensions!: Extension[]
 }

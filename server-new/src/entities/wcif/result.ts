@@ -25,7 +25,7 @@ export class Result {
 	@Field((type) => Int)
 	average!: number
 
-	@prop()
+	@prop({ type: Attempt })
 	@Field((type) => [Attempt])
 	attempts!: Attempt[]
 }

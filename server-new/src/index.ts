@@ -1,6 +1,6 @@
-import "reflect-metadata";
+import 'reflect-metadata'
 
-import bootstrap from "./bootstrap";
-import { config } from "./config";
+import bootstrap from './bootstrap'
+import { config } from './config'
 
-bootstrap(config);
+bootstrap(config)

@@ -34,11 +34,11 @@ export class Venue {
 	@Field((type) => Int)
 	longitudeMicrodegrees!: number
 
-	@prop()
+	@prop({ type: Room })
 	@Field((type) => [Room])
 	rooms!: Room[]
 
-	@prop()
+	@prop({ type: Extension })
 	@Field((type) => [Extension])
 	extension: Extension[]
 }

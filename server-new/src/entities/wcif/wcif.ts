@@ -29,11 +29,11 @@ export class Wcif {
 	@Field(() => [Person])
 	persons!: Person[]
 
-	@prop()
+	@prop({ type: Event })
 	@Field(() => [Event])
 	events: Event[]
 
-	@prop()
+	@prop({ type: Schedule })
 	@Field(() => Schedule)
 	schedule: Schedule
 
@@ -41,7 +41,7 @@ export class Wcif {
 	@Field(() => Int)
 	competitorLimit: number
 
-	@prop()
+	@prop({ type: Extension })
 	@Field(() => [Extension])
 	extensions: Extension[]
 
@@ -57,7 +57,7 @@ export class Wcif {
 	@Field()
 	registrationClose!: string
 
-	@prop()
+	@prop({ type: Setting })
 	@Field(() => Setting)
 	settings!: Setting
 }

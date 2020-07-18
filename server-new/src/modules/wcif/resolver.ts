@@ -73,7 +73,7 @@ export default class WcifResolver {
 	}
 
 	@UseMiddleware(isLoggedIn)
-	@hasRole(['delegate', 'organizer', 'traineeDelegate'])
+	// @hasRole(['delegate', 'organizer', 'traineeDelegate'])
 	@Mutation((returns) => Wcif)
 	async createWcif(
 		@Arg('competitionId') competitionId: string,

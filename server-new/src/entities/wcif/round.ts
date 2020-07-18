@@ -22,15 +22,15 @@ export class Round {
 	@Field()
 	format!: string
 
-	@prop()
+	@prop({ type: TimeLimit })
 	@Field(() => [TimeLimit])
 	timeLimit: TimeLimit[]
 
-	@prop()
+	@prop({ type: Cutoff })
 	@Field(() => Cutoff)
 	cutoff: Cutoff
 
-	@prop()
+	@prop({ type: AdvancementCondition })
 	@Field(() => AdvancementCondition)
 	advancementCondition: AdvancementCondition
 
@@ -38,15 +38,15 @@ export class Round {
 	@Field(() => Int)
 	scrambleSetCount: number
 
-	@prop()
+	@prop({ type: ScrambleSet })
 	@Field(() => [ScrambleSet])
 	scrambleSets: ScrambleSet[]
 
-	@prop()
+	@prop({ type: Result })
 	@Field(() => [Result])
 	results: Result[]
 
-	@prop()
+	@prop({ type: Extension })
 	@Field(() => [Extension])
 	extensions: Extension[]
 }
