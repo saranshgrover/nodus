@@ -1,18 +1,18 @@
-import React, { createContext, useContext, useEffect } from 'react'
-import LinearProgress from '@material-ui/core/LinearProgress'
-import Error from '../components/common/Error'
-import { flattenActivities } from '../logic/schedule'
-import { themeColors } from '../logic/consts'
 import blueGrey from '@material-ui/core/colors/blueGrey'
-import { ToggleThemeContext } from './ThemeProvider'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import useUser from 'hooks/useUser'
+import React, { createContext, useContext, useEffect } from 'react'
+import Error from '../components/common/Error'
 import {
-	useContextGetCompetitionQuery,
-	Scalars,
-	ExternalConnection,
 	Activtiy,
 	ChildActivity,
+	ExternalConnection,
+	Scalars,
+	useContextGetCompetitionQuery,
 } from '../generated/graphql'
-import useUser from 'hooks/useUser'
+import { themeColors } from '../logic/consts'
+import { flattenActivities } from '../logic/schedule'
+import { ToggleThemeContext } from './ThemeProvider'
 
 export interface ICompetitionContext {
 	userRegistered: boolean
@@ -80,6 +80,7 @@ const CompetitionProvider = ({
 		competitionType = userCompetition.competitionType
 		tabs = ['overview', ...tabs]
 		if (userConnectionInfo) {
+			console.log(userConnectionInfo)
 			registrantId = wcif!.persons.find(
 				(person) =>
 					person.wcaUserId === JSON.parse(userConnectionInfo!.content).id

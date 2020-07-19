@@ -22,7 +22,7 @@ export type Query = {
   getWcifById: Wcif;
   getMyUpcomingCompetitions: Array<Wcif>;
   getWcifByCompetitionId?: Maybe<Wcif>;
-  getOpenRounds: Round;
+  getOpenRounds: Array<Round>;
   getAllWcifs: Array<Wcif>;
   getTopCompetitors: Array<Person>;
   getUser?: Maybe<User>;
@@ -53,8 +53,8 @@ export type QueryGetOpenRoundsArgs = {
 
 
 export type QueryGetTopCompetitorsArgs = {
-  top: Scalars['Float'];
   competitionId: Scalars['String'];
+  top: Scalars['Int'];
 };
 
 
@@ -113,9 +113,9 @@ export type Registration = {
   _id: Scalars['ObjectId'];
   eventIds: Array<Scalars['String']>;
   status: Scalars['String'];
-  comments: Scalars['String'];
+  comments?: Maybe<Scalars['String']>;
   wcaRegistrationId: Scalars['Int'];
-  guests: Scalars['Int'];
+  guests?: Maybe<Scalars['Int']>;
 };
 
 export type Avatar = {
@@ -147,6 +147,7 @@ export type PersonalBest = {
 export type Event = {
   __typename?: 'Event';
   _id: Scalars['ObjectId'];
+  id: Scalars['String'];
   rounds: Array<Round>;
   extensions: Array<Extension>;
   competitorLimit: Scalars['Int'];
@@ -325,8 +326,8 @@ export type WcifFetch = {
   name: Scalars['String'];
   start_date: Scalars['String'];
   end_date: Scalars['String'];
-  id: Scalars['String'];
   country_iso2: Scalars['String'];
+  competitionId: Scalars['String'];
 };
 
 export type Mutation = {
@@ -361,16 +362,28 @@ export type MutationDeleteWcifArgs = {
 
 
 export type MutationUpdateWcifInfoArgs = {
-  newCompetitorLimit: Scalars['Float'];
-  newShortName: Scalars['String'];
-  newName: Scalars['String'];
   competitionId: Scalars['String'];
+  newName: Scalars['String'];
+  newShortName: Scalars['String'];
+  newCompetitorLimit: Scalars['Int'];
 };
 
 
 export type MutationUpdateWcifScheduleArgs = {
   schedule: ScheduleInput;
   competitionId: Scalars['String'];
+};
+
+
+export type MutationUpdateWcifCompetitorsArgs = {
+  competitionId: Scalars['String'];
+  competitors: Array<NewPersonInput>;
+};
+
+
+export type MutationUpdateWcifEventsArgs = {
+  competitionId: Scalars['String'];
+  events: Array<UpdateEventInput>;
 };
 
 
@@ -446,6 +459,59 @@ export type ExtensionInput = {
   data: Scalars['String'];
 };
 
+export type NewPersonInput = {
+  _id: Scalars['ObjectId'];
+  name: Scalars['String'];
+  wcaUserId: Scalars['Int'];
+  wcaId?: Maybe<Scalars['String']>;
+  registrantId?: Maybe<Scalars['Int']>;
+  countryIso2: Scalars['String'];
+  gender: Scalars['String'];
+  birthdate: Scalars['String'];
+  email: Scalars['String'];
+};
+
+export type UpdateEventInput = {
+  id: Scalars['String'];
+  competitorLimit: Scalars['Int'];
+  rounds: Array<UpdateRoundInput>;
+  qualification: QualificationInput;
+};
+
+export type UpdateRoundInput = {
+  id: Scalars['String'];
+  format: Scalars['String'];
+  scrambleSetCount: Scalars['Int'];
+  advancementCondition: AdvancementConditionInput;
+  timeLimit: Array<TimeLimitInput>;
+  cutoff: CutoffInput;
+};
+
+export type AdvancementConditionInput = {
+  _id: Scalars['ObjectId'];
+  type: Scalars['String'];
+  level: Array<Scalars['Int']>;
+};
+
+export type TimeLimitInput = {
+  _id: Scalars['ObjectId'];
+  centiseconds: Scalars['Int'];
+  cumulativeRoundIds: Array<Scalars['String']>;
+};
+
+export type CutoffInput = {
+  _id: Scalars['ObjectId'];
+  numberOfAttempts: Scalars['Int'];
+  attemptResult: Array<Scalars['Int']>;
+};
+
+export type QualificationInput = {
+  _id: Scalars['ObjectId'];
+  when: Scalars['String'];
+  type: Scalars['String'];
+  attemptResult: Array<Scalars['Int']>;
+};
+
 export type SettingInput = {
   _id: Scalars['ObjectId'];
   imageUrl: Scalars['String'];
@@ -461,6 +527,323 @@ export type UpdateUserInput = {
 };
 
 
+export const NewCreateWcifDocument = gql`
+    mutation NewCreateWcif($competitionId: String!) {
+  createWcif(competitionId: $competitionId) {
+    competitionId
+  }
+}
+    `;
+export type NewCreateWcifMutationFn = ApolloReactCommon.MutationFunction<NewCreateWcifMutation, NewCreateWcifMutationVariables>;
+
+/**
+ * __useNewCreateWcifMutation__
+ *
+ * To run a mutation, you first call `useNewCreateWcifMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useNewCreateWcifMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [newCreateWcifMutation, { data, loading, error }] = useNewCreateWcifMutation({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *   },
+ * });
+ */
+export function useNewCreateWcifMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<NewCreateWcifMutation, NewCreateWcifMutationVariables>) {
+        return ApolloReactHooks.useMutation<NewCreateWcifMutation, NewCreateWcifMutationVariables>(NewCreateWcifDocument, baseOptions);
+      }
+export type NewCreateWcifMutationHookResult = ReturnType<typeof useNewCreateWcifMutation>;
+export type NewCreateWcifMutationResult = ApolloReactCommon.MutationResult<NewCreateWcifMutation>;
+export type NewCreateWcifMutationOptions = ApolloReactCommon.BaseMutationOptions<NewCreateWcifMutation, NewCreateWcifMutationVariables>;
+export const UpdateWcifCompetitorsDocument = gql`
+    mutation updateWcifCompetitors($competitionId: String!, $updatedCompetitors: [NewPersonInput!]!) {
+  updateWcifCompetitors(competitionId: $competitionId, competitors: $updatedCompetitors) {
+    _id
+    competitionId
+    name
+  }
+}
+    `;
+export type UpdateWcifCompetitorsMutationFn = ApolloReactCommon.MutationFunction<UpdateWcifCompetitorsMutation, UpdateWcifCompetitorsMutationVariables>;
+
+/**
+ * __useUpdateWcifCompetitorsMutation__
+ *
+ * To run a mutation, you first call `useUpdateWcifCompetitorsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateWcifCompetitorsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateWcifCompetitorsMutation, { data, loading, error }] = useUpdateWcifCompetitorsMutation({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *      updatedCompetitors: // value for 'updatedCompetitors'
+ *   },
+ * });
+ */
+export function useUpdateWcifCompetitorsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateWcifCompetitorsMutation, UpdateWcifCompetitorsMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateWcifCompetitorsMutation, UpdateWcifCompetitorsMutationVariables>(UpdateWcifCompetitorsDocument, baseOptions);
+      }
+export type UpdateWcifCompetitorsMutationHookResult = ReturnType<typeof useUpdateWcifCompetitorsMutation>;
+export type UpdateWcifCompetitorsMutationResult = ApolloReactCommon.MutationResult<UpdateWcifCompetitorsMutation>;
+export type UpdateWcifCompetitorsMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateWcifCompetitorsMutation, UpdateWcifCompetitorsMutationVariables>;
+export const UpdateWcifEventsDocument = gql`
+    mutation UpdateWcifEvents($competitionId: String!, $events: [UpdateEventInput!]!) {
+  updateWcifEvents(competitionId: $competitionId, events: $events) {
+    _id
+    competitionId
+    name
+  }
+}
+    `;
+export type UpdateWcifEventsMutationFn = ApolloReactCommon.MutationFunction<UpdateWcifEventsMutation, UpdateWcifEventsMutationVariables>;
+
+/**
+ * __useUpdateWcifEventsMutation__
+ *
+ * To run a mutation, you first call `useUpdateWcifEventsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateWcifEventsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateWcifEventsMutation, { data, loading, error }] = useUpdateWcifEventsMutation({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *      events: // value for 'events'
+ *   },
+ * });
+ */
+export function useUpdateWcifEventsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateWcifEventsMutation, UpdateWcifEventsMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateWcifEventsMutation, UpdateWcifEventsMutationVariables>(UpdateWcifEventsDocument, baseOptions);
+      }
+export type UpdateWcifEventsMutationHookResult = ReturnType<typeof useUpdateWcifEventsMutation>;
+export type UpdateWcifEventsMutationResult = ApolloReactCommon.MutationResult<UpdateWcifEventsMutation>;
+export type UpdateWcifEventsMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateWcifEventsMutation, UpdateWcifEventsMutationVariables>;
+export const UpdateWcifInfoDocument = gql`
+    mutation updateWcifInfo($competitionId: String!, $name: String!, $shortName: String!, $competitorLimit: Int!) {
+  updateWcifInfo(competitionId: $competitionId, newName: $name, newShortName: $shortName, newCompetitorLimit: $competitorLimit) {
+    competitionId
+    _id
+  }
+}
+    `;
+export type UpdateWcifInfoMutationFn = ApolloReactCommon.MutationFunction<UpdateWcifInfoMutation, UpdateWcifInfoMutationVariables>;
+
+/**
+ * __useUpdateWcifInfoMutation__
+ *
+ * To run a mutation, you first call `useUpdateWcifInfoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateWcifInfoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateWcifInfoMutation, { data, loading, error }] = useUpdateWcifInfoMutation({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *      name: // value for 'name'
+ *      shortName: // value for 'shortName'
+ *      competitorLimit: // value for 'competitorLimit'
+ *   },
+ * });
+ */
+export function useUpdateWcifInfoMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateWcifInfoMutation, UpdateWcifInfoMutationVariables>) {
+        return ApolloReactHooks.useMutation<UpdateWcifInfoMutation, UpdateWcifInfoMutationVariables>(UpdateWcifInfoDocument, baseOptions);
+      }
+export type UpdateWcifInfoMutationHookResult = ReturnType<typeof useUpdateWcifInfoMutation>;
+export type UpdateWcifInfoMutationResult = ApolloReactCommon.MutationResult<UpdateWcifInfoMutation>;
+export type UpdateWcifInfoMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateWcifInfoMutation, UpdateWcifInfoMutationVariables>;
+export const CompetitionGroupsDocument = gql`
+    query CompetitionGroups($competitionId: String!) {
+  getWcifByCompetitionId(competitionId: $competitionId) {
+    name
+    shortName
+    competitionId
+    _id
+    events {
+      id
+      _id
+      rounds {
+        id
+      }
+    }
+    persons {
+      _id
+      name
+      wcaUserId
+      wcaId
+      roles
+      registration {
+        _id
+        eventIds
+      }
+      assignments {
+        _id
+        activityId
+        assignmentCode
+        stationNumber
+      }
+      personalBests {
+        _id
+        eventId
+        best
+        worldRanking
+        type
+      }
+    }
+    schedule {
+      _id
+      startDate
+      numberOfDays
+      venues {
+        _id
+        timezone
+        name
+        rooms {
+          _id
+          id
+          name
+          color
+          activities {
+            _id
+            id
+            name
+            activityCode
+            startTime
+            endTime
+            childActivities {
+              _id
+              id
+              name
+              activityCode
+              startTime
+              endTime
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useCompetitionGroupsQuery__
+ *
+ * To run a query within a React component, call `useCompetitionGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCompetitionGroupsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCompetitionGroupsQuery({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *   },
+ * });
+ */
+export function useCompetitionGroupsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CompetitionGroupsQuery, CompetitionGroupsQueryVariables>) {
+        return ApolloReactHooks.useQuery<CompetitionGroupsQuery, CompetitionGroupsQueryVariables>(CompetitionGroupsDocument, baseOptions);
+      }
+export function useCompetitionGroupsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CompetitionGroupsQuery, CompetitionGroupsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<CompetitionGroupsQuery, CompetitionGroupsQueryVariables>(CompetitionGroupsDocument, baseOptions);
+        }
+export type CompetitionGroupsQueryHookResult = ReturnType<typeof useCompetitionGroupsQuery>;
+export type CompetitionGroupsLazyQueryHookResult = ReturnType<typeof useCompetitionGroupsLazyQuery>;
+export type CompetitionGroupsQueryResult = ApolloReactCommon.QueryResult<CompetitionGroupsQuery, CompetitionGroupsQueryVariables>;
+export const CompetitionInformationDocument = gql`
+    query CompetitionInformation($competitionId: String!, $top: Int!) {
+  getWcifByCompetitionId(competitionId: $competitionId) {
+    _id
+    name
+    locationName
+    registrationOpen
+    registrationClose
+    settings {
+      imageUrl
+      message
+      colorTheme
+    }
+    schedule {
+      _id
+      startDate
+      numberOfDays
+      venues {
+        _id
+        rooms {
+          _id
+          activities {
+            _id
+            name
+            id
+            startTime
+            endTime
+          }
+        }
+      }
+    }
+    events {
+      _id
+      id
+    }
+  }
+  getTopCompetitors(top: $top, competitionId: $competitionId) {
+    _id
+    name
+    wcaUserId
+    personalBests {
+      _id
+      eventId
+      best
+      type
+      worldRanking
+    }
+    avatar {
+      thumbUrl
+    }
+  }
+}
+    `;
+
+/**
+ * __useCompetitionInformationQuery__
+ *
+ * To run a query within a React component, call `useCompetitionInformationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCompetitionInformationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCompetitionInformationQuery({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *      top: // value for 'top'
+ *   },
+ * });
+ */
+export function useCompetitionInformationQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CompetitionInformationQuery, CompetitionInformationQueryVariables>) {
+        return ApolloReactHooks.useQuery<CompetitionInformationQuery, CompetitionInformationQueryVariables>(CompetitionInformationDocument, baseOptions);
+      }
+export function useCompetitionInformationLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CompetitionInformationQuery, CompetitionInformationQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<CompetitionInformationQuery, CompetitionInformationQueryVariables>(CompetitionInformationDocument, baseOptions);
+        }
+export type CompetitionInformationQueryHookResult = ReturnType<typeof useCompetitionInformationQuery>;
+export type CompetitionInformationLazyQueryHookResult = ReturnType<typeof useCompetitionInformationLazyQuery>;
+export type CompetitionInformationQueryResult = ApolloReactCommon.QueryResult<CompetitionInformationQuery, CompetitionInformationQueryVariables>;
 export const ContextGetCompetitionDocument = gql`
     query ContextGetCompetition($competitionId: String!) {
   getWcifByCompetitionId(competitionId: $competitionId) {
@@ -625,6 +1008,76 @@ export function useLandingMyUpcomingCompetitionsLazyQuery(baseOptions?: ApolloRe
 export type LandingMyUpcomingCompetitionsQueryHookResult = ReturnType<typeof useLandingMyUpcomingCompetitionsQuery>;
 export type LandingMyUpcomingCompetitionsLazyQueryHookResult = ReturnType<typeof useLandingMyUpcomingCompetitionsLazyQuery>;
 export type LandingMyUpcomingCompetitionsQueryResult = ApolloReactCommon.QueryResult<LandingMyUpcomingCompetitionsQuery, LandingMyUpcomingCompetitionsQueryVariables>;
+export const NewFindMyManagableCompetitionDocument = gql`
+    query NewFindMyManagableCompetition {
+  findMyManagableCompetitions {
+    name
+    start_date
+    end_date
+    competitionId
+    country_iso2
+  }
+}
+    `;
+
+/**
+ * __useNewFindMyManagableCompetitionQuery__
+ *
+ * To run a query within a React component, call `useNewFindMyManagableCompetitionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNewFindMyManagableCompetitionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewFindMyManagableCompetitionQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNewFindMyManagableCompetitionQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<NewFindMyManagableCompetitionQuery, NewFindMyManagableCompetitionQueryVariables>) {
+        return ApolloReactHooks.useQuery<NewFindMyManagableCompetitionQuery, NewFindMyManagableCompetitionQueryVariables>(NewFindMyManagableCompetitionDocument, baseOptions);
+      }
+export function useNewFindMyManagableCompetitionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<NewFindMyManagableCompetitionQuery, NewFindMyManagableCompetitionQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<NewFindMyManagableCompetitionQuery, NewFindMyManagableCompetitionQueryVariables>(NewFindMyManagableCompetitionDocument, baseOptions);
+        }
+export type NewFindMyManagableCompetitionQueryHookResult = ReturnType<typeof useNewFindMyManagableCompetitionQuery>;
+export type NewFindMyManagableCompetitionLazyQueryHookResult = ReturnType<typeof useNewFindMyManagableCompetitionLazyQuery>;
+export type NewFindMyManagableCompetitionQueryResult = ApolloReactCommon.QueryResult<NewFindMyManagableCompetitionQuery, NewFindMyManagableCompetitionQueryVariables>;
+export const ResultsGetOpenRoundsDocument = gql`
+    query ResultsGetOpenRounds($competitionId: String!) {
+  getOpenRounds(competitionId: $competitionId) {
+    _id
+    id
+  }
+}
+    `;
+
+/**
+ * __useResultsGetOpenRoundsQuery__
+ *
+ * To run a query within a React component, call `useResultsGetOpenRoundsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useResultsGetOpenRoundsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useResultsGetOpenRoundsQuery({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *   },
+ * });
+ */
+export function useResultsGetOpenRoundsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ResultsGetOpenRoundsQuery, ResultsGetOpenRoundsQueryVariables>) {
+        return ApolloReactHooks.useQuery<ResultsGetOpenRoundsQuery, ResultsGetOpenRoundsQueryVariables>(ResultsGetOpenRoundsDocument, baseOptions);
+      }
+export function useResultsGetOpenRoundsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ResultsGetOpenRoundsQuery, ResultsGetOpenRoundsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<ResultsGetOpenRoundsQuery, ResultsGetOpenRoundsQueryVariables>(ResultsGetOpenRoundsDocument, baseOptions);
+        }
+export type ResultsGetOpenRoundsQueryHookResult = ReturnType<typeof useResultsGetOpenRoundsQuery>;
+export type ResultsGetOpenRoundsLazyQueryHookResult = ReturnType<typeof useResultsGetOpenRoundsLazyQuery>;
+export type ResultsGetOpenRoundsQueryResult = ApolloReactCommon.QueryResult<ResultsGetOpenRoundsQuery, ResultsGetOpenRoundsQueryVariables>;
 export const RoutingFindByCompetitionIdDocument = gql`
     query RoutingFindByCompetitionId($competitionId: String!) {
   getWcifByCompetitionId(competitionId: $competitionId) {
@@ -660,6 +1113,200 @@ export function useRoutingFindByCompetitionIdLazyQuery(baseOptions?: ApolloReact
 export type RoutingFindByCompetitionIdQueryHookResult = ReturnType<typeof useRoutingFindByCompetitionIdQuery>;
 export type RoutingFindByCompetitionIdLazyQueryHookResult = ReturnType<typeof useRoutingFindByCompetitionIdLazyQuery>;
 export type RoutingFindByCompetitionIdQueryResult = ApolloReactCommon.QueryResult<RoutingFindByCompetitionIdQuery, RoutingFindByCompetitionIdQueryVariables>;
+export const SetupCompetitionCompetitorsDocument = gql`
+    query SetupCompetitionCompetitors($competitionId: String!) {
+  getWcifByCompetitionId(competitionId: $competitionId) {
+    _id
+    persons {
+      _id
+      name
+      wcaUserId
+      wcaId
+      registrantId
+      countryIso2
+      gender
+      birthdate
+      email
+    }
+  }
+}
+    `;
+
+/**
+ * __useSetupCompetitionCompetitorsQuery__
+ *
+ * To run a query within a React component, call `useSetupCompetitionCompetitorsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSetupCompetitionCompetitorsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSetupCompetitionCompetitorsQuery({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *   },
+ * });
+ */
+export function useSetupCompetitionCompetitorsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SetupCompetitionCompetitorsQuery, SetupCompetitionCompetitorsQueryVariables>) {
+        return ApolloReactHooks.useQuery<SetupCompetitionCompetitorsQuery, SetupCompetitionCompetitorsQueryVariables>(SetupCompetitionCompetitorsDocument, baseOptions);
+      }
+export function useSetupCompetitionCompetitorsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SetupCompetitionCompetitorsQuery, SetupCompetitionCompetitorsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<SetupCompetitionCompetitorsQuery, SetupCompetitionCompetitorsQueryVariables>(SetupCompetitionCompetitorsDocument, baseOptions);
+        }
+export type SetupCompetitionCompetitorsQueryHookResult = ReturnType<typeof useSetupCompetitionCompetitorsQuery>;
+export type SetupCompetitionCompetitorsLazyQueryHookResult = ReturnType<typeof useSetupCompetitionCompetitorsLazyQuery>;
+export type SetupCompetitionCompetitorsQueryResult = ApolloReactCommon.QueryResult<SetupCompetitionCompetitorsQuery, SetupCompetitionCompetitorsQueryVariables>;
+export const SetupCompetitionEventsDocument = gql`
+    query SetupCompetitionEvents($competitionId: String!) {
+  getWcifByCompetitionId(competitionId: $competitionId) {
+    _id
+    events {
+      _id
+      id
+      rounds {
+        _id
+        id
+        format
+        advancementCondition {
+          _id
+          type
+          level
+        }
+        timeLimit {
+          _id
+          centiseconds
+          cumulativeRoundIds
+        }
+        cutoff {
+          _id
+          numberOfAttempts
+          attemptResult
+        }
+        scrambleSetCount
+      }
+      competitorLimit
+      qualification {
+        _id
+        when
+        type
+        attemptResult
+        _id
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useSetupCompetitionEventsQuery__
+ *
+ * To run a query within a React component, call `useSetupCompetitionEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSetupCompetitionEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSetupCompetitionEventsQuery({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *   },
+ * });
+ */
+export function useSetupCompetitionEventsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SetupCompetitionEventsQuery, SetupCompetitionEventsQueryVariables>) {
+        return ApolloReactHooks.useQuery<SetupCompetitionEventsQuery, SetupCompetitionEventsQueryVariables>(SetupCompetitionEventsDocument, baseOptions);
+      }
+export function useSetupCompetitionEventsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SetupCompetitionEventsQuery, SetupCompetitionEventsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<SetupCompetitionEventsQuery, SetupCompetitionEventsQueryVariables>(SetupCompetitionEventsDocument, baseOptions);
+        }
+export type SetupCompetitionEventsQueryHookResult = ReturnType<typeof useSetupCompetitionEventsQuery>;
+export type SetupCompetitionEventsLazyQueryHookResult = ReturnType<typeof useSetupCompetitionEventsLazyQuery>;
+export type SetupCompetitionEventsQueryResult = ApolloReactCommon.QueryResult<SetupCompetitionEventsQuery, SetupCompetitionEventsQueryVariables>;
+export const SetupCompetitionInfoDocument = gql`
+    query SetupCompetitionInfo($competitionId: String!) {
+  getWcifByCompetitionId(competitionId: $competitionId) {
+    _id
+    name
+    shortName
+    competitorLimit
+  }
+}
+    `;
+
+/**
+ * __useSetupCompetitionInfoQuery__
+ *
+ * To run a query within a React component, call `useSetupCompetitionInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSetupCompetitionInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSetupCompetitionInfoQuery({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *   },
+ * });
+ */
+export function useSetupCompetitionInfoQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SetupCompetitionInfoQuery, SetupCompetitionInfoQueryVariables>) {
+        return ApolloReactHooks.useQuery<SetupCompetitionInfoQuery, SetupCompetitionInfoQueryVariables>(SetupCompetitionInfoDocument, baseOptions);
+      }
+export function useSetupCompetitionInfoLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SetupCompetitionInfoQuery, SetupCompetitionInfoQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<SetupCompetitionInfoQuery, SetupCompetitionInfoQueryVariables>(SetupCompetitionInfoDocument, baseOptions);
+        }
+export type SetupCompetitionInfoQueryHookResult = ReturnType<typeof useSetupCompetitionInfoQuery>;
+export type SetupCompetitionInfoLazyQueryHookResult = ReturnType<typeof useSetupCompetitionInfoLazyQuery>;
+export type SetupCompetitionInfoQueryResult = ApolloReactCommon.QueryResult<SetupCompetitionInfoQuery, SetupCompetitionInfoQueryVariables>;
+export type NewCreateWcifMutationVariables = Exact<{
+  competitionId: Scalars['String'];
+}>;
+
+
+export type NewCreateWcifMutation = { __typename?: 'Mutation', createWcif: { __typename?: 'Wcif', competitionId: string } };
+
+export type UpdateWcifCompetitorsMutationVariables = Exact<{
+  competitionId: Scalars['String'];
+  updatedCompetitors: Array<NewPersonInput>;
+}>;
+
+
+export type UpdateWcifCompetitorsMutation = { __typename?: 'Mutation', updateWcifCompetitors: { __typename?: 'Wcif', _id: any, competitionId: string, name: string } };
+
+export type UpdateWcifEventsMutationVariables = Exact<{
+  competitionId: Scalars['String'];
+  events: Array<UpdateEventInput>;
+}>;
+
+
+export type UpdateWcifEventsMutation = { __typename?: 'Mutation', updateWcifEvents: { __typename?: 'Wcif', _id: any, competitionId: string, name: string } };
+
+export type UpdateWcifInfoMutationVariables = Exact<{
+  competitionId: Scalars['String'];
+  name: Scalars['String'];
+  shortName: Scalars['String'];
+  competitorLimit: Scalars['Int'];
+}>;
+
+
+export type UpdateWcifInfoMutation = { __typename?: 'Mutation', updateWcifInfo: { __typename?: 'Wcif', competitionId: string, _id: any } };
+
+export type CompetitionGroupsQueryVariables = Exact<{
+  competitionId: Scalars['String'];
+}>;
+
+
+export type CompetitionGroupsQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', name: string, shortName: string, competitionId: string, _id: any, events: Array<{ __typename?: 'Event', id: string, _id: any, rounds: Array<{ __typename?: 'Round', id: string }> }>, persons: Array<{ __typename?: 'Person', _id: any, name: string, wcaUserId: number, wcaId?: Maybe<string>, roles: Array<string>, registration: { __typename?: 'Registration', _id: any, eventIds: Array<string> }, assignments: Array<{ __typename?: 'Assignment', _id: any, activityId: Array<number>, assignmentCode: string, stationNumber: Array<number> }>, personalBests: Array<{ __typename?: 'PersonalBest', _id: any, eventId: string, best: number, worldRanking: number, type: string }> }>, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, timezone: string, name: string, rooms: Array<{ __typename?: 'Room', _id: any, id: number, name: string, color: string, activities: Array<{ __typename?: 'Activtiy', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string, childActivities: Array<{ __typename?: 'ChildActivity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string }> }> }> }> } }> };
+
+export type CompetitionInformationQueryVariables = Exact<{
+  competitionId: Scalars['String'];
+  top: Scalars['Int'];
+}>;
+
+
+export type CompetitionInformationQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', _id: any, name: string, locationName: string, registrationOpen: string, registrationClose: string, settings: { __typename?: 'Setting', imageUrl: string, message: string, colorTheme: string }, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, rooms: Array<{ __typename?: 'Room', _id: any, activities: Array<{ __typename?: 'Activtiy', _id: any, name: string, id: number, startTime: string, endTime: string }> }> }> }, events: Array<{ __typename?: 'Event', _id: any, id: string }> }>, getTopCompetitors: Array<{ __typename?: 'Person', _id: any, name: string, wcaUserId: number, personalBests: Array<{ __typename?: 'PersonalBest', _id: any, eventId: string, best: number, type: string, worldRanking: number }>, avatar: { __typename?: 'Avatar', thumbUrl: string } }> };
+
 export type ContextGetCompetitionQueryVariables = Exact<{
   competitionId: Scalars['String'];
 }>;
@@ -677,9 +1324,42 @@ export type LandingMyUpcomingCompetitionsQueryVariables = Exact<{ [key: string]:
 
 export type LandingMyUpcomingCompetitionsQuery = { __typename?: 'Query', getMyUpcomingCompetitions: Array<{ __typename?: 'Wcif', _id: any, name: string, competitionId: string, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, countryIso2: string, name: string }> } }> };
 
+export type NewFindMyManagableCompetitionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NewFindMyManagableCompetitionQuery = { __typename?: 'Query', findMyManagableCompetitions: Array<{ __typename?: 'WcifFetch', name: string, start_date: string, end_date: string, competitionId: string, country_iso2: string }> };
+
+export type ResultsGetOpenRoundsQueryVariables = Exact<{
+  competitionId: Scalars['String'];
+}>;
+
+
+export type ResultsGetOpenRoundsQuery = { __typename?: 'Query', getOpenRounds: Array<{ __typename?: 'Round', _id: any, id: string }> };
+
 export type RoutingFindByCompetitionIdQueryVariables = Exact<{
   competitionId: Scalars['String'];
 }>;
 
 
 export type RoutingFindByCompetitionIdQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', name: string, shortName: string, _id: any }> };
+
+export type SetupCompetitionCompetitorsQueryVariables = Exact<{
+  competitionId: Scalars['String'];
+}>;
+
+
+export type SetupCompetitionCompetitorsQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', _id: any, persons: Array<{ __typename?: 'Person', _id: any, name: string, wcaUserId: number, wcaId?: Maybe<string>, registrantId?: Maybe<number>, countryIso2: string, gender: string, birthdate?: Maybe<string>, email?: Maybe<string> }> }> };
+
+export type SetupCompetitionEventsQueryVariables = Exact<{
+  competitionId: Scalars['String'];
+}>;
+
+
+export type SetupCompetitionEventsQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', _id: any, events: Array<{ __typename?: 'Event', _id: any, id: string, competitorLimit: number, rounds: Array<{ __typename?: 'Round', _id: any, id: string, format: string, scrambleSetCount: number, advancementCondition: { __typename?: 'AdvancementCondition', _id: any, type: string, level: Array<number> }, timeLimit: Array<{ __typename?: 'TimeLimit', _id: any, centiseconds: number, cumulativeRoundIds: Array<string> }>, cutoff: { __typename?: 'Cutoff', _id: any, numberOfAttempts: number, attemptResult: Array<number> } }>, qualification: { __typename?: 'Qualification', _id: any, when: string, type: string, attemptResult: Array<number> } }> }> };
+
+export type SetupCompetitionInfoQueryVariables = Exact<{
+  competitionId: Scalars['String'];
+}>;
+
+
+export type SetupCompetitionInfoQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', _id: any, name: string, shortName: string, competitorLimit: number }> };

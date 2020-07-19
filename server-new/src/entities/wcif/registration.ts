@@ -1,6 +1,6 @@
-import { ObjectType, Field, Int, InputType } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
+import { Field, InputType, Int, ObjectType } from 'type-graphql'
 
 @InputType('RegistrationInput')
 @ObjectType('Registration')
@@ -17,14 +17,14 @@ export class Registration {
 	status!: string
 
 	@prop()
-	@Field()
-	comments!: string
+	@Field(() => String, { nullable: true })
+	comments: string | null
 
 	@prop()
 	@Field((type) => Int)
 	wcaRegistrationId!: number
 
 	@prop()
-	@Field((type) => Int)
-	guests!: number
+	@Field((type) => Int, { nullable: true })
+	guests: number
 }

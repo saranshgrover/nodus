@@ -1,6 +1,5 @@
-import { ObjectType, Field } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
-import { Schema } from 'mongoose'
+import { Field, ObjectType } from 'type-graphql'
 
 @ObjectType()
 export class ExternalConnection {
@@ -13,16 +12,9 @@ export class ExternalConnection {
 	accessToken: string
 
 	@prop({
-		set: (content: Schema.Types.Mixed | string) => {
-			if (typeof content === 'string') {
-				return JSON.parse(content)
-			} else return content
-		},
-		get: (content: Schema.Types.Mixed) => {
-			console.log('Getting content...')
-			return JSON.stringify(content)
-		},
-		type: Schema.Types.Mixed,
+		type: String,
+		set: (content) => JSON.stringify(content),
+		get: (content) => content,
 	})
 	@Field(() => String)
 	content: string

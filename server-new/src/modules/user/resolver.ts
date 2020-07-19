@@ -45,16 +45,14 @@ export default class UserResolver {
 		if (!req.user) return null
 		const user = await this.userService.getById(req!.user.id)
 		if (user && user.primaryAuthenticationType === 'WCA')
-			user.connections[0].content = JSON.stringify(
-				user?.connections[0].content
-			)
+			user.connections[0].content = JSON.stringify(user?.connections[0].content)
 		return user
 	}
 
 	@UseMiddleware(isLoggedIn)
 	@Query((returns) => [WcifFetch])
 	async findMyManagableCompetitions(@Ctx() { req }: Context) {
-		const user = await this.userService.getById(req.session!.user.id)
+		const user = await this.userService.getById(req.user.id)
 		const wcaAccessToken = user!.connections.find(
 			(connection) => connection.connectionType === 'WCA'
 		)?.accessToken
@@ -98,8 +96,7 @@ export default class UserResolver {
 			const usernameAlreadyTaken = await UserMongooseModel.exists({
 				username: data.newUsername,
 			})
-			if (usernameAlreadyTaken)
-				throw new Error('Username is already taken')
+			if (usernameAlreadyTaken) throw new Error('Username is already taken')
 		}
 		if (data.newName) user.name = data.newName
 		if (data.newEmail) user.email = data.newEmail

@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb'
 import mongoose from 'mongoose'
 import {
 	Arg,
+	Args,
 	Ctx,
 	Mutation,
 	Query,
@@ -13,7 +14,12 @@ import { PRODUCTION } from '../../config'
 import { Person, Round, Schedule, Setting, Wcif } from '../../entities/'
 import { hasRole } from '../decorator/hasRole'
 import { isLoggedIn } from '../middleware/isLoggedIn'
-import { WcifCompetitorArgs, WcifEventsArgs } from './input'
+import {
+	GetTopCompetitorsArgs,
+	UpdateWcifInfoArgs,
+	WcifCompetitorArgs,
+	WcifEventsArgs,
+} from './input'
 import WcifService from './service'
 
 /*
@@ -45,7 +51,7 @@ export default class WcifResolver {
 		return wcif
 	}
 
-	@Query((returns) => Round)
+	@Query((returns) => [Round])
 	async getOpenRounds(@Arg('competitionId') competitionId: string) {
 		const wcif = await this.wcifService.findByCompetitionId(competitionId)
 		let rounds: Round[] = []
@@ -66,8 +72,7 @@ export default class WcifResolver {
 
 	@Query((returns) => [Person])
 	async getTopCompetitors(
-		@Arg('competitionId') competitionId: string,
-		@Arg('top') top: number
+		@Args() { competitionId, top }: GetTopCompetitorsArgs
 	) {
 		return await this.wcifService.getTopCompetitors(competitionId, top)
 	}
@@ -92,19 +97,20 @@ export default class WcifResolver {
 	@hasRole(['delegate', 'organizer', 'traineeDelegate'])
 	@Mutation((returns) => Wcif)
 	async updateWcifInfo(
-		@Arg('competitionId') competitionId: string,
-		@Arg('newName') name: string,
-		@Arg('newShortName') shortName: string,
-		@Arg('newCompetitorLimit') competitorLimit: number
+		@Args()
+		{
+			competitionId,
+			newName: name,
+			newCompetitorLimit: competitorLimit,
+			newShortName: shortName,
+		}: UpdateWcifInfoArgs
 	) {
 		let competition = await this.wcifService.findByCompetitionId(competitionId)
-		competition = {
-			...competition,
-			name: name ?? competition.name,
-			shortName: shortName ?? competition.shortName,
-			competitorLimit: competitorLimit ?? competition.competitorLimit,
-		}
+		competition.name = name ?? competition.name
+		competition.shortName = shortName ?? competition.shortName
+		competition.competitorLimit = competitorLimit ?? competition.competitorLimit
 		const savedComp = await competition.save()
+		return savedComp
 	}
 
 	@hasRole(['delegate', 'organizer', 'traineeDelegate'])
@@ -123,27 +129,53 @@ export default class WcifResolver {
 
 	@hasRole(['delegate', 'organizer', 'traineeDelegate'])
 	@Mutation((returns) => Wcif)
-	async updateWcifCompetitors({
-		competitionId,
-		competitors,
-	}: WcifCompetitorArgs) {
+	async updateWcifCompetitors(
+		@Args() { competitionId, competitors }: WcifCompetitorArgs
+	) {
 		const comp = await this.wcifService.findByCompetitionId(competitionId)
 		for (const index in competitors) {
-			for (let key of Object.keys(competitors[index])) {
-				//@ts-ignore
-				comp.persons[index][key as keyof Person] =
-					competitors[index][key as keyof Person]
+			const newPerson = comp.persons.length >= parseInt(index)
+			const competitor: Person = {
+				...competitors[index],
+				registration: {
+					wcaRegistrationId: competitors[index].wcaUserId,
+					eventIds: [],
+					_id: new ObjectId(),
+					comments: null,
+					guests: 0,
+					status: '',
+				},
+				assignments: [],
+				avatar: newPerson
+					? { _id: new ObjectId(), thumbUrl: '', url: '' }
+					: comp.persons[index].avatar,
+				roles: newPerson ? [] : comp.persons[index].roles,
+				personalBests: newPerson ? [] : comp.persons[index].personalBests,
 			}
-			const savedComp = await comp.save()
-			return savedComp
+			comp.persons[index] = competitor
 		}
+		const savedComp = await comp.save()
+		return savedComp
 	}
 
 	@hasRole(['delegate', 'organizer', 'traineeDelegate'])
 	@Mutation((returns) => Wcif)
-	async updateWcifEvents({ competitionId, events }: WcifEventsArgs) {
+	async updateWcifEvents(@Args() { competitionId, events }: WcifEventsArgs) {
 		const comp = await this.wcifService.findByCompetitionId(competitionId)
-		comp.events = events
+		for (const index in events) {
+			const event = events[index]
+			comp.events[index].competitorLimit = event.competitorLimit
+			for (const roundIndex in event.rounds) {
+				const round = event.rounds[roundIndex]
+				comp.events[index].rounds[roundIndex].advancementCondition =
+					round.advancementCondition
+				comp.events[index].rounds[roundIndex].cutoff = round.cutoff
+				comp.events[index].rounds[roundIndex].format = round.format
+				comp.events[index].rounds[roundIndex].timeLimit = round.timeLimit
+				comp.events[index].rounds[roundIndex].scrambleSetCount =
+					round.scrambleSetCount
+			}
+		}
 		const savedComp = await comp.save()
 		return savedComp
 	}

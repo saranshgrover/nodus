@@ -33,6 +33,12 @@ type AdvancementCondition {
   type: String!
 }
 
+input AdvancementConditionInput {
+  _id: ObjectId!
+  level: [Int!]!
+  type: String!
+}
+
 type Assignment {
   _id: ObjectId!
   activityId: [Int!]!
@@ -88,6 +94,12 @@ type Cutoff {
   numberOfAttempts: Int!
 }
 
+input CutoffInput {
+  _id: ObjectId!
+  attemptResult: [Int!]!
+  numberOfAttempts: Int!
+}
+
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
@@ -97,6 +109,7 @@ type Event {
   _id: ObjectId!
   competitorLimit: Int!
   extensions: [Extension!]!
+  id: String!
   qualification: Qualification!
   rounds: [Round!]!
 }
@@ -130,11 +143,23 @@ type Mutation {
   createWcif(competitionId: String!): Wcif!
   deleteWcif(competitionId: String!): Wcif!
   updateUser(data: UpdateUserInput!): User
-  updateWcifCompetitors: Wcif!
-  updateWcifEvents: Wcif!
-  updateWcifInfo(competitionId: String!, newCompetitorLimit: Float!, newName: String!, newShortName: String!): Wcif!
+  updateWcifCompetitors(competitionId: String!, competitors: [NewPersonInput!]!): Wcif!
+  updateWcifEvents(competitionId: String!, events: [UpdateEventInput!]!): Wcif!
+  updateWcifInfo(competitionId: String!, newCompetitorLimit: Int!, newName: String!, newShortName: String!): Wcif!
   updateWcifSchedule(competitionId: String!, schedule: ScheduleInput!): Wcif!
   updateWcifSettings(competitionId: String!, settings: SettingInput!): Wcif!
+}
+
+input NewPersonInput {
+  _id: ObjectId!
+  birthdate: String!
+  countryIso2: String!
+  email: String!
+  gender: String!
+  name: String!
+  registrantId: Int
+  wcaId: String
+  wcaUserId: Int!
 }
 
 input NewTodoInput {
@@ -178,6 +203,13 @@ type Qualification {
   when: String!
 }
 
+input QualificationInput {
+  _id: ObjectId!
+  attemptResult: [Int!]!
+  type: String!
+  when: String!
+}
+
 type Query {
   findMyManagableCompetitions: [WcifFetch!]!
   getAllWcifs: [Wcif!]!
@@ -187,9 +219,9 @@ type Query {
   """
   getMe: User
   getMyUpcomingCompetitions: [Wcif!]!
-  getOpenRounds(competitionId: String!): Round!
+  getOpenRounds(competitionId: String!): [Round!]!
   getTodo(id: ObjectId!): Todo!
-  getTopCompetitors(competitionId: String!, top: Float!): [Person!]!
+  getTopCompetitors(competitionId: String!, top: Int!): [Person!]!
   getUser(id: ObjectId!): User
   getWcifByCompetitionId(competitionId: String!): Wcif
   getWcifById(_id: ObjectId!): Wcif!
@@ -197,9 +229,9 @@ type Query {
 
 type Registration {
   _id: ObjectId!
-  comments: String!
+  comments: String
   eventIds: [String!]!
-  guests: Int!
+  guests: Int
   status: String!
   wcaRegistrationId: Int!
 }
@@ -285,12 +317,34 @@ type TimeLimit {
   cumulativeRoundIds: [String!]!
 }
 
+input TimeLimitInput {
+  _id: ObjectId!
+  centiseconds: Int!
+  cumulativeRoundIds: [String!]!
+}
+
 type Todo {
   _id: ObjectId!
   content: String!
   createdAt: DateTime
   isDone: Boolean!
   updatedAt: DateTime!
+}
+
+input UpdateEventInput {
+  competitorLimit: Int!
+  id: String!
+  qualification: QualificationInput!
+  rounds: [UpdateRoundInput!]!
+}
+
+input UpdateRoundInput {
+  advancementCondition: AdvancementConditionInput!
+  cutoff: CutoffInput!
+  format: String!
+  id: String!
+  scrambleSetCount: Int!
+  timeLimit: [TimeLimitInput!]!
 }
 
 input UpdateUserInput {
@@ -351,9 +405,9 @@ type Wcif {
 }
 
 type WcifFetch {
+  competitionId: String!
   country_iso2: String!
   end_date: String!
-  id: String!
   name: String!
   start_date: String!
 }

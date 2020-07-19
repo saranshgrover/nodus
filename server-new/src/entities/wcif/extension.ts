@@ -1,6 +1,7 @@
-import { ObjectType, Field, InputType, Int, Root } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
+import { Schema } from 'mongoose'
+import { Field, InputType, ObjectType } from 'type-graphql'
 
 @InputType('ExtensionInput')
 @ObjectType('Extension')
@@ -17,9 +18,15 @@ export class Extension {
 	specUrl!: string
 
 	@prop({
-		set: (data: string) => JSON.parse(data),
-		get: (data: any) => JSON.stringify(data),
-		type: {},
+		set: (data: Schema.Types.Mixed | string) => {
+			if (typeof data === 'string') {
+				return JSON.parse(data)
+			} else return data
+		},
+		get: (content: Schema.Types.Mixed) => {
+			return JSON.stringify(content)
+		},
+		type: Schema.Types.Mixed,
 	})
 	@Field(() => String)
 	data: string

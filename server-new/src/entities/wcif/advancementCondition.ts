@@ -12,7 +12,7 @@ export class AdvancementCondition {
 	@Field()
 	type!: string
 
-	@prop()
+	@prop({ type: Int })
 	@Field(() => [Int])
 	level!: number[]
 }

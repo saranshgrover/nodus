@@ -1,66 +1,46 @@
-import React, { useState, useEffect } from 'react'
-import TextField from '@material-ui/core/TextField'
 import Grid from '@material-ui/core/Grid'
-import StepActions from './StepActions'
-import gql from 'graphql-tag'
-import { useQuery, useMutation } from '@apollo/react-hooks'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import TextField from '@material-ui/core/TextField'
+import React, { useEffect, useState } from 'react'
+import {
+	SetupCompetitionInfoQuery,
+	useSetupCompetitionInfoQuery,
+	useUpdateWcifInfoMutation,
+} from '../../../generated/graphql'
+import StepActions from './StepActions'
 
-const COMPETITION_INFO_QUERY = gql`
-	query findByCompetitionId($id: String!) {
-		getWcifById(_id: $id) {
-			_id
-			name
-			shortName
-			competitorLimit
-		}
-	}
-`
-
-const UPDATE_COMPETITION_INFO_MUTATION = gql`
-	mutation updateWcifInfo(
-		$id: String!
-		$name: String!
-		$shortName: String!
-		$competitorLimit: Int!
-	) {
-		updateWcifInfo(
-			_id: $id
-			newName: $name
-			newShortName: $shortName
-			newCompetitorLimit: $competitorLimit
-		) {
-			competitionId
-			_id
-		}
-	}
-`
-
-export default function InfoSetup({ id, onComplete, handleBack }) {
-	const [localData, setLocalData] = useState(null)
-	const query = useQuery(COMPETITION_INFO_QUERY, {
-		variables: { id: id },
+export default function InfoSetup({
+	id: competitionId,
+	onComplete,
+	handleBack,
+}: ISetupProps) {
+	const [localData, setLocalData] = useState<
+		SetupCompetitionInfoQuery['getWcifByCompetitionId']
+	>()
+	const query = useSetupCompetitionInfoQuery({
+		variables: { competitionId },
 	})
 	useEffect(() => {
-		!query.loading && !query.error && setLocalData(query.data.getWcifById)
+		!query.loading &&
+			!query.error &&
+			query.data &&
+			setLocalData(query.data.getWcifByCompetitionId)
 	}, [query.loading, query.error, query.data])
 
-	const [updateWcifInfo, mutationOptions] = useMutation(
-		UPDATE_COMPETITION_INFO_MUTATION
-	)
+	const [updateWcifInfo, mutationOptions] = useUpdateWcifInfoMutation()
 
 	if (query.loading || !localData) return <LinearProgress />
 	if (query.error) console.error(query.error)
 
 	const handleComplete = () => {
-		updateWcifInfo({ variables: { ...localData, id } }).then(() =>
+		updateWcifInfo({ variables: { ...localData, competitionId } }).then(() =>
 			onComplete()
 		)
 	}
 
 	const handleReset = () => {}
 
-	const handleChange = ({ target: { name, value } }) => {
+	const handleChange = ({ target: { name, value } }: any) => {
 		const v = isNaN(value) ? value : parseInt(value)
 		setLocalData({ ...localData, [name]: v })
 	}

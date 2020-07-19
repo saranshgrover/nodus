@@ -1,6 +1,6 @@
-import { ObjectType, Field, InputType, Int } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
+import { Field, InputType, Int, ObjectType } from 'type-graphql'
 import { Extension } from './extension'
 
 @InputType('ChildActivityInput')

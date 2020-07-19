@@ -1,4 +1,4 @@
-import { ObjectType, Field } from 'type-graphql'
+import { ObjectType, Field, Root } from 'type-graphql'
 
 @ObjectType()
 export class WcifFetch {
@@ -11,9 +11,13 @@ export class WcifFetch {
 	@Field()
 	end_date: string
 
-	@Field()
 	id: string
 
 	@Field()
 	country_iso2: string
+
+	@Field(() => String)
+	competitionId(@Root() wcif: WcifFetch) {
+		return wcif.id
+	}
 }

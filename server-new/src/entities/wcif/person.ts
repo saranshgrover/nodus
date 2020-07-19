@@ -1,10 +1,10 @@
-import { ObjectType, Field, InputType, Int, Authorized } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
-import { Registration } from './registration'
-import { Avatar } from './avatar'
+import { Authorized, Field, InputType, Int, ObjectType } from 'type-graphql'
 import { Assignment } from './assignment'
+import { Avatar } from './avatar'
 import { PersonalBest } from './personalBest'
+import { Registration } from './registration'
 
 @InputType('PersonInput')
 @ObjectType('Person')

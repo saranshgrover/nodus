@@ -1,15 +1,19 @@
-import { ObjectType, Field, InputType, Int } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
-import { Round } from './round'
+import { Field, InputType, Int, ObjectType } from 'type-graphql'
 import { Extension } from './extension'
 import { Qualification } from './qualification'
+import { Round } from './round'
 
 @InputType('EventInput')
 @ObjectType('Event')
 export class Event {
 	@Field()
 	readonly _id!: ObjectId
+
+	@Field()
+	@prop()
+	id: string
 
 	@prop()
 	@Field(() => [Round])

@@ -1,6 +1,6 @@
-import { ObjectType, Field, Int, InputType } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
+import { Field, InputType, Int, ObjectType } from 'type-graphql'
 import { Activity } from './activity'
 import { Extension } from './extension'
 
@@ -22,7 +22,7 @@ export class Room {
 	@Field()
 	color!: string
 
-	@prop()
+	@prop({ type: Activity })
 	@Field((type) => [Activity])
 	activities!: Activity[]
 

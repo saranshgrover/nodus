@@ -1,46 +1,45 @@
-import React, { useContext, useState, useEffect, Fragment } from 'react'
-import IconTabs from '../IconTabs/IconTabs'
-import gql from 'graphql-tag'
+import { useTheme } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
-import { useTheme, makeStyles } from '@material-ui/core/styles'
-import { useQuery } from '@apollo/react-hooks'
-import { CompetitionContext } from '../../contexts/CompetitionContext'
-import Error from '../common/Error'
-import LinearProgress from '../LinearProgress/LinearProgress'
 import GroupIcon from '@material-ui/icons/Group'
+import React, { Fragment, useContext, useEffect, useState } from 'react'
+import { CompetitionContext } from '../../contexts/CompetitionContext'
+import {
+	ResultsGetOpenRoundsQuery,
+	useResultsGetOpenRoundsQuery,
+} from '../../generated/graphql'
 import { activityKey, parseActivityCode } from '../../logic/activity'
 import CubingIcon from '../common/CubingIcon'
+import Error from '../common/Error'
+import EventResults from '../EventResults/EventResults'
+import IconTabs from '../IconTabs/IconTabs'
+import LinearProgress from '../LinearProgress/LinearProgress'
 import TabPanel from '../TabPanel/TabPanel'
 import UserResults from '../UserResults/UserResults'
-import EventResults from '../EventResults/EventResults'
-import Typography from '@material-ui/core/Typography'
-
-const COMPETITION_OPEN_ROUNDS_QUERY = gql`
-	query getOpenRoundsById($competitionId: String!) {
-		getOpenRounds(competitionId: $competitionId) {
-			_id
-			id
-		}
-	}
-`
-
-const useStyles = makeStyles((theme) => ({
-	root: {},
-}))
 
 export default function Results() {
 	const { competitionId, userRegistered } = useContext(CompetitionContext)
 	const theme = useTheme()
 	const largeScreen = useMediaQuery(theme.breakpoints.up('lg'))
 	const mediumScreen = useMediaQuery(theme.breakpoints.up('md'))
-	const { loading, error, data } = useQuery(COMPETITION_OPEN_ROUNDS_QUERY, {
-		variables: { competitionId: competitionId },
+	const { loading, error, data } = useResultsGetOpenRoundsQuery({
+		variables: { competitionId },
 	})
-	const [rounds, setRounds] = useState(null)
+	const [rounds, setRounds] = useState<
+		ResultsGetOpenRoundsQuery['getOpenRounds']
+	>()
 	useEffect(() => {
-		!loading && !error && setRounds(data.getOpenRounds)
+		!loading && !error && data && setRounds(data?.getOpenRounds)
 	}, [data, loading, error])
-	const [tabs, setTabs] = useState(
+	const [tabs, setTabs] = useState<
+		{
+			label: string
+			value: number
+			Icon: JSX.Element
+			Component: any
+			id: string
+		}[]
+	>(
 		userRegistered
 			? [
 					{
@@ -53,13 +52,13 @@ export default function Results() {
 			  ]
 			: []
 	)
-	const [value, setValue] = useState(null)
+	const [value, setValue] = useState<number | null>(null)
 	useEffect(() => {
 		tabs.length > 0 && setValue(0)
 	}, [tabs])
 	useEffect(() => {
 		if (rounds) {
-			let roundTabs = []
+			let roundTabs: typeof tabs = []
 			rounds.map((round) => {
 				const { eventId, roundNumber } = parseActivityCode(round.id)
 				roundTabs.push({
@@ -69,7 +68,7 @@ export default function Results() {
 						<CubingIcon
 							eventId={eventId}
 							small={!mediumScreen && !largeScreen}
-							style={{color:`${theme.palette.competitionPrimary.main}`}}
+							style={{ color: `${theme.palette.competitionPrimary.main}` }}
 						/>
 					),
 					Component: EventResults,
@@ -88,7 +87,7 @@ export default function Results() {
 	if (loading || value === null || rounds === null) return <LinearProgress />
 	if (error) return <Error message={error.toString()} />
 
-	const handleChange = (_, newValue) => {
+	const handleChange = (_: any, newValue: number) => {
 		setValue(newValue)
 	}
 	return (
@@ -99,6 +98,7 @@ export default function Results() {
 				variant={'scrollable'}
 				value={value}
 				tabs={tabs}
+				tabProps={{}}
 			/>
 			{tabs.map((tab, index) => (
 				<TabPanel value={value} index={index} key={`tab-${index}`}>
