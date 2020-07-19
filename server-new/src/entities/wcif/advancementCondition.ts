@@ -1,6 +1,6 @@
-import { ObjectType, Field, InputType, Int } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
+import { Field, InputType, Int, ObjectType } from 'type-graphql'
 
 @InputType('AdvancementConditionInput')
 @ObjectType('AdvancementCondition')
@@ -12,7 +12,7 @@ export class AdvancementCondition {
 	@Field()
 	type!: string
 
-	@prop({ type: Int })
+	@prop()
 	@Field(() => [Int])
 	level!: number[]
 }

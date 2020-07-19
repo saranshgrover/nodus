@@ -1,25 +1,22 @@
+import axios, { AxiosResponse } from 'axios'
+import { ObjectId } from 'mongodb'
 import {
-	Resolver,
 	Arg,
-	Query,
-	Mutation,
-	UseMiddleware,
 	Ctx,
+	Mutation,
+	Query,
+	Resolver,
+	UseMiddleware,
 } from 'type-graphql'
 import { Service } from 'typedi'
-import { ObjectId } from 'mongodb'
-
-import { User, Wcif, WcifFetch } from '../../entities'
-import UserService from './service'
+import { config } from '../../config'
+import { User, WcifFetch } from '../../entities'
+import descriptions from '../descriptions'
 import { isLoggedIn } from '../middleware/isLoggedIn'
 import { WcifMongooseModel } from '../wcif/model'
-import { use } from 'passport'
-import { config } from '../../config'
-import axios, { AxiosResponse } from 'axios'
 import { UpdateUserInput } from './input'
 import { UserMongooseModel } from './model'
-import session from 'express-session'
-import descriptions from '../descriptions'
+import UserService from './service'
 
 /*
   IMPORTANT: Your business logic must be in the service!
@@ -44,8 +41,6 @@ export default class UserResolver {
 	async getMe(@Ctx() { req }: Context) {
 		if (!req.user) return null
 		const user = await this.userService.getById(req!.user.id)
-		if (user && user.primaryAuthenticationType === 'WCA')
-			user.connections[0].content = JSON.stringify(user?.connections[0].content)
 		return user
 	}
 
@@ -96,7 +91,8 @@ export default class UserResolver {
 			const usernameAlreadyTaken = await UserMongooseModel.exists({
 				username: data.newUsername,
 			})
-			if (usernameAlreadyTaken) throw new Error('Username is already taken')
+			if (usernameAlreadyTaken)
+				throw new Error('Username is already taken')
 		}
 		if (data.newName) user.name = data.newName
 		if (data.newEmail) user.email = data.newEmail

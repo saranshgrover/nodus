@@ -52,10 +52,12 @@ export default function Information() {
 						alignItems='flex-start'
 						spacing={3}>
 						<Grid item md={5}>
-							<UpcomingEvents wcif={data.getWcifByCompetitionId} />
+							<UpcomingEvents />
 						</Grid>
 						<Grid item md={5}>
-							<TopCompetitors topCompetitors={data.getTopCompetitors} />
+							<TopCompetitors
+								topCompetitors={data.getTopCompetitors}
+							/>
 						</Grid>
 					</Grid>
 				</Paper>

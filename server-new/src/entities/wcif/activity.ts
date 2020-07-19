@@ -5,7 +5,7 @@ import { ChildActivity } from './childActivity'
 import { Extension } from './extension'
 
 @InputType('ActivityInput')
-@ObjectType('Activtiy')
+@ObjectType('Activity')
 export class Activity {
 	@Field()
 	readonly _id!: ObjectId

@@ -3,24 +3,24 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-input ActivityInput {
+type Activity {
   _id: ObjectId!
   activityCode: String!
-  childActivities: [ChildActivityInput!]!
+  childActivities: [ChildActivity!]!
   endTime: String!
-  extensions: [ExtensionInput!]!
+  extensions: [Extension!]!
   id: Int!
   name: String!
   scrambleSetId: Int!
   startTime: String!
 }
 
-type Activtiy {
+input ActivityInput {
   _id: ObjectId!
   activityCode: String!
-  childActivities: [ChildActivity!]!
+  childActivities: [ChildActivityInput!]!
   endTime: String!
-  extensions: [Extension!]!
+  extensions: [ExtensionInput!]!
   id: Int!
   name: String!
   scrambleSetId: Int!
@@ -41,9 +41,9 @@ input AdvancementConditionInput {
 
 type Assignment {
   _id: ObjectId!
-  activityId: [Int!]!
+  activityId: Int!
   assignmentCode: String!
-  stationNumber: [Int!]!
+  stationNumber: Int
 }
 
 type Attempt {
@@ -131,7 +131,7 @@ input ExtensionInput {
 type ExternalConnection {
   accessToken: String!
   connectionType: String!
-  content: String!
+  content: WCAContent!
 }
 
 type Mutation {
@@ -247,7 +247,7 @@ type Result {
 
 type Room {
   _id: ObjectId!
-  activities: [Activtiy!]!
+  activities: [Activity!]!
   color: String!
   extensions: [Extension!]!
   id: Int!
@@ -386,6 +386,20 @@ input VenueInput {
   name: String!
   rooms: [RoomInput!]!
   timezone: String!
+}
+
+type WCAContent {
+  birthdate: String!
+  delegateStatus: String!
+  id: Int!
+  photos: [String!]!
+  teams: [WCATeams!]!
+  wcaId: String
+}
+
+type WCATeams {
+  friendlyId: String!
+  leader: Boolean!
 }
 
 type Wcif {

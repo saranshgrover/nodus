@@ -1,9 +1,9 @@
-import React, { createContext } from 'react'
-import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import gql from 'graphql-tag'
+import React, { createContext } from 'react'
 import { SERVER_URI } from '../config'
-import { Query, User } from '../@types/graphql'
+import { User } from '../generated/graphql'
 
 interface UserContext {
 	info: User | null
@@ -21,7 +21,15 @@ const GET_USER = gql`
 			primaryAuthenticationType
 			connections {
 				connectionType
-				content
+				content {
+					id
+					wcaId
+					teams {
+						friendlyId
+						leader
+					}
+					photos
+				}
 			}
 			competitions {
 				competitionType
@@ -44,16 +52,11 @@ const UserProvider = ({ children }: React.PropsWithChildren<{}>) => {
 	const [user, setUser] = React.useState<User | null>(null)
 	const isSignedIn = () => user !== null
 	const signOut = () => (window.location.href = `${SERVER_URI}/auth/logout`)
-	const { loading, error, data } = useQuery<Query>(GET_USER)
+	const { loading, error, data } = useQuery(GET_USER)
 	if (error) console.error(error)
 	React.useEffect(() => {
 		if (!loading && !error && data) {
 			const user = data.getMe
-			if (user && user.primaryAuthenticationType !== 'local') {
-				user.connections[0].content = JSON.parse(
-					user.connections[0].content
-				)
-			}
 			setUser(user)
 		}
 	}, [loading, error, data])

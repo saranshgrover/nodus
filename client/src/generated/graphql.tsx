@@ -129,8 +129,8 @@ export type Assignment = {
   __typename?: 'Assignment';
   _id: Scalars['ObjectId'];
   assignmentCode: Scalars['String'];
-  activityId: Array<Scalars['Int']>;
-  stationNumber: Array<Scalars['Int']>;
+  activityId: Scalars['Int'];
+  stationNumber?: Maybe<Scalars['Int']>;
 };
 
 export type PersonalBest = {
@@ -257,12 +257,12 @@ export type Room = {
   id: Scalars['Int'];
   name: Scalars['String'];
   color: Scalars['String'];
-  activities: Array<Activtiy>;
+  activities: Array<Activity>;
   extensions: Array<Extension>;
 };
 
-export type Activtiy = {
-  __typename?: 'Activtiy';
+export type Activity = {
+  __typename?: 'Activity';
   _id: Scalars['ObjectId'];
   name: Scalars['String'];
   activityCode: Scalars['String'];
@@ -318,7 +318,23 @@ export type ExternalConnection = {
   __typename?: 'ExternalConnection';
   connectionType: Scalars['String'];
   accessToken: Scalars['String'];
-  content: Scalars['String'];
+  content: WcaContent;
+};
+
+export type WcaContent = {
+  __typename?: 'WCAContent';
+  id: Scalars['Int'];
+  delegateStatus: Scalars['String'];
+  birthdate: Scalars['String'];
+  teams: Array<WcaTeams>;
+  photos: Array<Scalars['String']>;
+  wcaId?: Maybe<Scalars['String']>;
+};
+
+export type WcaTeams = {
+  __typename?: 'WCATeams';
+  friendlyId: Scalars['String'];
+  leader: Scalars['Boolean'];
 };
 
 export type WcifFetch = {
@@ -1297,7 +1313,7 @@ export type CompetitionGroupsQueryVariables = Exact<{
 }>;
 
 
-export type CompetitionGroupsQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', name: string, shortName: string, competitionId: string, _id: any, events: Array<{ __typename?: 'Event', id: string, _id: any, rounds: Array<{ __typename?: 'Round', id: string }> }>, persons: Array<{ __typename?: 'Person', _id: any, name: string, wcaUserId: number, wcaId?: Maybe<string>, roles: Array<string>, registration: { __typename?: 'Registration', _id: any, eventIds: Array<string> }, assignments: Array<{ __typename?: 'Assignment', _id: any, activityId: Array<number>, assignmentCode: string, stationNumber: Array<number> }>, personalBests: Array<{ __typename?: 'PersonalBest', _id: any, eventId: string, best: number, worldRanking: number, type: string }> }>, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, timezone: string, name: string, rooms: Array<{ __typename?: 'Room', _id: any, id: number, name: string, color: string, activities: Array<{ __typename?: 'Activtiy', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string, childActivities: Array<{ __typename?: 'ChildActivity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string }> }> }> }> } }> };
+export type CompetitionGroupsQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', name: string, shortName: string, competitionId: string, _id: any, events: Array<{ __typename?: 'Event', id: string, _id: any, rounds: Array<{ __typename?: 'Round', id: string }> }>, persons: Array<{ __typename?: 'Person', _id: any, name: string, wcaUserId: number, wcaId?: Maybe<string>, roles: Array<string>, registration: { __typename?: 'Registration', _id: any, eventIds: Array<string> }, assignments: Array<{ __typename?: 'Assignment', _id: any, activityId: number, assignmentCode: string, stationNumber?: Maybe<number> }>, personalBests: Array<{ __typename?: 'PersonalBest', _id: any, eventId: string, best: number, worldRanking: number, type: string }> }>, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, timezone: string, name: string, rooms: Array<{ __typename?: 'Room', _id: any, id: number, name: string, color: string, activities: Array<{ __typename?: 'Activity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string, childActivities: Array<{ __typename?: 'ChildActivity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string }> }> }> }> } }> };
 
 export type CompetitionInformationQueryVariables = Exact<{
   competitionId: Scalars['String'];
@@ -1305,14 +1321,14 @@ export type CompetitionInformationQueryVariables = Exact<{
 }>;
 
 
-export type CompetitionInformationQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', _id: any, name: string, locationName: string, registrationOpen: string, registrationClose: string, settings: { __typename?: 'Setting', imageUrl: string, message: string, colorTheme: string }, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, rooms: Array<{ __typename?: 'Room', _id: any, activities: Array<{ __typename?: 'Activtiy', _id: any, name: string, id: number, startTime: string, endTime: string }> }> }> }, events: Array<{ __typename?: 'Event', _id: any, id: string }> }>, getTopCompetitors: Array<{ __typename?: 'Person', _id: any, name: string, wcaUserId: number, personalBests: Array<{ __typename?: 'PersonalBest', _id: any, eventId: string, best: number, type: string, worldRanking: number }>, avatar: { __typename?: 'Avatar', thumbUrl: string } }> };
+export type CompetitionInformationQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', _id: any, name: string, locationName: string, registrationOpen: string, registrationClose: string, settings: { __typename?: 'Setting', imageUrl: string, message: string, colorTheme: string }, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, rooms: Array<{ __typename?: 'Room', _id: any, activities: Array<{ __typename?: 'Activity', _id: any, name: string, id: number, startTime: string, endTime: string }> }> }> }, events: Array<{ __typename?: 'Event', _id: any, id: string }> }>, getTopCompetitors: Array<{ __typename?: 'Person', _id: any, name: string, wcaUserId: number, personalBests: Array<{ __typename?: 'PersonalBest', _id: any, eventId: string, best: number, type: string, worldRanking: number }>, avatar: { __typename?: 'Avatar', thumbUrl: string } }> };
 
 export type ContextGetCompetitionQueryVariables = Exact<{
   competitionId: Scalars['String'];
 }>;
 
 
-export type ContextGetCompetitionQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', name: string, shortName: string, _id: any, competitionId: string, settings: { __typename?: 'Setting', colorTheme: string }, persons: Array<{ __typename?: 'Person', _id: any, wcaUserId: number, registrantId?: Maybe<number> }>, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, timezone: string, name: string, rooms: Array<{ __typename?: 'Room', _id: any, id: number, name: string, color: string, activities: Array<{ __typename?: 'Activtiy', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string, childActivities: Array<{ __typename?: 'ChildActivity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string }> }> }> }> } }> };
+export type ContextGetCompetitionQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', name: string, shortName: string, _id: any, competitionId: string, settings: { __typename?: 'Setting', colorTheme: string }, persons: Array<{ __typename?: 'Person', _id: any, wcaUserId: number, registrantId?: Maybe<number> }>, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, timezone: string, name: string, rooms: Array<{ __typename?: 'Room', _id: any, id: number, name: string, color: string, activities: Array<{ __typename?: 'Activity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string, childActivities: Array<{ __typename?: 'ChildActivity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string }> }> }> }> } }> };
 
 export type LandingAllUpcomingCompetitionsQueryVariables = Exact<{ [key: string]: never; }>;
 

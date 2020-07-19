@@ -1,6 +1,6 @@
-import { ObjectType, Field, Int, InputType } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
+import { Field, InputType, Int, ObjectType } from 'type-graphql'
 
 @InputType('TimeLimitInput')
 @ObjectType('TimeLimit')
@@ -14,5 +14,5 @@ export class TimeLimit {
 
 	@prop()
 	@Field((type) => [String])
-	cumulativeRoundIds!: string
+	cumulativeRoundIds!: string[]
 }

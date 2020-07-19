@@ -3,7 +3,6 @@ import Container from '@material-ui/core/Container'
 import Paper from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import { ICompetitionContext } from 'contexts/CompetitionContext'
 import moment from 'moment-timezone'
 import React from 'react'
 import { CompetitionInformationQuery } from '../../generated/graphql'
@@ -26,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const getRegistrationStatus = (
-	userConnectionInfo: ICompetitionContext['userConnectionInfo'],
+	userConnectionInfo: Boolean,
 	competitionId: string,
 	registrationOpen: string,
 	registrationClose: string
@@ -34,7 +33,9 @@ const getRegistrationStatus = (
 	if (userConnectionInfo) {
 		// Reegistered for the event
 		return (
-			<Typography>You are registered to compete in this competition</Typography>
+			<Typography>
+				You are registered to compete in this competition
+			</Typography>
 		)
 	} else {
 		// Else get timing of registration
@@ -69,7 +70,8 @@ const getRegistrationTiming = (
 		return (
 			<>
 				<Typography>
-					Good news! Registration is open for another {now.to(close, true)}.
+					Good news! Registration is open for another{' '}
+					{now.to(close, true)}.
 				</Typography>
 				<Button
 					variant='outlined'
@@ -80,13 +82,17 @@ const getRegistrationTiming = (
 			</>
 		)
 	} else {
-		return <Typography>Registration is closed for this competition.</Typography>
+		return (
+			<Typography>
+				Registration is closed for this competition.
+			</Typography>
+		)
 	}
 }
 
 interface Props {
 	wcif: CompetitionInformationQuery['getWcifByCompetitionId']
-	userConnectionInfo: ICompetitionContext['userConnectionInfo']
+	userConnectionInfo: Boolean
 	competitionId?: string
 	showRegistration?: boolean
 	showMessage?: boolean
@@ -109,7 +115,10 @@ export default function GeneralInformation({
 				Welcome to {wcif.name}
 			</Typography>
 			<Typography className={classes.centered}>
-				{compDatesToString(wcif.schedule.startDate, wcif.schedule.numberOfDays)}
+				{compDatesToString(
+					wcif.schedule.startDate,
+					wcif.schedule.numberOfDays
+				)}
 				, {wcif.locationName}
 			</Typography>
 			<EventList
@@ -132,7 +141,9 @@ export default function GeneralInformation({
 			)}
 			{showMessage && wcif.settings.message.length > 0 && (
 				<Container>
-					<Typography variant='h6'>Message from Organizer:</Typography>
+					<Typography variant='h6'>
+						Message from Organizer:
+					</Typography>
 					<Typography>{wcif.settings.message}</Typography>
 				</Container>
 			)}

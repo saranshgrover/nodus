@@ -1,6 +1,6 @@
-import { ObjectType, Field, InputType, Int } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
+import { Field, InputType, Int, ObjectType } from 'type-graphql'
 
 @InputType('AssignmentInput')
 @ObjectType('Assignment')
@@ -13,10 +13,10 @@ export class Assignment {
 	assignmentCode!: string
 
 	@prop()
-	@Field(() => [Int])
-	activityId!: number[]
+	@Field(() => Int)
+	activityId!: number
 
 	@prop()
-	@Field(() => [Int])
-	stationNumber!: number[]
+	@Field(() => Int, { nullable: true })
+	stationNumber!: number
 }

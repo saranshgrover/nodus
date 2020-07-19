@@ -15,7 +15,7 @@ export class Event {
 	@prop()
 	id: string
 
-	@prop()
+	@prop({ type: Round })
 	@Field(() => [Round])
 	rounds: Round[]
 

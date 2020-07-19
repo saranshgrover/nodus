@@ -55,13 +55,13 @@ export default class WcifResolver {
 	async getOpenRounds(@Arg('competitionId') competitionId: string) {
 		const wcif = await this.wcifService.findByCompetitionId(competitionId)
 		let rounds: Round[] = []
-		wcif.events.map(
-			(event) =>
-				(rounds = [
-					...rounds,
-					...event.rounds.filter((round) => round.results.length > 0),
-				])
-		)
+		for (const event of wcif.events) {
+			rounds = [
+				...rounds,
+				...event.rounds.filter((round) => round.results.length > 0),
+			]
+		}
+		return rounds
 	}
 
 	@Query((returns) => [Wcif])
@@ -105,10 +105,13 @@ export default class WcifResolver {
 			newShortName: shortName,
 		}: UpdateWcifInfoArgs
 	) {
-		let competition = await this.wcifService.findByCompetitionId(competitionId)
+		let competition = await this.wcifService.findByCompetitionId(
+			competitionId
+		)
 		competition.name = name ?? competition.name
 		competition.shortName = shortName ?? competition.shortName
-		competition.competitorLimit = competitorLimit ?? competition.competitorLimit
+		competition.competitorLimit =
+			competitorLimit ?? competition.competitorLimit
 		const savedComp = await competition.save()
 		return savedComp
 	}
@@ -150,7 +153,9 @@ export default class WcifResolver {
 					? { _id: new ObjectId(), thumbUrl: '', url: '' }
 					: comp.persons[index].avatar,
 				roles: newPerson ? [] : comp.persons[index].roles,
-				personalBests: newPerson ? [] : comp.persons[index].personalBests,
+				personalBests: newPerson
+					? []
+					: comp.persons[index].personalBests,
 			}
 			comp.persons[index] = competitor
 		}
@@ -171,7 +176,8 @@ export default class WcifResolver {
 					round.advancementCondition
 				comp.events[index].rounds[roundIndex].cutoff = round.cutoff
 				comp.events[index].rounds[roundIndex].format = round.format
-				comp.events[index].rounds[roundIndex].timeLimit = round.timeLimit
+				comp.events[index].rounds[roundIndex].timeLimit =
+					round.timeLimit
 				comp.events[index].rounds[roundIndex].scrambleSetCount =
 					round.scrambleSetCount
 			}

@@ -1,12 +1,11 @@
-import express from 'express'
-import { IVerifyOptions } from 'passport-local'
-import { UserMongooseModel } from '../../modules/user/model'
 import axios from 'axios'
 import bcrypt from 'bcryptjs'
-
+import express from 'express'
+import { IVerifyOptions } from 'passport-local'
 import { config } from '../../config'
-import { WcifMongooseModel } from '../../modules/wcif/model'
 import { Competition } from '../../entities'
+import { UserMongooseModel } from '../../modules/user/model'
+import { WcifMongooseModel } from '../../modules/wcif/model'
 
 interface PassportWCACallback {
 	accessToken: string
@@ -68,7 +67,28 @@ export async function handleWCAConnect({
 						connectionType: 'WCA',
 						accessToken: accessToken,
 						// TODO1: Parse user profile
-						content: profile,
+						content: {
+							id: profile.id,
+							delegateStatus: profile.wca.delegate_status,
+							birthdate: profile.wca.dob,
+							wcaId: profile.wca.id,
+							photos: [
+								...profile.photos.map(
+									(photo: { value: String }) => photo.value
+								),
+							],
+							teams: [
+								...profile.wca.teams.map(
+									(team: {
+										friendly_id: String
+										leader: Boolean
+									}) => ({
+										friendlyId: team.friendly_id,
+										leader: team.leader,
+									})
+								),
+							],
+						},
 					},
 				],
 			})

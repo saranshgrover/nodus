@@ -1,5 +1,6 @@
 import { prop } from '@typegoose/typegoose'
 import { Field, ObjectType } from 'type-graphql'
+import { WCAContent } from './WCAContent'
 
 @ObjectType()
 export class ExternalConnection {
@@ -11,11 +12,7 @@ export class ExternalConnection {
 	@Field()
 	accessToken: string
 
-	@prop({
-		type: String,
-		set: (content) => JSON.stringify(content),
-		get: (content) => content,
-	})
-	@Field(() => String)
-	content: string
+	@prop()
+	@Field(() => WCAContent)
+	content: WCAContent
 }

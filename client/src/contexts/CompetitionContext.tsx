@@ -4,7 +4,7 @@ import useUser from 'hooks/useUser'
 import React, { createContext, useContext, useEffect } from 'react'
 import Error from '../components/common/Error'
 import {
-	Activtiy,
+	Activity,
 	ChildActivity,
 	ExternalConnection,
 	Scalars,
@@ -24,7 +24,7 @@ export interface ICompetitionContext {
 	userConnectionInfo: ExternalConnection | undefined
 	competitionType: string
 	tabs: string[]
-	activities: (Activtiy | ChildActivity)[] | undefined
+	activities: (Activity | ChildActivity)[] | undefined
 }
 
 // https://stackoverflow.com/a/61336826/8056181
@@ -68,7 +68,7 @@ const CompetitionProvider = ({
 	if (loading) return <LinearProgress />
 	if (error) return <Error message={error.toString()} />
 	const wcif = data!.getWcifByCompetitionId
-	const activities: (Activtiy | ChildActivity)[] = wcif
+	const activities: (Activity | ChildActivity)[] = wcif
 		? flattenActivities(wcif.schedule)
 		: []
 	if (userCompetition) {
@@ -82,8 +82,7 @@ const CompetitionProvider = ({
 		if (userConnectionInfo) {
 			console.log(userConnectionInfo)
 			registrantId = wcif!.persons.find(
-				(person) =>
-					person.wcaUserId === JSON.parse(userConnectionInfo!.content).id
+				(person) => person.wcaUserId === userConnectionInfo!.content.id
 			)?.registrantId
 		}
 	}

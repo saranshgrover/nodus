@@ -8,7 +8,7 @@ export class Registration {
 	@Field()
 	readonly _id!: ObjectId
 
-	@prop()
+	@prop({ type: String })
 	@Field((type) => [String])
 	eventIds!: string[]
 

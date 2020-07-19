@@ -5,8 +5,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import moment from 'moment-timezone'
 import React from 'react'
-import { Wcif } from '../../generated/graphql'
-import { flattenActivities } from '../../logic/schedule'
+import { Activity, ChildActivity } from '../../generated/graphql'
+import useCompetition from '../../hooks/useCompetition'
 
 const useStyles = makeStyles((theme) => ({
 	list: {
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const isHappeningNow = (event, minutes) => {
+const isHappeningNow = (event: Activity | ChildActivity, minutes: number) => {
 	const now = moment()
 	const startTime = moment(event.startTime)
 	const endTime = moment(event.endTime)
@@ -26,26 +26,25 @@ const isHappeningNow = (event, minutes) => {
 		now.isBefore(endTime)
 	) {
 		return { bool: true, message: `Starting ${now.to(startTime)}` }
-	} else return { bool: false }
+	} else return { bool: false, message: '' }
 }
 
-interface Props {
-	wcif: Wcif
-}
-
-export default function UpcomingEvents({ wcif }: Props) {
+export default function UpcomingEvents() {
 	const classes = useStyles()
-	let transformedActs = flattenActivities(wcif.schedule).map((round) => {
+	const competition = useCompetition()
+	let transformedActs: (
+		| (Activity & { message: String })
+		| (ChildActivity & { message: String })
+	)[] = []
+	competition.activities!.forEach((round) => {
 		let data = isHappeningNow(round, 60)
 		if (data.bool) {
-			round.message = data.message
-			return round
+			let newRound: (Activity | ChildActivity) & { message: String } = {
+				...round,
+				message: data.message,
+			}
+			transformedActs.push(newRound)
 		}
-		return null
-	})
-	// Remove nulls
-	transformedActs = transformedActs.filter((round) => {
-		if (round) return round
 	})
 	const ongoingActivities = transformedActs.filter(
 		(round) => round.message.indexOf('Ends') >= 0
@@ -61,32 +60,49 @@ export default function UpcomingEvents({ wcif }: Props) {
 					<List className={classes.list}>
 						{ongoingActivities.length > 0 && (
 							<>
-								<Typography variant='h5'>Ongoing Events</Typography>
+								<Typography variant='h5'>
+									Ongoing Events
+								</Typography>
 								{ongoingActivities.map((round, index) => (
 									<React.Fragment key={round.id}>
 										<ListItem>
-											<Typography variant='h5'>{round.name}</Typography>
+											<Typography variant='h5'>
+												{round.name}
+											</Typography>
 										</ListItem>
 										<ListItem>
-											<Typography>{round.message}</Typography>
+											<Typography>
+												{round.message}
+											</Typography>
 										</ListItem>
-										{index < transformedActs.length - 1 && <Divider />}
+										{index < transformedActs.length - 1 && (
+											<Divider />
+										)}
 									</React.Fragment>
 								))}
 							</>
 						)}
 						{upcomingActivities.length > 0 && (
 							<>
-								<Typography variant='h5'>Upcoming Events</Typography>
+								<Typography variant='h5'>
+									Upcoming Events
+								</Typography>
 								{upcomingActivities.map((round, index) => (
 									<React.Fragment key={round.id}>
 										<ListItem>
-											<Typography variant='h5'>{round.name}</Typography>
+											<Typography variant='h5'>
+												{round.name}
+											</Typography>
 										</ListItem>
 										<ListItem>
-											<Typography>{round.message}</Typography>
+											<Typography>
+												{round.message}
+											</Typography>
 										</ListItem>
-										{index < upcomingActivities.length - 1 && <Divider />}
+										{index <
+											upcomingActivities.length - 1 && (
+											<Divider />
+										)}
 									</React.Fragment>
 								))}
 							</>
@@ -94,7 +110,9 @@ export default function UpcomingEvents({ wcif }: Props) {
 					</List>
 				</>
 			) : (
-				<Typography>There are no events occuring in the next hour</Typography>
+				<Typography>
+					There are no events occuring in the next hour
+				</Typography>
 			)}
 		</>
 	)
