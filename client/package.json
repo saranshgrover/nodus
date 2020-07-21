@@ -45,6 +45,14 @@
 		"styled-components": "^5.1.0",
 		"typescript": "^3.9.6"
 	},
+	"watch": {
+		"gen-types": {
+			"patterns": [
+				"src/graphql"
+			],
+			"extensions": "ts"
+		}
+	},
 	"scripts": {
 		"start": "SET PORT=3001 && react-scripts start",
 		"build": "react-scripts build",
@@ -52,7 +60,8 @@
 		"eject": "react-scripts eject",
 		"predeploy": "npm run build",
 		"deploy": "gh-pages -d build",
-		"gen-types": "graphql-codegen"
+		"gen-types": "graphql-codegen",
+		"watch-gen-type": "npm-watch gen-types"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
