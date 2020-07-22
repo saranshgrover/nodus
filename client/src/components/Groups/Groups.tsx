@@ -1,6 +1,7 @@
 import { useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import GroupIcon from '@material-ui/icons/Group'
+import { IconTabsData } from 'components/IconTabs/types'
 import React, { Fragment, useContext, useEffect, useState } from 'react'
 import { CompetitionContext } from '../../contexts/CompetitionContext'
 import {
@@ -31,15 +32,7 @@ export default function Groups() {
 	useEffect(() => {
 		!loading && !error && data && setWcif(data.getWcifByCompetitionId)
 	}, [data, loading, error])
-	const [tabs, setTabs] = useState<
-		{
-			label: string
-			value: number
-			Icon: JSX.Element
-			Component: any
-			id: string
-		}[]
-	>(
+	const [tabs, setTabs] = useState<IconTabsData[]>(
 		userRegistered
 			? [
 					{
@@ -78,7 +71,7 @@ export default function Groups() {
 			setTabs([...tabs, ...eventTabs])
 		}
 	}, [wcif])
-	if (loading || value === null || wcif === null) return <LinearProgress />
+	if (loading || value === null || !wcif) return <LinearProgress />
 	if (error) return <Error message={error.toString()} />
 	const handleChange = (_: any, newValue: number) => {
 		setValue(newValue)
@@ -86,6 +79,7 @@ export default function Groups() {
 	return (
 		<Fragment>
 			<IconTabs
+				//@ts-ignore
 				onChange={handleChange}
 				centered={largeScreen}
 				variant={

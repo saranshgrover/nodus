@@ -1,18 +1,18 @@
+import { makeStyles } from '@material-ui/core'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import Typography from '@material-ui/core/Typography'
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { CompetitionContext } from '../../contexts/CompetitionContext'
+import { Activity, ChildActivity, CompetitionGroupsQuery } from '../../generated/graphql'
 import { getAssignmentsFromActivityId } from '../../logic/activity'
 import { getPersonalBestFromActivity } from '../../logic/competitor'
 import { assignedTo } from '../../logic/schedule'
-import Typography from '@material-ui/core/Typography'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import Table from '@material-ui/core/Table'
-import TableCell from '@material-ui/core/TableCell'
-import TableBody from '@material-ui/core/TableBody'
-import { makeStyles } from '@material-ui/core'
-
 import Error from '../common/Error'
-import { CompetitionContext } from '../../contexts/CompetitionContext'
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -43,7 +43,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-export default function GroupsActivity({ activity, wcif }) {
+interface Props {
+	activity: Activity | ChildActivity,
+	wcif: NonNullable<CompetitionGroupsQuery['getWcifByCompetitionId']>
+
+}
+
+export default function GroupsActivity({ activity, wcif }: Props) {
 	const { activityCode, id } = activity
 	const { competitionId } = useContext(CompetitionContext)
 	const classes = useStyles()
@@ -120,7 +126,7 @@ export default function GroupsActivity({ activity, wcif }) {
 								<TableCell className={classes.tableCell}>
 									<Link
 										className={classes.link}
-										to={`/competitions/${wcif.id}/groups/competitors/${
+										to={`/competitions/${wcif.competitionId}/groups/competitors/${
 											competitor.wcaId ? competitor.wcaId : competitor.wcaUserId
 										}`}
 									>
@@ -135,7 +141,7 @@ export default function GroupsActivity({ activity, wcif }) {
 										{assignedTo(
 											competitor.assignments.find(
 												(assignment) => assignment.activityId === id
-											).assignmentCode
+											)?.assignmentCode
 										)}
 									</Typography>
 								</TableCell>

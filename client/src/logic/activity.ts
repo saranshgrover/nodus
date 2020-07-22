@@ -1,4 +1,7 @@
-export const parseActivityCode = (activityCode) => {
+import { Person } from 'generated/graphql'
+
+export const parseActivityCode = (activityCode: string) => {
+	//@ts-ignore
 	const [, e, r, g, a] = activityCode.match(
 		/(\w+)(?:-r(\d+))?(?:-g(\d+))?(?:-a(\d+))?/
 	)
@@ -29,8 +32,8 @@ export const activityKey = {
 	sq1: 'Square 1',
 	minx: 'Megaminx',
 }
-export const getGroupsOf = (roundActivity, activities) => {
-	let groups = []
+export const getGroupsOf = (roundActivity: string, activities: any) => {
+	let groups: any[] = []
 	for (const activity of activities) {
 		if (
 			activity.activityCode.includes(roundActivity) &&
@@ -46,7 +49,10 @@ export const getGroupsOf = (roundActivity, activities) => {
 	}
 	return groups
 }
-export const getAssignmentsFromActivityId = (activityId, wcif) => {
+export const getAssignmentsFromActivityId = (
+	activityId: number,
+	wcif: any
+): Array<Array<Person>> => {
 	let compete = []
 	let staff = []
 	const persons = wcif.persons

@@ -2,6 +2,7 @@ import { useTheme } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import GroupIcon from '@material-ui/icons/Group'
+import { IconTabsData } from 'components/IconTabs/types'
 import React, { Fragment, useContext, useEffect, useState } from 'react'
 import { CompetitionContext } from '../../contexts/CompetitionContext'
 import {
@@ -31,15 +32,7 @@ export default function Results() {
 	useEffect(() => {
 		!loading && !error && data && setRounds(data?.getOpenRounds)
 	}, [data, loading, error])
-	const [tabs, setTabs] = useState<
-		{
-			label: string
-			value: number
-			Icon: JSX.Element
-			Component: any
-			id: string
-		}[]
-	>(
+	const [tabs, setTabs] = useState<IconTabsData[]>(
 		userRegistered
 			? [
 					{
@@ -87,18 +80,19 @@ export default function Results() {
 	if (loading || value === null || rounds === null) return <LinearProgress />
 	if (error) return <Error message={error.toString()} />
 
-	const handleChange = (_: any, newValue: number) => {
+	function handleChange(_: any, newValue: any) {
 		setValue(newValue)
 	}
 	return (
 		<Fragment>
 			<IconTabs
-				onChange={handleChange}
 				centered={largeScreen}
 				variant={'scrollable'}
 				value={value}
 				tabs={tabs}
 				tabProps={{}}
+				// @ts-ignore
+				onChange={handleChange}
 			/>
 			{tabs.map((tab, index) => (
 				<TabPanel value={value} index={index} key={`tab-${index}`}>

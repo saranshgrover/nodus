@@ -1,23 +1,23 @@
+import { useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import useCompetition from 'hooks/useCompetition'
 import React from 'react'
 // @ts-ignore
-import { Switch, Redirect, Route, RouteComponentProps } from 'react-router-dom'
-import AuthenticatedRoute from '../AuthenticatedRoute/AuthenticatedRoute'
-import LinearProgress from '../LinearProgress/LinearProgress'
-import Error from '../common/Error'
-import useMediaQuery from '@material-ui/core/useMediaQuery'
-import { useTheme } from '@material-ui/core/styles'
-import Overview from '../Overview/Overview'
-import ElevatedTabs from '../ElevatedTabs/ElevatedTabs'
+import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom'
 import SwipeableViews from 'react-swipeable-views'
-import { isAdmin } from '../../logic/user'
-import CompetitionAdmin from '../CompetitionAdmin/CompetitionAdmin'
-import Groups from '../Groups/Groups'
-import Results from '../Results/Results'
-import Information from '../Information/Information'
-import TabPanel from '../TabPanel/TabPanel'
-import Projector from '../Projector/Projector'
 import { useRoutingFindByCompetitionIdQuery } from '../../generated/graphql'
-import useCompetition from 'hooks/useCompetition'
+import { isAdmin } from '../../logic/user'
+import AuthenticatedRoute from '../AuthenticatedRoute/AuthenticatedRoute'
+import Error from '../common/Error'
+import CompetitionAdmin from '../CompetitionAdmin/CompetitionAdmin'
+import ElevatedTabs from '../ElevatedTabs/ElevatedTabs'
+import Groups from '../Groups/Groups'
+import Information from '../Information/Information'
+import LinearProgress from '../LinearProgress/LinearProgress'
+import Overview from '../Overview/Overview'
+import Projector from '../Projector/Projector'
+import Results from '../Results/Results'
+import TabPanel from '../TabPanel/TabPanel'
 
 // const useStyles = makeStyles((theme) => ({}))
 
@@ -79,6 +79,7 @@ export default function CompetitionRouting({
 						largeScreen ? 'standard' : mediumScreen ? 'fullWidth' : 'scrollable'
 					}
 					value={value}
+					// @ts-ignore
 					onChange={handleChange}
 					tabs={competition.tabs.map((tab, index) => ({
 						key: index,

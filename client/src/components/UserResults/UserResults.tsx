@@ -1,28 +1,28 @@
-import React, { useContext } from 'react'
-import WCALiveClient from '../../utils/WCALiveClient'
-import Error from '../common/Error'
-import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
-import { CompetitionContext } from '../../contexts/CompetitionContext'
+import teal from '@material-ui/core/colors/teal'
 import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
+import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import Paper from '@material-ui/core/Paper'
-import { formatAttemptResult } from '../../logic/attempts'
+import Typography from '@material-ui/core/Typography'
+import gql from 'graphql-tag'
+import React, { useContext } from 'react'
+import { CompetitionContext } from '../../contexts/CompetitionContext'
 import { activityKey, parseActivityCode } from '../../logic/activity'
+import { formatAttemptResult } from '../../logic/attempts'
+import WCALiveClient from '../../utils/WCALiveClient'
 import CubingIcon from '../common/CubingIcon'
-import teal from '@material-ui/core/colors/teal'
+import Error from '../common/Error'
 
 const WCA_ROUND_QUERY = gql`
 	query competitor($competitionId: ID!, $competitorId: Int!) {
 		competitor(competitionId: $competitionId, competitorId: $competitorId) {
 			_id
-			competitionId
+			id
 			name
 			wcaId
 			results {
@@ -41,6 +41,9 @@ const WCA_ROUND_QUERY = gql`
 	}
 `
 
+/**
+ * Note: This function currently directly feeds in from WCA Live. This is because a round-based subscription pattern hasn't been implemented yet. Once it will be, we will most likely be pulling that information from our own server
+ */
 export default function UserResult() {
 	const { competitionId, registrantId } = useContext(CompetitionContext)
 	const { loading, data, error } = useQuery(WCA_ROUND_QUERY, {
@@ -71,9 +74,7 @@ export default function UserResult() {
 					<Table aria-label='simple table'>
 						<TableHead>
 							<TableRow>
-								<TableCell
-									size='small'
-									align='left'></TableCell>
+								<TableCell size='small' align='left'></TableCell>
 								<TableCell align='left'></TableCell>
 								<TableCell>Event</TableCell>
 								<TableCell align='left'>Average</TableCell>
@@ -82,20 +83,17 @@ export default function UserResult() {
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{person.results.map((result) => {
-								const {
-									eventId,
-									roundNumber,
-								} = parseActivityCode(result.round.id)
+							{person.results.map((result: any) => {
+								const { eventId, roundNumber } = parseActivityCode(
+									result.round.id
+								)
 								{
 									return (
 										<TableRow key={result.round.id}>
 											<TableCell
 												size='small'
 												style={{
-													backgroundColor:
-														result.advancable &&
-														teal[400],
+													backgroundColor: result.advancable && teal[400],
 												}}>
 												{result.ranking}
 											</TableCell>
@@ -113,19 +111,11 @@ export default function UserResult() {
 												)}
 											</TableCell>
 											<TableCell align='left'>
-												{formatAttemptResult(
-													result.best || '',
-													eventId,
-													false
-												)}
+												{formatAttemptResult(result.best || '', eventId, false)}
 											</TableCell>
 											<TableCell align='right'>{`${result.attempts.map(
-												(r) =>
-													`${formatAttemptResult(
-														r,
-														eventId,
-														false
-													)} `
+												(r: number) =>
+													`${formatAttemptResult(r, eventId, false)} `
 											)}`}</TableCell>
 										</TableRow>
 									)

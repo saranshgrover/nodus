@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react'
 import Progress from '@material-ui/core/LinearProgress'
+import React, { useEffect, useState } from 'react'
 
+/**
+ * TODO This function is objectively stupid and needs to be redone.
+ */
 export default function LinearProgress() {
 	const [show, setShow] = useState(false)
 	useEffect(() => {

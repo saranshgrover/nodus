@@ -16,7 +16,7 @@ export class Registration {
 	@Field()
 	status!: string
 
-	@prop()
+	@prop({ type: String })
 	@Field(() => String, { nullable: true })
 	comments: string | null
 

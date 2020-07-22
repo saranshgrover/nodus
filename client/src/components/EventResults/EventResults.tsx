@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react'
-import CompetitorResultList from '../CompetitorResultList/CompetitorResultList'
+import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+import useCompetition from 'hooks/useCompetition'
+import React from 'react'
 import WCALiveClient from '../../utils/WCALiveClient'
 import Error from '../common/Error'
-import gql from 'graphql-tag'
-import { useQuery } from '@apollo/react-hooks'
-import { CompetitionContext } from '../../contexts/CompetitionContext'
+import CompetitorResultList from '../CompetitorResultList/CompetitorResultList'
 
 const WCA_ROUND_QUERY = gql`
 	query round($competitionId: ID!, $roundId: String!) {
 		round(competitionId: $competitionId, roundId: $roundId) {
 			_id
-			competitionId
+			id
 			results {
 				_id
 				person {
@@ -32,8 +32,12 @@ const WCA_ROUND_QUERY = gql`
 	}
 `
 
-export default function EventResults({ roundId }) {
-	const { competitionId } = useContext(CompetitionContext)
+interface Props {
+	roundId: string
+}
+
+export default function EventResults({ roundId }: Props) {
+	const { competitionId } = useCompetition()
 	const { loading, data, error } = useQuery(WCA_ROUND_QUERY, {
 		client: WCALiveClient,
 		variables: { competitionId, roundId },
@@ -41,9 +45,6 @@ export default function EventResults({ roundId }) {
 	if (loading) return <></>
 	if (error) return <Error message={error.message} />
 	return (
-		<CompetitorResultList
-			competitors={data.round.results}
-			roundId={roundId}
-		/>
+		<CompetitorResultList competitors={data.round.results} roundId={roundId} />
 	)
 }

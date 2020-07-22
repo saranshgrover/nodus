@@ -1,10 +1,10 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import { Theme } from '@material-ui/core'
+import Tab, { TabProps } from '@material-ui/core/Tab'
+import Tabs, { TabsProps } from '@material-ui/core/Tabs'
 import { makeStyles } from '@material-ui/styles'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
+import React from 'react'
 
-const useTabsStyles = makeStyles(({ spacing, palette }) => {
+const useTabsStyles = makeStyles(({ spacing, palette }: Theme) => {
 	const tabsBackground = `linear-gradient(60deg,${palette.primary.light} , ${palette.primary.dark})`
 	const indicatorBackground = 'rgba(255, 255, 255, .2)'
 	const borderRadius = spacing(1)
@@ -23,7 +23,7 @@ const useTabsStyles = makeStyles(({ spacing, palette }) => {
 	}
 })
 
-const useTabStyles = makeStyles(({ breakpoints, spacing, palette }) => {
+const useTabStyles = makeStyles(({ breakpoints, spacing, palette }: Theme) => {
 	const tabsGutter = spacing(2)
 	const labelColor = palette.text.primary
 	return {
@@ -43,18 +43,22 @@ const useTabStyles = makeStyles(({ breakpoints, spacing, palette }) => {
 	}
 })
 
-const ElevatedTabs = ({ tabs, tabProps = {}, ...props }) => {
+export interface ElevatedTabsProps {
+	tabs: Array<{ key: any; label: string }>
+	tabProps?: TabProps
+}
+
+const ElevatedTabs = ({
+	tabs,
+	tabProps = {},
+	...props
+}: ElevatedTabsProps & TabsProps) => {
 	const tabsClasses = useTabsStyles(props)
 	const tabClasses = useTabStyles(tabProps)
 	return (
 		<Tabs {...props} classes={tabsClasses}>
 			{tabs.map((tab) => (
-				<Tab
-					classes={tabClasses}
-					key={tab.key}
-					index={tab.key}
-					label={tab.label}
-				/>
+				<Tab classes={tabClasses} key={tab.key} label={tab.label} />
 			))}
 		</Tabs>
 	)

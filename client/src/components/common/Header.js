@@ -19,7 +19,10 @@ const useStyles = makeStyles((theme) => ({
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1,
 		height: '56px',
-		[theme.breakpoints.up('md')]: {
+		[theme.breakpoints.up('xs')]: {
+			height: '48px !important',
+		},
+		[theme.breakpoints.up('sm')]: {
 			height: '64px !important',
 		},
 	},

@@ -21,7 +21,7 @@ export interface ICompetitionContext {
 	name: string
 	userRoles: string[]
 	registrantId: number | undefined | null
-	userConnectionInfo: ExternalConnection | undefined
+	userConnectionInfo: Omit<ExternalConnection, 'accessToken'> | undefined
 	competitionType: string
 	tabs: string[]
 	activities: (Activity | ChildActivity)[] | undefined
@@ -51,7 +51,7 @@ const CompetitionProvider = ({
 			(competition) => competition.competitionId === competitionId
 		)
 	let userRoles: string[] = []
-	let userConnectionInfo: ExternalConnection | undefined = undefined
+	let userConnectionInfo: ICompetitionContext['userConnectionInfo'] = undefined
 	let competitionType: string = 'LOCAL'
 	let tabs: string[] = ['information', 'groups', 'results', 'notifications']
 	let registrantId = undefined

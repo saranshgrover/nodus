@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { TextField } from '@material-ui/core'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
 import ListSubheader from '@material-ui/core/ListSubheader'
-// eslint-disable-next-line no-unused-vars
-import Divider from '@material-ui/core/Divider'
-import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
-import FlagIconFactory from 'react-flag-icon-css'
-import { compDatesToString } from '../../logic/tools'
+import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/styles'
-import { TextField } from '@material-ui/core'
+import {
+	LandingAllUpcomingCompetitionsQuery,
+	LandingMyUpcomingCompetitionsQuery,
+} from 'generated/graphql'
+import React, { useEffect, useState } from 'react'
+import FlagIconFactory from 'react-flag-icon-css'
+import { Link } from 'react-router-dom'
+import { compDatesToString } from '../../logic/tools'
 const FlagIcon = FlagIconFactory(React, { useCssModules: false })
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	paper: {
 		height: 400,
 		overflow: 'auto',
@@ -25,13 +27,23 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-export default function CompList({ date = false, comps, subheader }) {
+interface Props {
+	date?: boolean
+	// TODO Fix this type?
+	comps: NonNullable<
+		| LandingMyUpcomingCompetitionsQuery['getMyUpcomingCompetitions']
+		| LandingAllUpcomingCompetitionsQuery['getAllWcifs']
+	>
+	subheader: string
+}
+
+export default function CompList({ comps, subheader }: Props) {
 	useEffect(() => {
 		setQueryComps(comps)
 	}, [comps])
-	const [query, setQuery] = useState('')
+	const [query, setQuery] = useState<string>('')
 	const [queryComps, setQueryComps] = useState(comps)
-	const handleSearchChange = (event) => {
+	const handleSearchChange = (event: any) => {
 		setQuery(event.target.value)
 		event.target.value === ''
 			? setQueryComps(comps)
@@ -76,11 +88,7 @@ export default function CompList({ date = false, comps, subheader }) {
 								children={
 									<FlagIcon
 										size={'2x'}
-										code={
-											comp.country_iso2
-												? comp.country_iso2.toLowerCase()
-												: comp.schedule.venues[0].countryIso2?.toLowerCase()
-										}
+										code={comp.schedule.venues[0].countryIso2?.toLowerCase()}
 									/>
 								}
 							/>

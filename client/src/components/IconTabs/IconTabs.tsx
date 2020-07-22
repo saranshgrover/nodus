@@ -1,9 +1,11 @@
+import { Theme } from '@material-ui/core'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import { makeStyles } from '@material-ui/styles'
 import React from 'react'
+import { IconTabsProps } from './types'
 
-const useTabsStyles = makeStyles(({ spacing, palette }) => {
+const useTabsStyles = makeStyles(({ spacing, palette }: Theme) => {
 	const indicatorBackground =
 		palette.type === 'dark' ? 'rgba(255, 255, 255, .2)' : 'rgba(0,0,0,0.2)'
 	const borderRadius = spacing(1)
@@ -20,7 +22,7 @@ const useTabsStyles = makeStyles(({ spacing, palette }) => {
 	}
 })
 
-const useTabStyles = makeStyles(({ breakpoints, spacing, palette }) => {
+const useTabStyles = makeStyles(({ breakpoints, palette }: Theme) => {
 	const labelColor = palette.text.primary
 	return {
 		root: {
@@ -38,7 +40,7 @@ const useTabStyles = makeStyles(({ breakpoints, spacing, palette }) => {
 	}
 })
 
-const IconTabs = ({ tabs, tabProps, ...props }) => {
+const IconTabs = ({ tabs, tabProps, ...props }: IconTabsProps) => {
 	const tabsClasses = useTabsStyles(props)
 	const tabClasses = useTabStyles(tabProps)
 	return (
@@ -47,7 +49,6 @@ const IconTabs = ({ tabs, tabProps, ...props }) => {
 				<Tab
 					classes={tabClasses}
 					key={index}
-					index={index}
 					label={tab.label}
 					icon={tab.Icon}
 				/>

@@ -1,25 +1,24 @@
-import React, { useContext } from 'react'
-import moment from 'moment'
-import 'moment-timezone'
-import { getMyAssignmentsInOrder } from '../../logic/competitor'
-import { getScheduleData, assignedTo } from '../../logic/schedule'
-import { parseActivityCode, activityKey } from '../../logic/activity'
-
-import Table from '@material-ui/core/Table'
+import { Theme } from '@material-ui/core'
+import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/styles'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell'
-import TableBody from '@material-ui/core/TableBody'
-import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
+import { makeStyles } from '@material-ui/styles'
+import { CompetitionGroupsQuery } from 'generated/graphql'
+import useCompetition from 'hooks/useCompetition'
+import moment from 'moment-timezone'
+import React from 'react'
+import { activityKey, parseActivityCode } from '../../logic/activity'
+import { getMyAssignmentsInOrder } from '../../logic/competitor'
+import { assignedTo, getScheduleData } from '../../logic/schedule'
 import Error from '../common/Error'
-import { CompetitionContext } from '../../contexts/CompetitionContext'
-import LinearProgress from '../LinearProgress/LinearProgress'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	root: {
 		width: '100%',
 		marginTop: theme.spacing(3),
@@ -44,11 +43,15 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-export default function UserGroups({ wcif }) {
-	const { userConnectionInfo, activities } = useContext(CompetitionContext)
+interface Props {
+	wcif: NonNullable<CompetitionGroupsQuery['getWcifByCompetitionId']>
+}
+
+export default function UserGroups({ wcif }: Props) {
+	const { userConnectionInfo, activities } = useCompetition()
 	const classes = useStyles()
 	const myAssignments = getMyAssignmentsInOrder(
-		userConnectionInfo.content.id,
+		userConnectionInfo!.content.id,
 		wcif
 	)
 	const mySchedule =
@@ -61,7 +64,7 @@ export default function UserGroups({ wcif }) {
 			) : (
 				<Grid item className={classes.root} xs={12}>
 					<Paper className={classes.paper}>
-						<Table className={classes.table}>
+						<Table>
 							<TableHead>
 								<TableRow>
 									<TableCell className={classes.tableCell} size='small'>

@@ -1,21 +1,21 @@
-import React from 'react'
-import Typography from '@material-ui/core/Typography'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
+import makeStyles from '@material-ui/core/styles/makeStyles'
+import React from 'react'
 import WCAButton from '../common/WCAButton'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	root: {
 		marginTop: '10px',
 	},
 }))
 
-export default function CompetitionTypeSelector({ onSelect }) {
+interface Props {
+	onSelect: (val: string) => void
+}
+
+export default function CompetitionTypeSelector({ onSelect }: Props) {
 	const classes = useStyles()
-	const handleClick = (e) => {
-		console.log(e.target)
-	}
 	return (
 		<Grid
 			className={classes.root}
@@ -25,8 +25,7 @@ export default function CompetitionTypeSelector({ onSelect }) {
 			alignContent='center'
 			alignItems='center'
 			spacing={4}
-			xs={12}
-		>
+			xs={12}>
 			<Grid item>
 				<Button variant='contained' onClick={() => onSelect('generic')}>
 					Start from Scratch

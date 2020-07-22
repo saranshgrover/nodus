@@ -1,9 +1,9 @@
-import { ObjectType, InputType, Field, Int } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
+import { Field, InputType, Int, ObjectType } from 'type-graphql'
+import { Event } from './event'
 import { Extension } from './extension'
 import { Person } from './person'
-import { Event } from './event'
 import { Schedule } from './schedule'
 import { Setting } from './setting'
 

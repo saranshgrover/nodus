@@ -1,9 +1,9 @@
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
 import React, { useState } from 'react'
 import CompetitionTypeSelector from './CompetitionTypeSelector'
 import CompetitionSetup from './Setup/CompetitionSetup'
 import WCASelector from './WCA/WCASelector'
-import Typography from '@material-ui/core/Typography'
-import Paper from '@material-ui/core/Paper'
 
 export default function NewCompetition() {
 	const [selectedCompType, setSelectedCompType] = useState('')
@@ -12,18 +12,15 @@ export default function NewCompetition() {
 			<Paper style={{ marginTop: '2vh', minHeight: '5vh' }}>
 				<Typography
 					variant='h4'
-					align='center'
-				>{`New Competition Setup`}</Typography>
+					align='center'>{`New Competition Setup`}</Typography>
 			</Paper>
 			{selectedCompType ? (
 				<CompetitionSetup
-					StartComponent={
-						selectedCompType === 'wca' ? WCASelector : null
-					}
+					StartComponent={selectedCompType === 'wca' ? WCASelector : null}
 				/>
 			) : (
 				<CompetitionTypeSelector
-					onSelect={(type) => setSelectedCompType(type)}
+					onSelect={(type: string) => setSelectedCompType(type)}
 				/>
 			)}
 		</>

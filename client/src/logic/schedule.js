@@ -1,10 +1,3 @@
-/**
- * Returns a list of data resembling
- * {start_date: , end_date: title:  }
- *
- * @param {*} events
- * @param {*} assignments
- */
 export const getScheduleData = (
 	events = [],
 	unselectedVenues = [],
