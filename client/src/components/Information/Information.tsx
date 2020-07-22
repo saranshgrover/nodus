@@ -1,7 +1,8 @@
 import { default as Grid, default as Paper } from '@material-ui/core/Grid'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useContext } from 'react'
+import { NetworkStatus } from 'apollo-client'
+import React, { useContext, useEffect } from 'react'
 import { CompetitionContext } from '../../contexts/CompetitionContext'
 import { useCompetitionInformationQuery } from '../../generated/graphql'
 import Error from '../common/Error'
@@ -27,11 +28,20 @@ const useStyles = makeStyles((theme) => ({
 }))
 export default function Information() {
 	const competition = useContext(CompetitionContext)
-	const { loading, error, data } = useCompetitionInformationQuery({
+	const {
+		loading,
+		error,
+		data,
+		refetch,
+		networkStatus,
+	} = useCompetitionInformationQuery({
 		variables: { competitionId: competition.competitionId, top: 50 },
 	}) // Gets competitors where world ranking is 50 or lower
 	const classes = useStyles()
-	console.log(competition)
+	useEffect(() => {
+		// Refetch when data changes from same query
+		if (networkStatus !== NetworkStatus.loading) refetch()
+	}, [data])
 	if (loading || !data) return <LinearProgress />
 	else if (error) return <Error message={error.toString()} />
 	else
