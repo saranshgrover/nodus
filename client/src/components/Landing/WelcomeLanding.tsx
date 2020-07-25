@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react'
-import LandingSignedIn from './LandingSignedIn'
-import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import CompList from './CompList'
-import LinearProgress from '../LinearProgress/LinearProgress'
-import useUser from '../../hooks/useUser'
+import Tabs from '@material-ui/core/Tabs'
 import {
-	useLandingAllUpcomingCompetitionsQuery,
 	LandingAllUpcomingCompetitionsQuery,
+	useLandingAllUpcomingCompetitionsQuery,
 } from 'generated/graphql'
+import useSnackbar from 'hooks/useSnackbar'
+import React, { useEffect, useState } from 'react'
+import useUser from '../../hooks/useUser'
+import LinearProgress from '../LinearProgress/LinearProgress'
+import CompList from './CompList'
+import LandingSignedIn from './LandingSignedIn'
 
 export default function WelcomeLanding() {
 	const user = useUser()
@@ -17,7 +18,11 @@ export default function WelcomeLanding() {
 	const [upcomingCompetitions, setUpcomingCompetitions] = useState<
 		LandingAllUpcomingCompetitionsQuery['getAllWcifs']
 	>([])
+	const { addSnackbar } = useSnackbar()
 	useEffect(() => {
+		if (error) {
+			addSnackbar({ variant: 'error', message: error.message })
+		}
 		!loading && !error && data && setUpcomingCompetitions(data.getAllWcifs)
 	}, [loading, error, data])
 	if (loading) return <LinearProgress />
