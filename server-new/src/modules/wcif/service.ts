@@ -11,6 +11,7 @@ import {
 	GroupInfo,
 } from './input'
 import WcifModel from './model'
+import addCompetitionToUsers from './utils/addCompetitionToUsers'
 import createModelFromWcif from './utils/createModelFromWcif'
 import getOpenActivities from './utils/getOpenActivities'
 
@@ -48,43 +49,8 @@ export default class WcifService {
 		const wcifData = await createModelFromWcif(data, competitionId)
 		const wcif = await this.wcifModel.create(wcifData)
 		const persons = wcif.persons
-		// TODO: Make this cleaner
-		for (const person of persons) {
-			const user = await UserMongooseModel.findOne({
-				connections: {
-					$elemMatch: {
-						$and: [
-							{ connectionType: 'WCA' },
-							{ 'content.id': person.wcaUserId },
-						],
-					},
-				},
-			})
-			if (
-				user &&
-				user.competitions &&
-				!user.competitions.some(
-					(competition) => competition.competitionId === wcif.competitionId
-				)
-			) {
-				let endDate = new Date(wcif.schedule.startDate)
-				endDate.setDate(endDate.getDate() + wcif.schedule.numberOfDays - 1)
-				const roles: RoleType[] = ['competitor']
-				if (person.roles.includes('organizer')) roles.push('organizer')
-				if (person.roles.includes('delegate')) roles.push('delegate')
-				if (person.roles.includes('delegate')) roles.push('delegate')
-				if (person.roles.includes('trainee_delegate'))
-					roles.push('traineeDelegate')
-				user.competitions.push({
-					competitionType: 'WCA',
-					competitionId: wcif.competitionId,
-					startDate: wcif.schedule.startDate,
-					endDate: endDate.toISOString().split('T')[0],
-					roles: roles,
-				})
-				await user.save()
-			}
-		}
+		// DONT await this since it isn't necessary for completing the mutation
+		addCompetitionToUsers(wcif)
 		const savedWcif = await wcif.save()
 		if (!savedWcif) throw new Error('Error saving document')
 		return wcif

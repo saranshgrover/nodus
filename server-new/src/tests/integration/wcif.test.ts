@@ -1,8 +1,13 @@
 import { ApolloServer, gql } from 'apollo-server-express'
 import { createTestClient } from 'apollo-server-testing'
+import { Wcif } from '../../entities'
+import { UserMongooseModel } from '../../modules/user/model'
 import { WcifMongooseModel } from '../../modules/wcif/model'
+import addCompetitionToUsers from '../../modules/wcif/utils/addCompetitionToUsers'
 import createModelFromWcif from '../../modules/wcif/utils/createModelFromWcif'
 import { buildSchema } from '../../utils'
+import { createWcaUser } from '../data/user-builder'
+import { Competition, Person } from '../data/wcif-builders'
 import wcif1 from '../data/wcif1'
 import { closeDatabase, connect, populateDatabase } from '../utils'
 
@@ -65,5 +70,46 @@ describe('Wcif', () => {
 		//@ts-ignore
 		const wcif = await createModelFromWcif(wcif1, 'SBUFall2019')
 		expect(wcif).toMatchSnapshot()
+	})
+
+	it(`should add competition to users competition list`, async () => {
+		const user = createWcaUser()
+		const competition: Wcif = Competition({
+			persons: [Person({ wcaUserId: user.connections[0].content.id })],
+		})
+		await populateDatabase(UserMongooseModel, [user])
+		await addCompetitionToUsers(competition)
+		await populateDatabase(WcifMongooseModel, [competition])
+
+		// We create the Apollo Server
+		const graphQLSchema = await buildSchema()
+		const server = new ApolloServer({
+			schema: graphQLSchema,
+			context: () => ({ req: {} }),
+		}) as any
+
+		// use the test server to create a query function
+		const { query } = createTestClient(server)
+
+		const GET_USER = gql`
+			query getUser($id: ObjectId!) {
+				getUser(id: $id) {
+					competitions {
+						competitionId
+						roles
+					}
+				}
+			}
+		`
+		const res = await query({
+			query: GET_USER,
+			variables: { id: user._id.toHexString() },
+		})
+		expect(res.data?.getUser.competitions).toEqual([
+			{
+				competitionId: competition.competitionId,
+				roles: ['competitor'],
+			},
+		])
 	})
 })

@@ -6,6 +6,7 @@ import { config } from '../../config'
 import { Competition } from '../../entities'
 import { UserMongooseModel } from '../../modules/user/model'
 import { WcifMongooseModel } from '../../modules/wcif/model'
+import createUsername from './createUsername'
 
 interface PassportWCACallback {
 	accessToken: string
@@ -54,9 +55,7 @@ export async function handleWCAConnect({
 		if (!user) {
 			user = new UserModel({
 				// TODO Make this a function
-				username: `${profile.displayName
-					.toLowerCase()
-					.replace(/\s/g, '')}${Math.random().toString().slice(2, 6)}`,
+				username: createUsername(profile.displayName),
 				name: profile.displayName,
 				email: profile.emails[0].value,
 				primaryAuthenticationType: 'WCA',
