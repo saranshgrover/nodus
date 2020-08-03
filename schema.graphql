@@ -11,6 +11,7 @@ type Activity {
   extensions: [Extension!]!
   id: Int!
   name: String!
+  ongoing: Boolean
   scrambleSetId: Int!
   startTime: String!
 }
@@ -23,6 +24,21 @@ input ActivityInput {
   extensions: [ExtensionInput!]!
   id: Int!
   name: String!
+  ongoing: Boolean = false
+  scrambleSetId: Int!
+  startTime: String!
+}
+
+type ActivityWithPerons {
+  _id: ObjectId!
+  activityCode: String!
+  childActivities: [ChildActivityWithPersons!]!
+  endTime: String!
+  extensions: [Extension!]!
+  id: Int!
+  name: String!
+  ongoing: Boolean
+  room: RoomWithoutActivties!
   scrambleSetId: Int!
   startTime: String!
 }
@@ -65,6 +81,7 @@ type ChildActivity {
   extensions: [Extension!]!
   id: Int!
   name: String!
+  ongoing: Boolean
   scrambleSetId: Int!
   startTime: String!
 }
@@ -76,6 +93,21 @@ input ChildActivityInput {
   extensions: [ExtensionInput!]!
   id: Int!
   name: String!
+  ongoing: Boolean = false
+  scrambleSetId: Int!
+  startTime: String!
+}
+
+type ChildActivityWithPersons {
+  _id: ObjectId!
+  activityCode: String!
+  endTime: String!
+  extensions: [Extension!]!
+  id: Int!
+  name: String!
+  next: ChildActivity
+  ongoing: Boolean
+  persons: [Person!]!
   scrambleSetId: Int!
   startTime: String!
 }
@@ -134,6 +166,12 @@ type ExternalConnection {
   content: WCAContent!
 }
 
+input GroupInfo {
+  activityCode: String
+  id: Int!
+  parentId: Int
+}
+
 type Mutation {
   """
   Clears the database. Only works in development when server is running locally.
@@ -142,6 +180,7 @@ type Mutation {
   createTodo(createTodoData: NewTodoInput!): Todo!
   createWcif(competitionId: String!): Wcif!
   deleteWcif(competitionId: String!): Wcif!
+  updateOngoingGroups(closeGroups: [GroupInfo!] = [], competitionId: String!, newGroups: [GroupInfo!] = []): [ActivityWithPerons!]!
   updateUser(data: UpdateUserInput!): User
   updateWcifCompetitors(competitionId: String!, competitors: [NewPersonInput!]!): Wcif!
   updateWcifEvents(competitionId: String!, events: [UpdateEventInput!]!): Wcif!
@@ -219,6 +258,7 @@ type Query {
   """
   getMe: User
   getMyUpcomingCompetitions: [Wcif!]!
+  getOngoingGroups(competitionId: String!): [ActivityWithPerons!]!
   getOpenRounds(competitionId: String!): [Round!]!
   getTodo(id: ObjectId!): Todo!
   getTopCompetitors(competitionId: String!, top: Int!): [Person!]!
@@ -259,6 +299,14 @@ input RoomInput {
   activities: [ActivityInput!]!
   color: String!
   extensions: [ExtensionInput!]!
+  id: Int!
+  name: String!
+}
+
+type RoomWithoutActivties {
+  _id: ObjectId!
+  color: String!
+  extensions: [Extension!]!
   id: Int!
   name: String!
 }

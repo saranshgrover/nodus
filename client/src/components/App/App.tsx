@@ -12,9 +12,9 @@ import Navigation from '../Navigation/Navigation'
 export default function App() {
 	return (
 		<ThemeProvider>
+			<CssBaseline />
 			<SnackbarProvider>
 				<ApolloProvider client={client}>
-					<CssBaseline />
 					<UserProvider>
 						<ErrorBoundary FallbackComponent={ErrorFallback}>
 							<Navigation />

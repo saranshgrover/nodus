@@ -4,9 +4,9 @@ import { Field, InputType, Int, ObjectType } from 'type-graphql'
 import { Activity } from './activity'
 import { Extension } from './extension'
 
-@InputType('RoomInput')
-@ObjectType('Room')
-export class Room {
+@InputType('RoomWithoutActivitiesInput')
+@ObjectType('RoomWithoutActivties')
+export class RoomWithoutActivities {
 	@Field()
 	readonly _id!: ObjectId
 
@@ -22,11 +22,15 @@ export class Room {
 	@Field()
 	color!: string
 
-	@prop({ type: Activity })
-	@Field((type) => [Activity])
-	activities!: Activity[]
-
 	@prop({ type: Extension })
 	@Field((type) => [Extension])
 	extensions!: Extension[]
+}
+
+@InputType('RoomInput')
+@ObjectType('Room')
+export class Room extends RoomWithoutActivities {
+	@prop({ type: Activity })
+	@Field((type) => [Activity])
+	activities!: Activity[]
 }

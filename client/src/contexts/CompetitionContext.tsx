@@ -24,7 +24,11 @@ export interface ICompetitionContext {
 	userConnectionInfo: Omit<ExternalConnection, 'accessToken'> | undefined
 	competitionType: string
 	tabs: string[]
-	activities: (Activity | ChildActivity)[] | undefined
+	activities:
+		| ((Activity | ChildActivity) & {
+				parentId: number | null
+		  })[]
+		| undefined
 }
 
 // https://stackoverflow.com/a/61336826/8056181
@@ -68,9 +72,9 @@ const CompetitionProvider = ({
 	if (loading) return <LinearProgress />
 	if (error) return <Error message={error.toString()} />
 	const wcif = data!.getWcifByCompetitionId
-	const activities: (Activity | ChildActivity)[] = wcif
-		? flattenActivities(wcif.schedule)
-		: []
+	const activities: ((Activity | ChildActivity) & {
+		parentId: number | null
+	})[] = wcif ? flattenActivities(wcif.schedule) : []
 	if (userCompetition) {
 		userRoles = userCompetition.roles
 		userConnectionInfo = user.info?.connections.find(
@@ -80,7 +84,6 @@ const CompetitionProvider = ({
 		competitionType = userCompetition.competitionType
 		tabs = ['overview', ...tabs]
 		if (userConnectionInfo) {
-			console.log(userConnectionInfo)
 			registrantId = wcif!.persons.find(
 				(person) => person.wcaUserId === userConnectionInfo!.content.id
 			)?.registrantId

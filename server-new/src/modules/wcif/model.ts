@@ -23,6 +23,10 @@ export default class WcifModel {
 		return await WcifMongooseModel.findOne({ competitionId })
 	}
 
+	async findByCompetitionIdLean(competitionId: string) {
+		return await WcifMongooseModel.findOne({ competitionId }).lean().exec()
+	}
+
 	async exists(competitionId: string): Promise<boolean> {
 		return await WcifMongooseModel.exists({ competitionId: competitionId })
 	}

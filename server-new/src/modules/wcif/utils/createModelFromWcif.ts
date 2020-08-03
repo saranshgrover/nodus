@@ -18,6 +18,17 @@ export default async function createModelFromWcif(
 	data.locationName = compInfoData.venue_address
 	data.registrationOpen = compInfoData.registration_open
 	data.registrationClose = compInfoData.registration_close
+
+	// Sort Schedule Activities according to start time. Without this, we'd have to sort each time.
+	for (const venue of data.schedule?.venues!) {
+		for (const room of venue.rooms) {
+			room.activities.sort((a, b) => {
+				let aTime = new Date(a.startTime)
+				let bTime = new Date(b.startTime)
+				return +aTime - +bTime
+			})
+		}
+	}
 	// Attach starting settings data
 	// @ts-ignore because _id is dynamically created by mongo
 	data.settings = {

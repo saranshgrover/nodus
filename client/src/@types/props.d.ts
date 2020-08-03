@@ -2,6 +2,6 @@
 interface ISetupProps {
 	id: string
 	onComplete: () => void
-	handleBack: () => void
+	handleBack?: () => void
 	handleReset?: () => void
 }

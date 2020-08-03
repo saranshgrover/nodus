@@ -20,11 +20,12 @@ export type Query = {
   __typename?: 'Query';
   getTodo: Todo;
   getWcifById: Wcif;
-  getMyUpcomingCompetitions: Array<Wcif>;
   getWcifByCompetitionId?: Maybe<Wcif>;
   getOpenRounds: Array<Round>;
   getAllWcifs: Array<Wcif>;
   getTopCompetitors: Array<Person>;
+  getOngoingGroups: Array<ActivityWithPerons>;
+  getMyUpcomingCompetitions: Array<Wcif>;
   getUser?: Maybe<User>;
   /** Returns the current logged in User. If no user is logged in, returns Null */
   getMe?: Maybe<User>;
@@ -55,6 +56,11 @@ export type QueryGetOpenRoundsArgs = {
 export type QueryGetTopCompetitorsArgs = {
   competitionId: Scalars['String'];
   top: Scalars['Int'];
+};
+
+
+export type QueryGetOngoingGroupsArgs = {
+  competitionId: Scalars['String'];
 };
 
 
@@ -257,8 +263,8 @@ export type Room = {
   id: Scalars['Int'];
   name: Scalars['String'];
   color: Scalars['String'];
-  activities: Array<Activity>;
   extensions: Array<Extension>;
+  activities: Array<Activity>;
 };
 
 export type Activity = {
@@ -272,6 +278,7 @@ export type Activity = {
   id: Scalars['Int'];
   childActivities: Array<ChildActivity>;
   extensions: Array<Extension>;
+  ongoing?: Maybe<Scalars['Boolean']>;
 };
 
 export type ChildActivity = {
@@ -284,6 +291,7 @@ export type ChildActivity = {
   scrambleSetId: Scalars['Int'];
   id: Scalars['Int'];
   extensions: Array<Extension>;
+  ongoing?: Maybe<Scalars['Boolean']>;
 };
 
 export type Setting = {
@@ -292,6 +300,45 @@ export type Setting = {
   imageUrl: Scalars['String'];
   message: Scalars['String'];
   colorTheme: Scalars['String'];
+};
+
+export type ActivityWithPerons = {
+  __typename?: 'ActivityWithPerons';
+  _id: Scalars['ObjectId'];
+  name: Scalars['String'];
+  activityCode: Scalars['String'];
+  startTime: Scalars['String'];
+  endTime: Scalars['String'];
+  scrambleSetId: Scalars['Int'];
+  id: Scalars['Int'];
+  childActivities: Array<ChildActivityWithPersons>;
+  extensions: Array<Extension>;
+  ongoing?: Maybe<Scalars['Boolean']>;
+  room: RoomWithoutActivties;
+};
+
+export type ChildActivityWithPersons = {
+  __typename?: 'ChildActivityWithPersons';
+  _id: Scalars['ObjectId'];
+  name: Scalars['String'];
+  activityCode: Scalars['String'];
+  startTime: Scalars['String'];
+  endTime: Scalars['String'];
+  scrambleSetId: Scalars['Int'];
+  id: Scalars['Int'];
+  extensions: Array<Extension>;
+  ongoing?: Maybe<Scalars['Boolean']>;
+  persons: Array<Person>;
+  next?: Maybe<ChildActivity>;
+};
+
+export type RoomWithoutActivties = {
+  __typename?: 'RoomWithoutActivties';
+  _id: Scalars['ObjectId'];
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  color: Scalars['String'];
+  extensions: Array<Extension>;
 };
 
 export type User = {
@@ -358,6 +405,7 @@ export type Mutation = {
   updateWcifSettings: Wcif;
   /** Clears the database. Only works in development when server is running locally. */
   clearDatabase: Scalars['Boolean'];
+  updateOngoingGroups: Array<ActivityWithPerons>;
   updateUser?: Maybe<User>;
 };
 
@@ -409,6 +457,13 @@ export type MutationUpdateWcifSettingsArgs = {
 };
 
 
+export type MutationUpdateOngoingGroupsArgs = {
+  competitionId: Scalars['String'];
+  newGroups?: Maybe<Array<GroupInfo>>;
+  closeGroups?: Maybe<Array<GroupInfo>>;
+};
+
+
 export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
 };
@@ -441,8 +496,15 @@ export type RoomInput = {
   id: Scalars['Int'];
   name: Scalars['String'];
   color: Scalars['String'];
-  activities: Array<ActivityInput>;
   extensions: Array<ExtensionInput>;
+  activities: Array<ActivityInput>;
+};
+
+export type ExtensionInput = {
+  _id: Scalars['ObjectId'];
+  id: Scalars['String'];
+  specUrl: Scalars['String'];
+  data: Scalars['String'];
 };
 
 export type ActivityInput = {
@@ -455,6 +517,7 @@ export type ActivityInput = {
   id: Scalars['Int'];
   childActivities: Array<ChildActivityInput>;
   extensions: Array<ExtensionInput>;
+  ongoing?: Maybe<Scalars['Boolean']>;
 };
 
 export type ChildActivityInput = {
@@ -466,13 +529,7 @@ export type ChildActivityInput = {
   scrambleSetId: Scalars['Int'];
   id: Scalars['Int'];
   extensions: Array<ExtensionInput>;
-};
-
-export type ExtensionInput = {
-  _id: Scalars['ObjectId'];
-  id: Scalars['String'];
-  specUrl: Scalars['String'];
-  data: Scalars['String'];
+  ongoing?: Maybe<Scalars['Boolean']>;
 };
 
 export type NewPersonInput = {
@@ -533,6 +590,12 @@ export type SettingInput = {
   imageUrl: Scalars['String'];
   message: Scalars['String'];
   colorTheme: Scalars['String'];
+};
+
+export type GroupInfo = {
+  id: Scalars['Int'];
+  activityCode?: Maybe<Scalars['String']>;
+  parentId?: Maybe<Scalars['Int']>;
 };
 
 export type UpdateUserInput = {
@@ -630,6 +693,74 @@ export function useContextGetMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQuer
 export type ContextGetMeQueryHookResult = ReturnType<typeof useContextGetMeQuery>;
 export type ContextGetMeLazyQueryHookResult = ReturnType<typeof useContextGetMeLazyQuery>;
 export type ContextGetMeQueryResult = ApolloReactCommon.QueryResult<ContextGetMeQuery, ContextGetMeQueryVariables>;
+export const ControlCenterUpdateOngoingGroupsDocument = gql`
+    mutation ControlCenterUpdateOngoingGroups($competitionId: String!, $newGroups: [GroupInfo!], $closeGroups: [GroupInfo!]) {
+  updateOngoingGroups(competitionId: $competitionId, newGroups: $newGroups, closeGroups: $closeGroups) {
+    name
+    activityCode
+    startTime
+    endTime
+    id
+    room {
+      name
+      color
+    }
+    childActivities {
+      name
+      activityCode
+      startTime
+      endTime
+      id
+      persons {
+        name
+        wcaUserId
+        wcaId
+        registrantId
+        countryIso2
+        roles
+        assignments {
+          assignmentCode
+          activityId
+        }
+      }
+      next {
+        name
+        startTime
+        endTime
+        id
+        activityCode
+      }
+    }
+  }
+}
+    `;
+export type ControlCenterUpdateOngoingGroupsMutationFn = ApolloReactCommon.MutationFunction<ControlCenterUpdateOngoingGroupsMutation, ControlCenterUpdateOngoingGroupsMutationVariables>;
+
+/**
+ * __useControlCenterUpdateOngoingGroupsMutation__
+ *
+ * To run a mutation, you first call `useControlCenterUpdateOngoingGroupsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useControlCenterUpdateOngoingGroupsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [controlCenterUpdateOngoingGroupsMutation, { data, loading, error }] = useControlCenterUpdateOngoingGroupsMutation({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *      newGroups: // value for 'newGroups'
+ *      closeGroups: // value for 'closeGroups'
+ *   },
+ * });
+ */
+export function useControlCenterUpdateOngoingGroupsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ControlCenterUpdateOngoingGroupsMutation, ControlCenterUpdateOngoingGroupsMutationVariables>) {
+        return ApolloReactHooks.useMutation<ControlCenterUpdateOngoingGroupsMutation, ControlCenterUpdateOngoingGroupsMutationVariables>(ControlCenterUpdateOngoingGroupsDocument, baseOptions);
+      }
+export type ControlCenterUpdateOngoingGroupsMutationHookResult = ReturnType<typeof useControlCenterUpdateOngoingGroupsMutation>;
+export type ControlCenterUpdateOngoingGroupsMutationResult = ApolloReactCommon.MutationResult<ControlCenterUpdateOngoingGroupsMutation>;
+export type ControlCenterUpdateOngoingGroupsMutationOptions = ApolloReactCommon.BaseMutationOptions<ControlCenterUpdateOngoingGroupsMutation, ControlCenterUpdateOngoingGroupsMutationVariables>;
 export const NewCreateWcifDocument = gql`
     mutation NewCreateWcif($competitionId: String!) {
   createWcif(competitionId: $competitionId) {
@@ -1106,6 +1237,73 @@ export function useContextGetCompetitionLazyQuery(baseOptions?: ApolloReactHooks
 export type ContextGetCompetitionQueryHookResult = ReturnType<typeof useContextGetCompetitionQuery>;
 export type ContextGetCompetitionLazyQueryHookResult = ReturnType<typeof useContextGetCompetitionLazyQuery>;
 export type ContextGetCompetitionQueryResult = ApolloReactCommon.QueryResult<ContextGetCompetitionQuery, ContextGetCompetitionQueryVariables>;
+export const ControlCenterGetOpenGroupsDocument = gql`
+    query ControlCenterGetOpenGroups($competitionId: String!) {
+  getOngoingGroups(competitionId: $competitionId) {
+    name
+    activityCode
+    startTime
+    endTime
+    id
+    room {
+      name
+      color
+    }
+    childActivities {
+      name
+      activityCode
+      startTime
+      endTime
+      id
+      persons {
+        name
+        wcaUserId
+        wcaId
+        registrantId
+        countryIso2
+        roles
+        assignments {
+          assignmentCode
+          activityId
+        }
+      }
+      next {
+        name
+        startTime
+        endTime
+        id
+        activityCode
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useControlCenterGetOpenGroupsQuery__
+ *
+ * To run a query within a React component, call `useControlCenterGetOpenGroupsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useControlCenterGetOpenGroupsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useControlCenterGetOpenGroupsQuery({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *   },
+ * });
+ */
+export function useControlCenterGetOpenGroupsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ControlCenterGetOpenGroupsQuery, ControlCenterGetOpenGroupsQueryVariables>) {
+        return ApolloReactHooks.useQuery<ControlCenterGetOpenGroupsQuery, ControlCenterGetOpenGroupsQueryVariables>(ControlCenterGetOpenGroupsDocument, baseOptions);
+      }
+export function useControlCenterGetOpenGroupsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ControlCenterGetOpenGroupsQuery, ControlCenterGetOpenGroupsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<ControlCenterGetOpenGroupsQuery, ControlCenterGetOpenGroupsQueryVariables>(ControlCenterGetOpenGroupsDocument, baseOptions);
+        }
+export type ControlCenterGetOpenGroupsQueryHookResult = ReturnType<typeof useControlCenterGetOpenGroupsQuery>;
+export type ControlCenterGetOpenGroupsLazyQueryHookResult = ReturnType<typeof useControlCenterGetOpenGroupsLazyQuery>;
+export type ControlCenterGetOpenGroupsQueryResult = ApolloReactCommon.QueryResult<ControlCenterGetOpenGroupsQuery, ControlCenterGetOpenGroupsQueryVariables>;
 export const LandingAllUpcomingCompetitionsDocument = gql`
     query LandingAllUpcomingCompetitions {
   getAllWcifs {
@@ -1457,6 +1655,15 @@ export type ContextGetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ContextGetMeQuery = { __typename?: 'Query', getMe?: Maybe<{ __typename?: 'User', _id: any, username: string, email: string, name: string, primaryAuthenticationType: string, connections: Array<{ __typename?: 'ExternalConnection', connectionType: string, content: { __typename?: 'WCAContent', id: number, wcaId?: Maybe<string>, photos: Array<string>, birthdate: string, delegateStatus: string, teams: Array<{ __typename?: 'WCATeams', friendlyId: string, leader: boolean }> } }>, competitions: Array<{ __typename?: 'Competition', competitionType: string, competitionId: string, roles: Array<string> }> }> };
 
+export type ControlCenterUpdateOngoingGroupsMutationVariables = Exact<{
+  competitionId: Scalars['String'];
+  newGroups?: Maybe<Array<GroupInfo>>;
+  closeGroups?: Maybe<Array<GroupInfo>>;
+}>;
+
+
+export type ControlCenterUpdateOngoingGroupsMutation = { __typename?: 'Mutation', updateOngoingGroups: Array<{ __typename?: 'ActivityWithPerons', name: string, activityCode: string, startTime: string, endTime: string, id: number, room: { __typename?: 'RoomWithoutActivties', name: string, color: string }, childActivities: Array<{ __typename?: 'ChildActivityWithPersons', name: string, activityCode: string, startTime: string, endTime: string, id: number, persons: Array<{ __typename?: 'Person', name: string, wcaUserId: number, wcaId?: Maybe<string>, registrantId?: Maybe<number>, countryIso2: string, roles: Array<string>, assignments: Array<{ __typename?: 'Assignment', assignmentCode: string, activityId: number }> }>, next?: Maybe<{ __typename?: 'ChildActivity', name: string, startTime: string, endTime: string, id: number, activityCode: string }> }> }> };
+
 export type NewCreateWcifMutationVariables = Exact<{
   competitionId: Scalars['String'];
 }>;
@@ -1518,6 +1725,13 @@ export type ContextGetCompetitionQueryVariables = Exact<{
 
 
 export type ContextGetCompetitionQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', name: string, shortName: string, _id: any, competitionId: string, settings: { __typename?: 'Setting', colorTheme: string }, persons: Array<{ __typename?: 'Person', _id: any, wcaUserId: number, registrantId?: Maybe<number> }>, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, timezone: string, name: string, rooms: Array<{ __typename?: 'Room', _id: any, id: number, name: string, color: string, activities: Array<{ __typename?: 'Activity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string, childActivities: Array<{ __typename?: 'ChildActivity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string }> }> }> }> } }> };
+
+export type ControlCenterGetOpenGroupsQueryVariables = Exact<{
+  competitionId: Scalars['String'];
+}>;
+
+
+export type ControlCenterGetOpenGroupsQuery = { __typename?: 'Query', getOngoingGroups: Array<{ __typename?: 'ActivityWithPerons', name: string, activityCode: string, startTime: string, endTime: string, id: number, room: { __typename?: 'RoomWithoutActivties', name: string, color: string }, childActivities: Array<{ __typename?: 'ChildActivityWithPersons', name: string, activityCode: string, startTime: string, endTime: string, id: number, persons: Array<{ __typename?: 'Person', name: string, wcaUserId: number, wcaId?: Maybe<string>, registrantId?: Maybe<number>, countryIso2: string, roles: Array<string>, assignments: Array<{ __typename?: 'Assignment', assignmentCode: string, activityId: number }> }>, next?: Maybe<{ __typename?: 'ChildActivity', name: string, startTime: string, endTime: string, id: number, activityCode: string }> }> }> };
 
 export type LandingAllUpcomingCompetitionsQueryVariables = Exact<{ [key: string]: never; }>;
 

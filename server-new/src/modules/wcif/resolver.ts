@@ -15,7 +15,9 @@ import { Person, Round, Schedule, Setting, Wcif } from '../../entities/'
 import { hasRole } from '../decorator/hasRole'
 import { isLoggedIn } from '../middleware/isLoggedIn'
 import {
+	ActivityWithPerons,
 	GetTopCompetitorsArgs,
+	UpdateGroupsArgs,
 	UpdateWcifInfoArgs,
 	WcifCompetitorArgs,
 	WcifEventsArgs,
@@ -31,18 +33,11 @@ import WcifService from './service'
 export default class WcifResolver {
 	constructor(private readonly wcifService: WcifService) {}
 
+	// QUERIES: PUBLIC
+
 	@Query((returns) => Wcif)
 	async getWcifById(@Arg('_id') id: ObjectId) {
 		return await this.wcifService.getById(id)
-	}
-
-	@UseMiddleware(isLoggedIn)
-	@Query((returns) => [Wcif])
-	async getMyUpcomingCompetitions(@Ctx() { req }: Context) {
-		const upcomingCompetitions = this.wcifService.getUpcomingCompetitionsFor(
-			req.user._id
-		)
-		return upcomingCompetitions
 	}
 
 	@Query((returns) => Wcif, { nullable: true })
@@ -76,6 +71,24 @@ export default class WcifResolver {
 	) {
 		return await this.wcifService.getTopCompetitors(competitionId, top)
 	}
+
+	@Query((returns) => [ActivityWithPerons])
+	async getOngoingGroups(@Arg('competitionId') competitionId: string) {
+		return await this.wcifService.getOngoingGroups(competitionId)
+	}
+
+	// QUERIES: AUTHORIZED
+
+	@UseMiddleware(isLoggedIn)
+	@Query((returns) => [Wcif])
+	async getMyUpcomingCompetitions(@Ctx() { req }: Context) {
+		const upcomingCompetitions = this.wcifService.getUpcomingCompetitionsFor(
+			req.user._id
+		)
+		return upcomingCompetitions
+	}
+
+	// MUTATIONS: AUTHORIZED
 
 	@UseMiddleware(isLoggedIn)
 	// @hasRole(['delegate', 'organizer', 'traineeDelegate'])
@@ -206,5 +219,18 @@ export default class WcifResolver {
 			await mongoose.connection.db.dropDatabase()
 		}
 		return true
+	}
+
+	@hasRole(['delegate', 'organizer', 'traineeDelegate', 'staff'])
+	@Mutation(() => [ActivityWithPerons])
+	async updateOngoingGroups(
+		@Args() { closeGroups, competitionId, newGroups }: UpdateGroupsArgs
+	) {
+		const updatedOngoingGroups = await this.wcifService.updateOngoingGroups(
+			competitionId,
+			newGroups,
+			closeGroups
+		)
+		return updatedOngoingGroups
 	}
 }

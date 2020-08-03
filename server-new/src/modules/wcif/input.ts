@@ -1,14 +1,17 @@
 import { MaxLength, Min } from 'class-validator'
 import { ObjectId } from 'mongodb'
-import { ArgsType, Field, InputType, Int } from 'type-graphql'
+import { ArgsType, Field, InputType, Int, ObjectType } from 'type-graphql'
 import {
+	Activity,
 	AdvancementCondition,
+	ChildActivity,
 	Cutoff,
 	Person,
 	Qualification,
 	TimeLimit,
 	Wcif,
 } from '../../entities/wcif'
+import { RoomWithoutActivities } from '../../entities/wcif/room'
 
 @InputType()
 export class NewWcifInput extends Wcif {}
@@ -105,4 +108,46 @@ export class GetTopCompetitorsArgs {
 	competitionId: string
 	@Field(() => Int)
 	top: number
+}
+
+@InputType()
+export class GroupInfo {
+	@Field(() => Int)
+	id: number
+
+	@Field({ nullable: true })
+	activityCode: string
+
+	@Field(() => Int, { nullable: true })
+	parentId: number
+}
+
+@ArgsType()
+export class UpdateGroupsArgs {
+	@Field(() => String)
+	competitionId: string
+
+	@Field(() => [GroupInfo], { defaultValue: [] })
+	newGroups: GroupInfo[]
+
+	@Field(() => [GroupInfo], { defaultValue: [] })
+	closeGroups: GroupInfo[]
+}
+
+@ObjectType()
+export class ActivityWithPerons extends Activity {
+	@Field(() => [ChildActivityWithPersons])
+	childActivities: ChildActivityWithPersons[]
+
+	@Field(() => RoomWithoutActivities)
+	room: RoomWithoutActivities
+}
+
+@ObjectType()
+export class ChildActivityWithPersons extends ChildActivity {
+	@Field(() => [Person])
+	persons: Person[]
+
+	@Field(() => ChildActivity, { nullable: true })
+	next: ChildActivity
 }

@@ -12,6 +12,27 @@ export const parseActivityCode = (activityCode: string) => {
 		attemptNumber: a && parseInt(a, 10),
 	}
 }
+
+export const activityToString = (activityCode: string, short = false) => {
+	const {
+		eventId,
+		roundNumber,
+		groupNumber,
+		attemptNumber,
+	} = parseActivityCode(activityCode)
+	if (eventId === 'other') {
+		return null
+	}
+	const r = short ? 'R' : 'Round '
+	const g = short ? 'G' : 'Group '
+	const a = short ? 'A' : 'Attempt '
+	return `${eventId ? activityKey[eventId] : ''} ${
+		roundNumber ? `${r}${roundNumber}` : ''
+	} ${groupNumber ? `${g}${groupNumber}` : ''} ${
+		attemptNumber ? `${a}${attemptNumber}` : ''
+	} `
+}
+
 export const activityKey = {
 	'222': '2x2',
 	'333': '3x3',

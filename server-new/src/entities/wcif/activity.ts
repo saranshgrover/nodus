@@ -41,4 +41,8 @@ export class Activity {
 	@prop({ type: Extension })
 	@Field(() => [Extension])
 	extensions!: Extension[]
+
+	@prop({ default: false })
+	@Field(() => Boolean, { defaultValue: false })
+	ongoing: boolean
 }
