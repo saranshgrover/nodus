@@ -1,20 +1,21 @@
 import React from 'react'
 import {
 	BrowserRouter as Router,
-	Switch,
-	Route,
 	Redirect,
+	Route,
+	Switch,
 } from 'react-router-dom'
 import AuthenticatedRoute from '../AuthenticatedRoute/AuthenticatedRoute'
+import Register from '../Authentication/Register'
+import SignIn from '../Authentication/SignIn'
+import Footer from '../common/Footer'
+import Header from '../common/Header'
+import Competition from '../CompetitionRouting/Competition'
 import LandingSignedIn from '../Landing/LandingSignedIn'
 import WelcomeLanding from '../Landing/WelcomeLanding'
 import NewCompetition from '../New/NewCompetition'
-import SignIn from '../Authentication/SignIn'
-import Register from '../Authentication/Register'
-import Header from '../common/Header'
-import Footer from '../common/Footer'
-import Competition from '../CompetitionRouting/Competition'
 import UserSettings from '../UserSettings/UserSettings'
+
 export default function Navigation() {
 	return (
 		<Router basename={process.env.PUBLIC_URL}>

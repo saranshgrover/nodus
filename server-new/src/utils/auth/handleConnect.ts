@@ -56,9 +56,7 @@ export async function handleWCAConnect({
 				// TODO Make this a function
 				username: `${profile.displayName
 					.toLowerCase()
-					.replace(/\s/g, '')}${Math.random()
-					.toString()
-					.slice(2, 6)}`,
+					.replace(/\s/g, '')}${Math.random().toString().slice(2, 6)}`,
 				name: profile.displayName,
 				email: profile.emails[0].value,
 				primaryAuthenticationType: 'WCA',
@@ -66,7 +64,6 @@ export async function handleWCAConnect({
 					{
 						connectionType: 'WCA',
 						accessToken: accessToken,
-						// TODO1: Parse user profile
 						content: {
 							id: profile.id,
 							delegateStatus: profile.wca.delegate_status,
@@ -79,10 +76,7 @@ export async function handleWCAConnect({
 							],
 							teams: [
 								...profile.wca.teams.map(
-									(team: {
-										friendly_id: String
-										leader: Boolean
-									}) => ({
+									(team: { friendly_id: String; leader: Boolean }) => ({
 										friendlyId: team.friendly_id,
 										leader: team.leader,
 									})

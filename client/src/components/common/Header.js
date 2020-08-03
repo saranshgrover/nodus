@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 		zIndex: theme.zIndex.drawer + 1,
 		height: '56px',
 		[theme.breakpoints.up('xs')]: {
-			height: '48px !important',
+			height: '56px !important',
 		},
 		[theme.breakpoints.up('sm')]: {
 			height: '64px !important',
@@ -68,7 +68,7 @@ export default function Header() {
 	useEffect(() => {
 		const competitionId = match?.params?.competitionId
 		isAdmin(user, competitionId) && setAdmin(true)
-	}, [match.params.competitionId, match.params.tab])
+	}, [match.params.competitionId, match.params.tab, user])
 	const classes = useStyles()
 	return (
 		<React.Fragment>

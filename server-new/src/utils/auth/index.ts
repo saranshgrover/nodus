@@ -1,13 +1,13 @@
-import passport from 'passport'
 import express from 'express'
-import WCAStratetgy from 'passport-wca'
-import * as passportLocal from 'passport-local'
-const LocalStrategy = passportLocal.Strategy
 import { ObjectId } from 'mongodb'
+import passport from 'passport'
+import * as passportLocal from 'passport-local'
+import WCAStratetgy from 'passport-wca'
 import { config } from '../../config'
-import handleConnect from './handleConnect'
 import { User } from '../../entities'
 import { UserMongooseModel } from '../../modules/user/model'
+import handleConnect from './handleConnect'
+const LocalStrategy = passportLocal.Strategy
 
 export default function (passport: passport.PassportStatic) {
 	const router = express.Router()
@@ -72,9 +72,7 @@ export default function (passport: passport.PassportStatic) {
 
 	passport.deserializeUser((user: Partial<User> & { id: ObjectId }, done) => {
 		console.log('deserialize')
-		UserMongooseModel.findOne({ _id: user.id }, (err, user) =>
-			done(err, user)
-		)
+		UserMongooseModel.findOne({ _id: user.id }, (err, user) => done(err, user))
 	})
 
 	router.get('/wca', passport.authenticate('wca'))
