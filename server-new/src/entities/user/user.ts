@@ -1,9 +1,9 @@
-import { ObjectType, Field } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
 import { ObjectId } from 'mongodb'
-
+import { Field, ObjectType } from 'type-graphql'
 import { Competition } from './competition'
 import { ExternalConnection } from './externalConnection'
+import { UserPushSubscription } from './pushSubscription'
 
 @ObjectType()
 export class User {
@@ -36,4 +36,9 @@ export class User {
 	@prop({ type: ExternalConnection })
 	@Field(() => [ExternalConnection])
 	connections: ExternalConnection[]
+
+	// should this be a graphql iterable field? if so, what permissions?
+	@prop({ type: UserPushSubscription })
+	@Field(() => [UserPushSubscription])
+	subscriptions: UserPushSubscription[]
 }

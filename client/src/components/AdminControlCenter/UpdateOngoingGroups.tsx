@@ -55,12 +55,14 @@ export default function UpdateOngoingGroups({
 					...openActivities.map((activity) => ({
 						id: activity.id,
 						parentId: activity.parentId,
+						activityCode: activity.activityCode,
 					})),
 				],
 				closeGroups: [
 					...closeActivities.map((activity) => ({
 						id: activity.id,
 						parentId: activity.parentId,
+						activityCode: activity.activityCode,
 					})),
 				],
 			}

@@ -27,6 +27,11 @@ export const ContextGetMe = gql`
 				competitionId
 				roles
 			}
+			subscriptions {
+				endpoint
+				browser
+				device
+			}
 		}
 	}
 `

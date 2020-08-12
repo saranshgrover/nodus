@@ -21,9 +21,6 @@ export default function Navigation() {
 		<Router basename={process.env.PUBLIC_URL}>
 			<Header />
 			<Switch>
-				<Route exact path='/about' component={WelcomeLanding} />
-				<Route exact path='/signin' component={SignIn} />
-				<Route exact path='/register' component={Register} />
 				<AuthenticatedRoute
 					authCallback={(user) => user.isSignedIn()}
 					RedirectComponent={<Redirect to='/' />}
@@ -31,9 +28,6 @@ export default function Navigation() {
 					path='/new'
 					component={NewCompetition}
 				/>
-				<Route exact path={`/competitions`} component={LandingSignedIn} />
-				<Route path='/competitions/:compId/:tab?' component={Competition} />
-				<Route exact path='/about' component={WelcomeLanding} />
 				<AuthenticatedRoute
 					authCallback={(user) => user.isSignedIn()}
 					RedirectComponent={<Redirect to='/' />}
@@ -41,6 +35,12 @@ export default function Navigation() {
 					path='/settings'
 					component={UserSettings}
 				/>
+				<Route exact path='/about' component={WelcomeLanding} />
+				<Route exact path='/signin' component={SignIn} />
+				<Route exact path='/register' component={Register} />
+				<Route exact path={`/competitions`} component={LandingSignedIn} />
+				<Route path='/competitions/:compId/:tab?' component={Competition} />
+				<Route exact path='/about' component={WelcomeLanding} />
 				<Route exact path='/' component={WelcomeLanding} />
 				<Redirect to='/' />
 			</Switch>

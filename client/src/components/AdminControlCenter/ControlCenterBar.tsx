@@ -18,9 +18,9 @@ import {
 	ControlCenterGetOpenGroupsQuery,
 	ControlCenterUpdateOngoingGroupsMutation,
 } from 'generated/graphql'
-import { activityToString } from 'logic/activity'
 import moment from 'moment-timezone'
 import React, { ReactElement, useEffect, useState } from 'react'
+import { activityToString } from '../../../../shared/logic/activity'
 import UpdateOngoingGroups from './UpdateOngoingGroups'
 
 const ProgressIndicator = withStyles((theme: Theme) =>

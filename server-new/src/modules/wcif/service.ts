@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb'
 import { Service } from 'typedi'
 import { config } from '../../config'
 import { Person, Wcif } from '../../entities'
+import { parseActivityCode } from '../../logic/activity'
 import { UserMongooseModel } from '../user/model'
 import {
 	ActivityWithPerons,
@@ -14,6 +15,7 @@ import WcifModel from './model'
 import addCompetitionToUsers from './utils/addCompetitionToUsers'
 import createModelFromWcif from './utils/createModelFromWcif'
 import getOpenActivities from './utils/getOpenActivities'
+import sendNewGroupNotifications from './utils/sendNewGroupNotification'
 
 @Service() // Dependencies injection
 export default class WcifService {
@@ -212,11 +214,15 @@ export default class WcifService {
 			}
 		}
 		for (const group of newGroups) {
+			let found = false
 			if (group.parentId === null) {
 				const activity = flatActivities.find(
 					(activity) => activity.id === group.id
 				)
-				if (activity) activity.ongoing = true
+				if (activity) {
+					activity.ongoing = true
+					found = true
+				}
 			} else {
 				const parentActivity = flatActivities.find(
 					(activity) => activity.id === group.parentId
@@ -229,8 +235,23 @@ export default class WcifService {
 					if (childActivity) {
 						childActivity.ongoing = true
 						parentActivity.ongoing = true
+						found = true
 					}
 				}
+			}
+			if (found) {
+				const { eventId, groupNumber, roundNumber } = parseActivityCode(
+					group.activityCode
+				)
+				const title = `${eventId} Round ${roundNumber} Group ${groupNumber}`
+				const body = `${eventId} Round ${roundNumber} Group ${groupNumber} is starting now`
+				const icon = `/nodus-orange.png`
+				const url = `/competitions/${competitionId}/overview`
+				sendNewGroupNotifications(
+					group.id,
+					competition,
+					JSON.stringify({ body, title, icon, url })
+				)
 			}
 		}
 		await competition.save()

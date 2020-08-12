@@ -22,6 +22,11 @@ export interface Config {
 		callbackURL: string
 		scope: string[]
 	}
+	webpush: {
+		publicKey: string
+		privateKey: string
+		gcmApiKey: string
+	}
 	clientOrigin: string
 	cookieSecret: string
 	port: number
@@ -45,6 +50,11 @@ export const config: Config = {
 	isDev: env('NODE_ENV') === 'development',
 	mongoDB: {
 		uri: env('MONGODB_URI'),
+	},
+	webpush: {
+		publicKey: env('VAPID_PUBLIC_KEY'),
+		privateKey: env('VAPID_PRIVATE_KEY'),
+		gcmApiKey: env('GCM_API_KEY'),
 	},
 	redis: {
 		port: +env('REDIS_PORT'),

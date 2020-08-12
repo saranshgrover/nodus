@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Route, RouteProps, RouteComponentProps } from 'react-router-dom'
+import { Route, RouteComponentProps, RouteProps } from 'react-router-dom'
 import { UserContext } from '../../contexts/UserContext'
 
 interface AuthenticatedRouteProps {
@@ -19,7 +19,6 @@ export default function AuthenticatedRoute({
 	const user = useContext(UserContext)
 	return (
 		<Route
-			component={C}
 			{...rest}
 			render={(props) =>
 				authCallback(user) ? <C {...props} /> : RedirectComponent

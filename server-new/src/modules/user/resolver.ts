@@ -11,6 +11,7 @@ import {
 import { Service } from 'typedi'
 import { config } from '../../config'
 import { User, WcifFetch } from '../../entities'
+import { UserPushSubscription } from '../../entities/user/pushSubscription'
 import descriptions from '../descriptions'
 import { isLoggedIn } from '../middleware/isLoggedIn'
 import { WcifMongooseModel } from '../wcif/model'
@@ -91,13 +92,22 @@ export default class UserResolver {
 			const usernameAlreadyTaken = await UserMongooseModel.exists({
 				username: data.newUsername,
 			})
-			if (usernameAlreadyTaken)
-				throw new Error('Username is already taken')
+			if (usernameAlreadyTaken) throw new Error('Username is already taken')
 		}
 		if (data.newName) user.name = data.newName
 		if (data.newEmail) user.email = data.newEmail
 		if (data.newUsername) user.username = data.newUsername
 		await user.save()
 		return user
+	}
+
+	@UseMiddleware(isLoggedIn)
+	@Mutation((returns) => Boolean)
+	async subscribeMe(
+		@Ctx() { req }: Context,
+		@Arg('subscription') subscription: UserPushSubscription
+	) {
+		const done = await this.userService.subscribeUser(req.user.id, subscription)
+		return done
 	}
 }

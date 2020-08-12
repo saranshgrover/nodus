@@ -350,6 +350,7 @@ export type User = {
   primaryAuthenticationType: Scalars['String'];
   competitions: Array<Competition>;
   connections: Array<ExternalConnection>;
+  subscriptions: Array<UserPushSubscriptionInput>;
 };
 
 export type Competition = {
@@ -384,6 +385,20 @@ export type WcaTeams = {
   leader: Scalars['Boolean'];
 };
 
+export type UserPushSubscriptionInput = {
+  __typename?: 'UserPushSubscriptionInput';
+  endpoint: Scalars['String'];
+  keys: Keys;
+  device?: Maybe<Scalars['String']>;
+  browser?: Maybe<Scalars['String']>;
+};
+
+export type Keys = {
+  __typename?: 'Keys';
+  p256dh: Scalars['String'];
+  auth: Scalars['String'];
+};
+
 export type WcifFetch = {
   __typename?: 'WcifFetch';
   name: Scalars['String'];
@@ -407,6 +422,7 @@ export type Mutation = {
   clearDatabase: Scalars['Boolean'];
   updateOngoingGroups: Array<ActivityWithPerons>;
   updateUser?: Maybe<User>;
+  subscribeMe: Scalars['Boolean'];
 };
 
 
@@ -466,6 +482,11 @@ export type MutationUpdateOngoingGroupsArgs = {
 
 export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
+};
+
+
+export type MutationSubscribeMeArgs = {
+  subscription: UserPushSubscription;
 };
 
 export type NewTodoInput = {
@@ -605,6 +626,18 @@ export type UpdateUserInput = {
   newUsername: Scalars['String'];
 };
 
+export type UserPushSubscription = {
+  endpoint: Scalars['String'];
+  keys: KeysInput;
+  device?: Maybe<Scalars['String']>;
+  browser?: Maybe<Scalars['String']>;
+};
+
+export type KeysInput = {
+  p256dh: Scalars['String'];
+  auth: Scalars['String'];
+};
+
 
 export const SettingsUpdateUserDocument = gql`
     mutation SettingsUpdateUser($data: UpdateUserInput!) {
@@ -638,6 +671,36 @@ export function useSettingsUpdateUserMutation(baseOptions?: ApolloReactHooks.Mut
 export type SettingsUpdateUserMutationHookResult = ReturnType<typeof useSettingsUpdateUserMutation>;
 export type SettingsUpdateUserMutationResult = ApolloReactCommon.MutationResult<SettingsUpdateUserMutation>;
 export type SettingsUpdateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<SettingsUpdateUserMutation, SettingsUpdateUserMutationVariables>;
+export const SubscribeUserDocument = gql`
+    mutation SubscribeUser($subscription: UserPushSubscription!) {
+  subscribeMe(subscription: $subscription)
+}
+    `;
+export type SubscribeUserMutationFn = ApolloReactCommon.MutationFunction<SubscribeUserMutation, SubscribeUserMutationVariables>;
+
+/**
+ * __useSubscribeUserMutation__
+ *
+ * To run a mutation, you first call `useSubscribeUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubscribeUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [subscribeUserMutation, { data, loading, error }] = useSubscribeUserMutation({
+ *   variables: {
+ *      subscription: // value for 'subscription'
+ *   },
+ * });
+ */
+export function useSubscribeUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SubscribeUserMutation, SubscribeUserMutationVariables>) {
+        return ApolloReactHooks.useMutation<SubscribeUserMutation, SubscribeUserMutationVariables>(SubscribeUserDocument, baseOptions);
+      }
+export type SubscribeUserMutationHookResult = ReturnType<typeof useSubscribeUserMutation>;
+export type SubscribeUserMutationResult = ApolloReactCommon.MutationResult<SubscribeUserMutation>;
+export type SubscribeUserMutationOptions = ApolloReactCommon.BaseMutationOptions<SubscribeUserMutation, SubscribeUserMutationVariables>;
 export const ContextGetMeDocument = gql`
     query ContextGetMe {
   getMe {
@@ -664,6 +727,11 @@ export const ContextGetMeDocument = gql`
       competitionType
       competitionId
       roles
+    }
+    subscriptions {
+      endpoint
+      browser
+      device
     }
   }
 }
@@ -1650,10 +1718,17 @@ export type SettingsUpdateUserMutationVariables = Exact<{
 
 export type SettingsUpdateUserMutation = { __typename?: 'Mutation', updateUser?: Maybe<{ __typename?: 'User', _id: any }> };
 
+export type SubscribeUserMutationVariables = Exact<{
+  subscription: UserPushSubscription;
+}>;
+
+
+export type SubscribeUserMutation = { __typename?: 'Mutation', subscribeMe: boolean };
+
 export type ContextGetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ContextGetMeQuery = { __typename?: 'Query', getMe?: Maybe<{ __typename?: 'User', _id: any, username: string, email: string, name: string, primaryAuthenticationType: string, connections: Array<{ __typename?: 'ExternalConnection', connectionType: string, content: { __typename?: 'WCAContent', id: number, wcaId?: Maybe<string>, photos: Array<string>, birthdate: string, delegateStatus: string, teams: Array<{ __typename?: 'WCATeams', friendlyId: string, leader: boolean }> } }>, competitions: Array<{ __typename?: 'Competition', competitionType: string, competitionId: string, roles: Array<string> }> }> };
+export type ContextGetMeQuery = { __typename?: 'Query', getMe?: Maybe<{ __typename?: 'User', _id: any, username: string, email: string, name: string, primaryAuthenticationType: string, connections: Array<{ __typename?: 'ExternalConnection', connectionType: string, content: { __typename?: 'WCAContent', id: number, wcaId?: Maybe<string>, photos: Array<string>, birthdate: string, delegateStatus: string, teams: Array<{ __typename?: 'WCATeams', friendlyId: string, leader: boolean }> } }>, competitions: Array<{ __typename?: 'Competition', competitionType: string, competitionId: string, roles: Array<string> }>, subscriptions: Array<{ __typename?: 'UserPushSubscriptionInput', endpoint: string, browser?: Maybe<string>, device?: Maybe<string> }> }> };
 
 export type ControlCenterUpdateOngoingGroupsMutationVariables = Exact<{
   competitionId: Scalars['String'];

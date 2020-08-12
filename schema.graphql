@@ -172,6 +172,16 @@ input GroupInfo {
   parentId: Int
 }
 
+type Keys {
+  auth: String!
+  p256dh: String!
+}
+
+input KeysInput {
+  auth: String!
+  p256dh: String!
+}
+
 type Mutation {
   """
   Clears the database. Only works in development when server is running locally.
@@ -180,6 +190,7 @@ type Mutation {
   createTodo(createTodoData: NewTodoInput!): Todo!
   createWcif(competitionId: String!): Wcif!
   deleteWcif(competitionId: String!): Wcif!
+  subscribeMe(subscription: UserPushSubscription!): Boolean!
   updateOngoingGroups(closeGroups: [GroupInfo!] = [], competitionId: String!, newGroups: [GroupInfo!] = []): [ActivityWithPerons!]!
   updateUser(data: UpdateUserInput!): User
   updateWcifCompetitors(competitionId: String!, competitors: [NewPersonInput!]!): Wcif!
@@ -221,6 +232,7 @@ type Person {
   registrantId: Int
   registration: Registration!
   roles: [String!]!
+  subscribers: [UserSubscription!]!
   wcaId: String
   wcaUserId: Int!
 }
@@ -409,6 +421,29 @@ type User {
   email: String!
   name: String!
   primaryAuthenticationType: String!
+  subscriptions: [UserPushSubscriptionInput!]!
+  username: String!
+}
+
+input UserPushSubscription {
+  browser: String
+  device: String
+  endpoint: String!
+  keys: KeysInput!
+}
+
+type UserPushSubscriptionInput {
+  browser: String
+  device: String
+  endpoint: String!
+  keys: Keys!
+}
+
+type UserSubscription {
+  _id: ObjectId!
+  connections: [ExternalConnection!]!
+  name: String!
+  subscriptions: [UserPushSubscriptionInput!]!
   username: String!
 }
 

@@ -23,6 +23,7 @@ import Typography from '@material-ui/core/Typography'
 import AddAlertOutlinedIcon from '@material-ui/icons/AddAlertOutlined'
 import AddCircleOutlineOutlinedIcon from '@material-ui/icons/AddCircleOutlineOutlined'
 import ExpandMoreOutlined from '@material-ui/icons/ExpandMoreOutlined'
+import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import RefreshIcon from '@material-ui/icons/Refresh'
 import SettingsIcon from '@material-ui/icons/Settings'
 import {
@@ -33,7 +34,6 @@ import useCompetition from 'hooks/useCompetition'
 import { assignedTo } from 'logic/schedule'
 import React, { ReactElement, useCallback, useState } from 'react'
 import UpdateOngoingGroups from './UpdateOngoingGroups'
-
 const useStyles = makeStyles((theme: Theme) => ({
 	root: {
 		padding: theme.spacing(2),
@@ -69,6 +69,7 @@ export default function ControlCenterEventInfo({
 	const [updateOpen, setUpdateOpen] = useState<
 		ArrayElement<typeof activities>
 	>()
+	const [updateClose, setUpdateClose] = useState<number>()
 	const allPossibleGroups = getAllPossibleGroups()
 	const anchorRef = React.useRef<HTMLButtonElement>(null)
 	const currentGroup = allPossibleGroups.find(
@@ -97,16 +98,17 @@ export default function ControlCenterEventInfo({
 		val?: ControlCenterUpdateOngoingGroupsMutation['updateOngoingGroups']
 	) => {
 		setUpdateOpen(undefined)
+		setUpdateClose(undefined)
 		setOpen(false)
 		if (val) handleNextCall(val)
 	}
 
 	return (
 		<div className={classes.root}>
-			{Boolean(updateOpen) && (
+			{(updateOpen !== undefined || updateClose !== undefined) && (
 				<UpdateOngoingGroups
-					open={[updateOpen!.id]}
-					close={[]}
+					open={updateOpen ? [updateOpen.id] : []}
+					close={updateClose ? [updateClose] : []}
 					callback={handleSelect}
 				/>
 			)}
@@ -128,6 +130,11 @@ export default function ControlCenterEventInfo({
 				</Grid>
 				<Grid item>
 					<ButtonGroup>
+						<IconButton
+							disabled={!currentGroup}
+							onClick={() => setUpdateClose(currentGroup!.id)}>
+							<HighlightOffIcon />
+						</IconButton>
 						<IconButton ref={anchorRef} onClick={() => setOpen(true)}>
 							<AddCircleOutlineOutlinedIcon />
 						</IconButton>

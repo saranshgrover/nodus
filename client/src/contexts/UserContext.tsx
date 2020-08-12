@@ -18,9 +18,7 @@ UserContext.displayName = 'UserContext'
 export { UserContext }
 
 const UserProvider = ({ children }: React.PropsWithChildren<{}>) => {
-	const [user, setUser] = React.useState<ContextGetMeQuery['getMe'] | null>(
-		null
-	)
+	const [user, setUser] = React.useState<ContextGetMeQuery['getMe'] | null>()
 	const isSignedIn = () => user !== null
 	const signOut = () => (window.location.href = `${SERVER_URI}/auth/logout`)
 	const { loading, error, data } = useContextGetMeQuery()
