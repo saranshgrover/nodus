@@ -164,6 +164,7 @@ export type Wcif = {
   registrationOpen: Scalars['String'];
   registrationClose: Scalars['String'];
   settings: Setting;
+  synchronizedAt: Scalars['Float'];
 };
 
 export type Person = {
@@ -435,6 +436,7 @@ export type Mutation = {
   /** Clears the database. Only works in development when server is running locally. */
   clearDatabase: Scalars['Boolean'];
   updateOngoingGroups: Array<ActivityWithPerons>;
+  synchronize?: Maybe<Wcif>;
 };
 
 
@@ -494,6 +496,11 @@ export type MutationUpdateOngoingGroupsArgs = {
   competitionId: Scalars['String'];
   newGroups?: Maybe<Array<GroupInfo>>;
   closeGroups?: Maybe<Array<GroupInfo>>;
+};
+
+
+export type MutationSynchronizeArgs = {
+  competitionId: Scalars['String'];
 };
 
 export type UpdateUserInput = {
@@ -802,6 +809,38 @@ export function useGetMyNotificationsLazyQuery(baseOptions?: ApolloReactHooks.La
 export type GetMyNotificationsQueryHookResult = ReturnType<typeof useGetMyNotificationsQuery>;
 export type GetMyNotificationsLazyQueryHookResult = ReturnType<typeof useGetMyNotificationsLazyQuery>;
 export type GetMyNotificationsQueryResult = ApolloReactCommon.QueryResult<GetMyNotificationsQuery, GetMyNotificationsQueryVariables>;
+export const AdminSynchronizeDocument = gql`
+    mutation AdminSynchronize($competitionId: String!) {
+  synchronize(competitionId: $competitionId) {
+    synchronizedAt
+  }
+}
+    `;
+export type AdminSynchronizeMutationFn = ApolloReactCommon.MutationFunction<AdminSynchronizeMutation, AdminSynchronizeMutationVariables>;
+
+/**
+ * __useAdminSynchronizeMutation__
+ *
+ * To run a mutation, you first call `useAdminSynchronizeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAdminSynchronizeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [adminSynchronizeMutation, { data, loading, error }] = useAdminSynchronizeMutation({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *   },
+ * });
+ */
+export function useAdminSynchronizeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AdminSynchronizeMutation, AdminSynchronizeMutationVariables>) {
+        return ApolloReactHooks.useMutation<AdminSynchronizeMutation, AdminSynchronizeMutationVariables>(AdminSynchronizeDocument, baseOptions);
+      }
+export type AdminSynchronizeMutationHookResult = ReturnType<typeof useAdminSynchronizeMutation>;
+export type AdminSynchronizeMutationResult = ApolloReactCommon.MutationResult<AdminSynchronizeMutation>;
+export type AdminSynchronizeMutationOptions = ApolloReactCommon.BaseMutationOptions<AdminSynchronizeMutation, AdminSynchronizeMutationVariables>;
 export const ControlCenterUpdateOngoingGroupsDocument = gql`
     mutation ControlCenterUpdateOngoingGroups($competitionId: String!, $newGroups: [GroupInfo!], $closeGroups: [GroupInfo!]) {
   updateOngoingGroups(competitionId: $competitionId, newGroups: $newGroups, closeGroups: $closeGroups) {
@@ -1260,6 +1299,7 @@ export type CompetitionOverviewQueryResult = ApolloReactCommon.QueryResult<Compe
 export const ContextGetCompetitionDocument = gql`
     query ContextGetCompetition($competitionId: String!) {
   getWcifByCompetitionId(competitionId: $competitionId) {
+    synchronizedAt
     name
     shortName
     _id
@@ -1767,6 +1807,13 @@ export type GetMyNotificationsQueryVariables = Exact<{
 
 export type GetMyNotificationsQuery = { __typename?: 'Query', getMyNotifications: Array<{ __typename?: 'Notification', _id: any, body?: Maybe<string>, title?: Maybe<string>, icon?: Maybe<string>, url?: Maybe<string>, image?: Maybe<string> }> };
 
+export type AdminSynchronizeMutationVariables = Exact<{
+  competitionId: Scalars['String'];
+}>;
+
+
+export type AdminSynchronizeMutation = { __typename?: 'Mutation', synchronize?: Maybe<{ __typename?: 'Wcif', synchronizedAt: number }> };
+
 export type ControlCenterUpdateOngoingGroupsMutationVariables = Exact<{
   competitionId: Scalars['String'];
   newGroups?: Maybe<Array<GroupInfo>>;
@@ -1836,7 +1883,7 @@ export type ContextGetCompetitionQueryVariables = Exact<{
 }>;
 
 
-export type ContextGetCompetitionQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', name: string, shortName: string, _id: any, competitionId: string, settings: { __typename?: 'Setting', colorTheme: string }, persons: Array<{ __typename?: 'Person', _id: any, wcaUserId: number, registrantId?: Maybe<number> }>, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, timezone: string, name: string, rooms: Array<{ __typename?: 'Room', _id: any, id: number, name: string, color: string, activities: Array<{ __typename?: 'Activity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string, ongoing?: Maybe<boolean>, childActivities: Array<{ __typename?: 'ChildActivity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string, ongoing?: Maybe<boolean> }> }> }> }> } }> };
+export type ContextGetCompetitionQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', synchronizedAt: number, name: string, shortName: string, _id: any, competitionId: string, settings: { __typename?: 'Setting', colorTheme: string }, persons: Array<{ __typename?: 'Person', _id: any, wcaUserId: number, registrantId?: Maybe<number> }>, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, timezone: string, name: string, rooms: Array<{ __typename?: 'Room', _id: any, id: number, name: string, color: string, activities: Array<{ __typename?: 'Activity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string, ongoing?: Maybe<boolean>, childActivities: Array<{ __typename?: 'ChildActivity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string, ongoing?: Maybe<boolean> }> }> }> }> } }> };
 
 export type ControlCenterGetOpenGroupsQueryVariables = Exact<{
   competitionId: Scalars['String'];

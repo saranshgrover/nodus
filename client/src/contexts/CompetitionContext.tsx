@@ -29,6 +29,7 @@ export interface ICompetitionContext {
 				parentId: number | null
 		  })[]
 		| undefined
+	synchronizedAt: number
 	startPolling: (ms: number) => void
 	stopPolling: () => void
 }
@@ -110,6 +111,7 @@ const CompetitionProvider = ({
 				competitionType: competitionType,
 				tabs: tabs,
 				activities: activities,
+				synchronizedAt: wcif!.synchronizedAt,
 				startPolling,
 				stopPolling,
 			}}>

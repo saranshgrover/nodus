@@ -10,7 +10,6 @@ export default class WcifModel {
 		// Use mongoose as usual
 		return WcifMongooseModel.findById(_id).lean().exec()
 	}
-
 	async create(data: Wcif): Promise<DocumentType<Wcif>> {
 		const wcif = new WcifMongooseModel(data)
 		await wcif.save()

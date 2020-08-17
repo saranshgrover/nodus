@@ -105,7 +105,7 @@ export default async function sendNewGroupNotifications(
 	}
 }
 
-async function findUser(wcaUserId: number) {
+export async function findUser(wcaUserId: number) {
 	return await UserMongooseModel.findOne({
 		connections: {
 			$elemMatch: {

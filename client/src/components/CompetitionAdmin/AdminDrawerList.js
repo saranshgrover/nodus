@@ -9,6 +9,7 @@ import NotesIcon from '@material-ui/icons/Notes'
 import NotificationsIcon from '@material-ui/icons/Notifications'
 import ScheduleIcon from '@material-ui/icons/Schedule'
 import SettingsIcon from '@material-ui/icons/Settings'
+import SyncIcon from '@material-ui/icons/Sync'
 import VideocamIcon from '@material-ui/icons/Videocam'
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -34,6 +35,8 @@ export default function DashboardList() {
 				return <EmojiEventsIcon />
 			case 'Settings':
 				return <SettingsIcon />
+			case 'Sync':
+				return <SyncIcon />
 			default:
 				return <AppsIcon />
 		}
@@ -43,6 +46,7 @@ export default function DashboardList() {
 			<List>
 				{[
 					'Control Center',
+					'Sync',
 					'Competitors',
 					'Events',
 					'Groups',

@@ -2,6 +2,7 @@ import Drawer from '@material-ui/core/Drawer'
 import { makeStyles } from '@material-ui/core/styles'
 import classNames from 'classnames'
 import AdminControlCenter from 'components/AdminControlCenter/AdminControlCenter'
+import AdminSyncrhonize from 'components/AdminSynchronize/AdminSyncrhonize'
 import useSnackbar from 'hooks/useSnackbar'
 import React, { useContext, useEffect, useState } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
@@ -67,6 +68,9 @@ export default function CompetitionAdmin() {
 						exact
 						path={`/competitions/${competitionId}/admin/control-center`}>
 						<AdminControlCenter />
+					</Route>
+					<Route exact path={`/competitions/${competitionId}/admin/sync`}>
+						<AdminSyncrhonize />
 					</Route>
 					<Route
 						exact

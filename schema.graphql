@@ -186,6 +186,7 @@ type Mutation {
   createWcif(competitionId: String!): Wcif!
   deleteWcif(competitionId: String!): Wcif!
   subscribeMe(subscription: UserPushSubscription!): Boolean!
+  synchronize(competitionId: String!): Wcif
   updateOngoingGroups(closeGroups: [GroupInfo!] = [], competitionId: String!, newGroups: [GroupInfo!] = []): [ActivityWithPerons!]!
   updateUser(data: UpdateUserInput!): User
   updateWcifCompetitors(competitionId: String!, competitors: [NewPersonInput!]!): Wcif!
@@ -495,6 +496,7 @@ type Wcif {
   schedule: Schedule!
   settings: Setting!
   shortName: String!
+  synchronizedAt: Float!
 }
 
 type WcifFetch {

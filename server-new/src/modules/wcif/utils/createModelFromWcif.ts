@@ -37,6 +37,7 @@ export default async function createModelFromWcif(
 		colorTheme: 'orange_200', // Orange default
 	}
 	data.competitionId = data.id
+	data.synchronizedAt = new Date().getTime()
 	delete data.id
 	return data as Wcif
 }

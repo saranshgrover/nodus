@@ -1,16 +1,16 @@
 import { DocumentType } from '@typegoose/typegoose'
-import axios, { AxiosResponse } from 'axios'
 import { ObjectId } from 'mongodb'
 import { Service } from 'typedi'
 import { config } from '../../config'
 import { Person, Wcif } from '../../entities'
 import { UserMongooseModel } from '../user/model'
+import wcaApiFetch from '../user/utils/wcaApiFetch'
 import {
 	ActivityWithPerons,
 	ChildActivityWithPersons,
 	GroupInfo,
 } from './input'
-import WcifModel from './model'
+import WcifModel, { WcifMongooseModel } from './model'
 import addCompetitionToUsers from './utils/addCompetitionToUsers'
 import createModelFromWcif from './utils/createModelFromWcif'
 import getOpenActivities from './utils/getOpenActivities'
@@ -30,26 +30,16 @@ export default class WcifService {
 		if (competition) {
 			throw new Error(`Error: Document with '${competitionId}' already exists.`)
 		}
-		const user = await UserMongooseModel.findById(userId)
-		const wcaConnection = user!.connections.find(
-			(connection) => connection.connectionType === 'WCA'
-		)
-		if (!wcaConnection) {
-			throw new Error('No WCA Connection found')
-		}
-		const wcaAccessToken = wcaConnection.accessToken
-		const res: AxiosResponse<Partial<Wcif> & { id: string }> = await axios({
+		const res = await wcaApiFetch<Partial<Wcif> & { id: string }>(userId, {
 			url: `${config.wca.originURL}/api/v0/competitions/${competitionId}/wcif/`,
 			method: 'GET',
 			headers: {
-				Authorization: `Bearer ${wcaAccessToken}`,
 				'Content-Type': 'application/json',
 			},
 		})
 		const data = await res.data
 		const wcifData = await createModelFromWcif(data, competitionId)
 		const wcif = await this.wcifModel.create(wcifData)
-		const persons = wcif.persons
 		// DONT await this since it isn't necessary for completing the mutation
 		addCompetitionToUsers(wcif)
 		const savedWcif = await wcif.save()
@@ -154,6 +144,13 @@ export default class WcifService {
 		}
 		const deletedWcif = await this.wcifModel.deleteWcif(competitionId)
 		return deletedWcif!
+	}
+
+	public async updateWcif(competitionId: string, wcif: Partial<Wcif>) {
+		const filter = { competitionId: competitionId }
+		return await WcifMongooseModel.findOneAndUpdate(filter, wcif, {
+			new: true,
+		})
 	}
 
 	public async getOngoingGroups(

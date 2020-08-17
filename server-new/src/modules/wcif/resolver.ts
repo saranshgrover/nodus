@@ -10,10 +10,11 @@ import {
 	UseMiddleware,
 } from 'type-graphql'
 import { Service } from 'typedi'
-import { PRODUCTION } from '../../config'
+import { config, PRODUCTION } from '../../config'
 import { Person, Round, Schedule, Setting, Wcif } from '../../entities/'
 import { hasRole } from '../decorator/hasRole'
 import { isLoggedIn } from '../middleware/isLoggedIn'
+import wcaApiFetch from '../user/utils/wcaApiFetch'
 import {
 	ActivityWithPerons,
 	GetTopCompetitorsArgs,
@@ -23,6 +24,7 @@ import {
 	WcifEventsArgs,
 } from './input'
 import WcifService from './service'
+import { synchronize } from './utils/synchronize'
 
 /*
   IMPORTANT: Your business logic must be in the service!
@@ -233,5 +235,25 @@ export default class WcifResolver {
 			closeGroups
 		)
 		return updatedOngoingGroups
+	}
+
+	@hasRole(['delegate', 'organizer', 'traineeDelegate'])
+	@Mutation((returns) => Wcif, { nullable: true })
+	async synchronize(
+		@Arg('competitionId') competitionId: string,
+		@Ctx() { req }: Context
+	) {
+		const competition = await this.wcifService.findByCompetitionIdLean(
+			competitionId
+		)
+		const newWcif = await wcaApiFetch<Wcif>(req.user.id, {
+			url: `${config.wca.originURL}/api/v0/competitions/${competitionId}/wcif/`,
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		})
+		const synchronizedWcif = await synchronize(competition, newWcif.data)
+		return await this.wcifService.updateWcif(competitionId, synchronizedWcif)
 	}
 }

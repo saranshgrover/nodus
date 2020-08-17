@@ -60,4 +60,8 @@ export class Wcif {
 	@prop({ type: Setting })
 	@Field(() => Setting)
 	settings!: Setting
+
+	@prop({ type: Number })
+	@Field()
+	synchronizedAt: number
 }
