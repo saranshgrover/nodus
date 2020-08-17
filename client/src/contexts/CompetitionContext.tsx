@@ -29,6 +29,8 @@ export interface ICompetitionContext {
 				parentId: number | null
 		  })[]
 		| undefined
+	startPolling: (ms: number) => void
+	stopPolling: () => void
 }
 
 // https://stackoverflow.com/a/61336826/8056181
@@ -43,7 +45,13 @@ const CompetitionProvider = ({
 	competitionId,
 	children,
 }: React.PropsWithChildren<{ competitionId: string }>) => {
-	const { loading, error, data } = useContextGetCompetitionQuery({
+	const {
+		loading,
+		error,
+		data,
+		startPolling,
+		stopPolling,
+	} = useContextGetCompetitionQuery({
 		variables: { competitionId },
 	})
 	const user = useUser()
@@ -102,6 +110,8 @@ const CompetitionProvider = ({
 				competitionType: competitionType,
 				tabs: tabs,
 				activities: activities,
+				startPolling,
+				stopPolling,
 			}}>
 			{children}
 		</CompetitionContext.Provider>

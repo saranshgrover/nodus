@@ -65,9 +65,9 @@ export default function Information() {
 							<UpcomingEvents />
 						</Grid>
 						<Grid item md={5}>
-							<TopCompetitors
-								topCompetitors={data.getTopCompetitors}
-							/>
+							{data.getTopCompetitors.length > 0 && (
+								<TopCompetitors topCompetitors={data.getTopCompetitors} />
+							)}
 						</Grid>
 					</Grid>
 				</Paper>

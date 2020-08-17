@@ -14,11 +14,13 @@ import { browserName, deviceDetect } from 'react-device-detect'
 interface Props {
 	open: boolean
 	setOpen: (newOpen: boolean) => void
+	onComplete?: () => void
 }
 
 export default function AskForPermission({
 	open,
 	setOpen,
+	onComplete,
 }: Props): ReactElement {
 	const {
 		userConsent,
@@ -53,6 +55,9 @@ export default function AskForPermission({
 							'Unable to subscribe to push notifications. You may already be subscribed, or your browser may be incompatible',
 						variant: 'error',
 					})
+				else {
+					if (onComplete) onComplete()
+				}
 				setOpen(false)
 			})
 		}

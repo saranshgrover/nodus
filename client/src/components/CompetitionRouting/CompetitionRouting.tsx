@@ -1,5 +1,6 @@
 import { useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
+import CompetitionNotification from 'components/CompetitionNotification/CompetitionNotification'
 import useCompetition from 'hooks/useCompetition'
 import React from 'react'
 // @ts-ignore
@@ -24,7 +25,7 @@ import TabPanel from '../TabPanel/TabPanel'
 const tabs = {
 	overview: { name: 'Overview', component: <Overview /> },
 	information: { name: 'Information', component: <Information /> },
-	notifications: { name: 'Notifications', component: () => {} },
+	notifications: { name: 'Notifications', component: CompetitionNotification },
 	results: { name: 'Results', component: <Results /> },
 	groups: { name: 'Groups', component: <Groups /> },
 }

@@ -7,8 +7,10 @@ import UserModel from './model'
 export default class UserService {
 	constructor(private readonly userModel: UserModel) {}
 
-	public getById(id: ObjectId) {
-		return this.userModel.getById(id)
+	public async getById(id: ObjectId) {
+		const user = await this.userModel.getById(id)
+		if (!user) throw new Error('No user found')
+		return user
 	}
 
 	public findById(id: ObjectId) {

@@ -16,6 +16,7 @@ export const createUser = (): User => {
 		email: faker.internet.email(),
 		hashedPassword: faker.internet.password(),
 		primaryAuthenticationType: 'LOCAL',
+		subscriptions: [],
 	}
 }
 

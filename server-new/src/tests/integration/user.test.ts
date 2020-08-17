@@ -89,6 +89,14 @@ const GET_USER = gql`
 				startDate
 				endDate
 				roles
+				notifications {
+					body
+				}
+			}
+			subscriptions {
+				endpoint
+				device
+				browser
 			}
 			connections {
 				connectionType
@@ -122,6 +130,14 @@ const GET_ME = gql`
 				startDate
 				endDate
 				roles
+				notifications {
+					body
+				}
+			}
+			subscriptions {
+				endpoint
+				device
+				browser
 			}
 			connections {
 				connectionType

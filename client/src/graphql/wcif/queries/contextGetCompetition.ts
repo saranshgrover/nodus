@@ -35,6 +35,7 @@ export const ContextGetCompetition = gql`
 							activityCode
 							startTime
 							endTime
+							ongoing
 							childActivities {
 								_id
 								id
@@ -42,6 +43,7 @@ export const ContextGetCompetition = gql`
 								activityCode
 								startTime
 								endTime
+								ongoing
 							}
 						}
 					}

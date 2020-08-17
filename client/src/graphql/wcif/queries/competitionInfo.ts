@@ -17,19 +17,6 @@ export const CompetitionInformation = gql`
 				_id
 				startDate
 				numberOfDays
-				venues {
-					_id
-					rooms {
-						_id
-						activities {
-							_id
-							name
-							id
-							startTime
-							endTime
-						}
-					}
-				}
 			}
 			events {
 				_id

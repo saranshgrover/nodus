@@ -4,7 +4,6 @@ import { ObjectId } from 'mongodb'
 import { Service } from 'typedi'
 import { config } from '../../config'
 import { Person, Wcif } from '../../entities'
-import { parseActivityCode } from '../../logic/activity'
 import { UserMongooseModel } from '../user/model'
 import {
 	ActivityWithPerons,
@@ -214,14 +213,14 @@ export default class WcifService {
 			}
 		}
 		for (const group of newGroups) {
-			let found = false
+			let found
 			if (group.parentId === null) {
 				const activity = flatActivities.find(
 					(activity) => activity.id === group.id
 				)
 				if (activity) {
 					activity.ongoing = true
-					found = true
+					found = activity
 				}
 			} else {
 				const parentActivity = flatActivities.find(
@@ -235,23 +234,22 @@ export default class WcifService {
 					if (childActivity) {
 						childActivity.ongoing = true
 						parentActivity.ongoing = true
-						found = true
+						found = childActivity
 					}
 				}
 			}
 			if (found) {
-				const { eventId, groupNumber, roundNumber } = parseActivityCode(
-					group.activityCode
-				)
-				const title = `${eventId} Round ${roundNumber} Group ${groupNumber}`
-				const body = `${eventId} Round ${roundNumber} Group ${groupNumber} is starting now`
+				const title = found.name
+				const body = `${found.name} is starting now`
 				const icon = `/nodus-orange.png`
-				const url = `/competitions/${competitionId}/overview`
-				sendNewGroupNotifications(
-					group.id,
-					competition,
-					JSON.stringify({ body, title, icon, url })
-				)
+				const url = `https://google.com/competitions/${competitionId}/notifications`
+				sendNewGroupNotifications(group.id, competition, {
+					body,
+					title,
+					icon,
+					url,
+					timestamp: new Date().getTime(),
+				})
 			}
 		}
 		await competition.save()

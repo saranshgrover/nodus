@@ -116,6 +116,7 @@ type Competition {
   competitionId: String!
   competitionType: String!
   endDate: String!
+  notifications: [Notification!]
   roles: [String!]!
   startDate: String!
 }
@@ -131,11 +132,6 @@ input CutoffInput {
   attemptResult: [Int!]!
   numberOfAttempts: Int!
 }
-
-"""
-The javascript `Date` as string. Type represents date and time as the ISO Date string.
-"""
-scalar DateTime
 
 type Event {
   _id: ObjectId!
@@ -187,7 +183,6 @@ type Mutation {
   Clears the database. Only works in development when server is running locally.
   """
   clearDatabase: Boolean!
-  createTodo(createTodoData: NewTodoInput!): Todo!
   createWcif(competitionId: String!): Wcif!
   deleteWcif(competitionId: String!): Wcif!
   subscribeMe(subscription: UserPushSubscription!): Boolean!
@@ -212,8 +207,17 @@ input NewPersonInput {
   wcaUserId: Int!
 }
 
-input NewTodoInput {
-  content: String!
+type Notification {
+  _id: ObjectId!
+  actions: [String!]
+  badge: String
+  body: String
+  icon: String
+  image: String
+  timestamp: Float!
+  title: String
+  url: String
+  vibrate: [Int!]
 }
 
 """Mongo object id scalar type"""
@@ -269,10 +273,10 @@ type Query {
   Returns the current logged in User. If no user is logged in, returns Null
   """
   getMe: User
+  getMyNotifications(competitionId: String!): [Notification!]!
   getMyUpcomingCompetitions: [Wcif!]!
   getOngoingGroups(competitionId: String!): [ActivityWithPerons!]!
   getOpenRounds(competitionId: String!): [Round!]!
-  getTodo(id: ObjectId!): Todo!
   getTopCompetitors(competitionId: String!, top: Int!): [Person!]!
   getUser(id: ObjectId!): User
   getWcifByCompetitionId(competitionId: String!): Wcif
@@ -381,14 +385,6 @@ input TimeLimitInput {
   _id: ObjectId!
   centiseconds: Int!
   cumulativeRoundIds: [String!]!
-}
-
-type Todo {
-  _id: ObjectId!
-  content: String!
-  createdAt: DateTime
-  isDone: Boolean!
-  updatedAt: DateTime!
 }
 
 input UpdateEventInput {

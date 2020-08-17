@@ -1,10 +1,13 @@
 import Divider from '@material-ui/core/Divider'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
+import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import CubingIcon from 'components/common/CubingIcon'
+import { parseActivityCode } from 'logic/activity'
 import moment from 'moment-timezone'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Activity, ChildActivity } from '../../generated/graphql'
 import useCompetition from '../../hooks/useCompetition'
 
@@ -32,77 +35,75 @@ const isHappeningNow = (event: Activity | ChildActivity, minutes: number) => {
 export default function UpcomingEvents() {
 	const classes = useStyles()
 	const competition = useCompetition()
+	useEffect(() => {
+		competition.startPolling(30000)
+		return () => competition.stopPolling()
+	}, [])
 	let transformedActs: (
 		| (Activity & { message: String })
 		| (ChildActivity & { message: String })
 	)[] = []
 	competition.activities!.forEach((round) => {
-		let data = isHappeningNow(round, 60)
-		if (data.bool) {
-			let newRound: (Activity | ChildActivity) & { message: String } = {
-				...round,
-				message: data.message,
+		if (!round.ongoing) {
+			let data = isHappeningNow(round, 60)
+			if (data.bool) {
+				let newRound: (Activity | ChildActivity) & { message: String } = {
+					...round,
+					message: data.message,
+				}
+				transformedActs.push(newRound)
 			}
-			transformedActs.push(newRound)
 		}
 	})
-	const ongoingActivities = transformedActs.filter(
-		(round) => round.message.indexOf('Ends') >= 0
+	const ongoingActivities = competition.activities!.filter(
+		// @ts-ignore
+		(activity) => activity.ongoing
 	)
-	const upcomingActivities = transformedActs.filter(
-		(round) => round.message.indexOf('Ends') === -1
-	)
+	const upcomingActivities = transformedActs
 	return (
 		<>
-			<Typography variant='h4'>Ongoing and Upcoming Rounds</Typography>
-			{transformedActs.length > 0 ? (
+			{transformedActs.length > 0 || ongoingActivities.length > 0 ? (
 				<>
 					<List className={classes.list}>
 						{ongoingActivities.length > 0 && (
 							<>
-								<Typography variant='h5'>
-									Ongoing Events
-								</Typography>
+								<Typography variant='h5'>Ongoing Events</Typography>
 								{ongoingActivities.map((round, index) => (
 									<React.Fragment key={round.id}>
 										<ListItem>
-											<Typography variant='h5'>
-												{round.name}
-											</Typography>
+											<ListItemAvatar>
+												<CubingIcon
+													eventId={
+														parseActivityCode(round.activityCode).eventId
+													}
+												/>
+											</ListItemAvatar>
+											<Typography variant='h5'>{round.name}</Typography>
 										</ListItem>
-										<ListItem>
-											<Typography>
-												{round.message}
-											</Typography>
-										</ListItem>
-										{index < transformedActs.length - 1 && (
-											<Divider />
-										)}
+										{index < transformedActs.length - 1 && <Divider />}
 									</React.Fragment>
 								))}
 							</>
 						)}
 						{upcomingActivities.length > 0 && (
 							<>
-								<Typography variant='h5'>
-									Upcoming Events
-								</Typography>
+								<Typography variant='h5'>Upcoming Events</Typography>
 								{upcomingActivities.map((round, index) => (
 									<React.Fragment key={round.id}>
 										<ListItem>
-											<Typography variant='h5'>
-												{round.name}
-											</Typography>
+											<ListItemAvatar>
+												<CubingIcon
+													eventId={
+														parseActivityCode(round.activityCode).eventId
+													}
+												/>
+											</ListItemAvatar>
+											<Typography variant='h5'>{round.name}</Typography>
 										</ListItem>
 										<ListItem>
-											<Typography>
-												{round.message}
-											</Typography>
+											<Typography>{round.message}</Typography>
 										</ListItem>
-										{index <
-											upcomingActivities.length - 1 && (
-											<Divider />
-										)}
+										{index < upcomingActivities.length - 1 && <Divider />}
 									</React.Fragment>
 								))}
 							</>
@@ -110,9 +111,7 @@ export default function UpcomingEvents() {
 					</List>
 				</>
 			) : (
-				<Typography>
-					There are no events occuring in the next hour
-				</Typography>
+				<></>
 			)}
 		</>
 	)

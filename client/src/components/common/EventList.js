@@ -1,4 +1,5 @@
-import { Grid, IconButton, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
+import ButtonBase from '@material-ui/core/ButtonBase'
 import { makeStyles } from '@material-ui/styles'
 import React from 'react'
 import { activityKey } from '../Competition/Overview/OverviewLogic'
@@ -33,27 +34,33 @@ export default function EventList({
 	alignment = 'row',
 	size = 2,
 	showName = false,
+	button = false,
+	spacing = 4
 }) {
 	const classes = useStyles()
 	return (
 		<div className={classes.root}>
-			<Grid spacing={4} container direction={alignment} justify={justify}>
+			<Grid spacing={spacing} container direction={alignment} justify={justify}>
 				{events.map((event) => (
 					<Grid item key={event}>
-						<IconButton variant='inherit' onClick={() => onClick(event)}>
-							<span
-								className={
-									(!selected.includes(event)
-										? classes.iconSelect
-										: classes.icon) + ` cubing-icon event-${event}`
-								}
-							/>
-						</IconButton>
-						{showName && (
+						<Grid container direction='column' justify='center' alignItems='center'>
 							<Grid item>
-								<Typography align='center'>{activityKey[event]}</Typography>
+								<ButtonBase disableRipple={button} variant='inherit' onClick={() => onClick(event)}>
+									<span
+										className={
+											(!selected.includes(event)
+												? classes.iconSelect
+												: classes.icon) + ` cubing-icon event-${event}`
+										}
+									/>
+								</ButtonBase>
 							</Grid>
-						)}
+							{showName && (
+								<Grid item>
+									<Typography align='center'>{activityKey[event]}</Typography>
+								</Grid>
+							)}
+						</Grid>
 					</Grid>
 				))}
 			</Grid>

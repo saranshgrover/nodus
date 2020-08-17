@@ -20,7 +20,7 @@ import {
 } from 'generated/graphql'
 import moment from 'moment-timezone'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { activityToString } from '../../../../shared/logic/activity'
+import { activityToString } from '../../logic/activity'
 import UpdateOngoingGroups from './UpdateOngoingGroups'
 
 const ProgressIndicator = withStyles((theme: Theme) =>

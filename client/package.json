@@ -50,7 +50,8 @@
 	"watch": {
 		"gen-types": {
 			"patterns": [
-				"src/graphql"
+				"src/graphql",
+				"../schema.graphql"
 			],
 			"extensions": "ts"
 		}

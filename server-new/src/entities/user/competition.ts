@@ -1,5 +1,6 @@
-import { ObjectType, Field } from 'type-graphql'
 import { prop } from '@typegoose/typegoose'
+import { Field, ObjectType } from 'type-graphql'
+import { Notification } from './notification'
 
 @ObjectType()
 export class Competition {
@@ -22,4 +23,8 @@ export class Competition {
 	@prop({ type: String })
 	@Field(() => [String])
 	roles: RoleType[]
+
+	@prop({ type: Notification, default: [] })
+	@Field(() => [Notification], { defaultValue: [] })
+	notifications: Notification[]
 }

@@ -10,7 +10,7 @@ import {
 } from 'type-graphql'
 import { Service } from 'typedi'
 import { config } from '../../config'
-import { User, WcifFetch } from '../../entities'
+import { Notification, User, WcifFetch } from '../../entities'
 import { UserPushSubscription } from '../../entities/user/pushSubscription'
 import descriptions from '../descriptions'
 import { isLoggedIn } from '../middleware/isLoggedIn'
@@ -45,6 +45,20 @@ export default class UserResolver {
 		return user
 	}
 
+	@UseMiddleware(isLoggedIn)
+	@Query((returns) => [Notification])
+	async getMyNotifications(
+		@Ctx() { req }: Context,
+		@Arg('competitionId') competitionId: string
+	) {
+		const user = await this.userService.getById(req.user.id)
+		const competition = user.competitions.find(
+			(competition) => competition.competitionId === competitionId
+		)
+		if (!competition) return []
+		else
+			return competition.notifications.sort((a, b) => b.timestamp - a.timestamp)
+	}
 	@UseMiddleware(isLoggedIn)
 	@Query((returns) => [WcifFetch])
 	async findMyManagableCompetitions(@Ctx() { req }: Context) {

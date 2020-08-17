@@ -18,6 +18,7 @@ const isLocalhost = Boolean(
   window.location.hostname.match(
     /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
   )
+  || window.location.hostname === "192.168.1.210"
 )
 
 export function register(config) {
@@ -35,6 +36,7 @@ export function register(config) {
       const swFileName = process.env.NODE_ENV === 'production'
         ? 'service-worker.js'
         : 'custom-sw.js'
+      console.log(swFileName)
       const swUrl = `${process.env.PUBLIC_URL}/${swFileName}`;
 
       if (isLocalhost) {

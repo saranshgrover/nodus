@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Divider from "@material-ui/core/Divider";
+import Grid from "@material-ui/core/Grid";
+import Icon from "@material-ui/core/Icon";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
-import Grid from "@material-ui/core/Grid";
-import Avatar from "@material-ui/core/Avatar";
-import Icon from "@material-ui/core/Icon";
-import ListItem from "@material-ui/core/ListItem";
-import Divider from "@material-ui/core/Divider";
-import Paper from "@material-ui/core/Paper";
-import { activityKey } from "../../logic/activity";
+import React from "react";
 
 const useStyles = makeStyles((theme) => ({
 	list: {
@@ -119,11 +118,9 @@ const displayRanking = (competitor, classes) => {
 
 export default function TopCompetitors({ topCompetitors, ...props }) {
 	const classes = useStyles();
-	console.log(topCompetitors);
 	return (
 		<>
 			<Typography variant='h4'>Top Competitors</Typography>
-			<Typography>Showing rankings for top 50 in the world</Typography>
 			{topCompetitors.length > 0 ? (
 				<List className={classes.list} {...props}>
 					{topCompetitors.map((competitor, index) => (
@@ -157,8 +154,8 @@ export default function TopCompetitors({ topCompetitors, ...props }) {
 					))}
 				</List>
 			) : (
-				<Typography>There are no top competitors</Typography>
-			)}
+					<Typography>There are no top competitors</Typography>
+				)}
 		</>
 	);
 }

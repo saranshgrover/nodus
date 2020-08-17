@@ -61,6 +61,7 @@ export default function (passport: passport.PassportStatic) {
 	)
 
 	passport.serializeUser((user: User, done) => {
+		console.log(user)
 		done(null, {
 			id: user._id,
 			name: user.username,

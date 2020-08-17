@@ -42,8 +42,6 @@ export async function handleWCAConnect({
 	done,
 }: PassportWCACallback) {
 	const UserModel = UserMongooseModel
-	const users = await UserModel.find()
-	// console.log(users[0].connections[0])
 	let user = await UserModel.findOne({
 		connections: {
 			$elemMatch: {
@@ -54,7 +52,6 @@ export async function handleWCAConnect({
 	try {
 		if (!user) {
 			user = new UserModel({
-				// TODO Make this a function
 				username: createUsername(profile.displayName),
 				name: profile.displayName,
 				email: profile.emails[0].value,
@@ -106,6 +103,7 @@ export async function handleWCAConnect({
 						startDate: competition.start_date,
 						endDate: competition.end_date,
 						roles: ['competitor'],
+						notifications: [],
 					}
 					if (
 						competition.delegates.some(
@@ -139,7 +137,7 @@ export async function handleWCAConnect({
 	} catch (err) {
 		done(err, null)
 	}
-	// console.log(user)
+	console.log(user)
 	done(false, user)
 }
 

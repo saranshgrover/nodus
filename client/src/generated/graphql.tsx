@@ -12,13 +12,15 @@ export type Scalars = {
   Float: number;
   /** Mongo object id scalar type */
   ObjectId: any;
-  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-  DateTime: any;
 };
 
 export type Query = {
   __typename?: 'Query';
-  getTodo: Todo;
+  getUser?: Maybe<User>;
+  /** Returns the current logged in User. If no user is logged in, returns Null */
+  getMe?: Maybe<User>;
+  getMyNotifications: Array<Notification>;
+  findMyManagableCompetitions: Array<WcifFetch>;
   getWcifById: Wcif;
   getWcifByCompetitionId?: Maybe<Wcif>;
   getOpenRounds: Array<Round>;
@@ -26,15 +28,16 @@ export type Query = {
   getTopCompetitors: Array<Person>;
   getOngoingGroups: Array<ActivityWithPerons>;
   getMyUpcomingCompetitions: Array<Wcif>;
-  getUser?: Maybe<User>;
-  /** Returns the current logged in User. If no user is logged in, returns Null */
-  getMe?: Maybe<User>;
-  findMyManagableCompetitions: Array<WcifFetch>;
 };
 
 
-export type QueryGetTodoArgs = {
+export type QueryGetUserArgs = {
   id: Scalars['ObjectId'];
+};
+
+
+export type QueryGetMyNotificationsArgs = {
+  competitionId: Scalars['String'];
 };
 
 
@@ -63,21 +66,88 @@ export type QueryGetOngoingGroupsArgs = {
   competitionId: Scalars['String'];
 };
 
-
-export type QueryGetUserArgs = {
-  id: Scalars['ObjectId'];
-};
-
-export type Todo = {
-  __typename?: 'Todo';
+export type User = {
+  __typename?: 'User';
   _id: Scalars['ObjectId'];
-  createdAt?: Maybe<Scalars['DateTime']>;
-  updatedAt: Scalars['DateTime'];
-  content: Scalars['String'];
-  isDone: Scalars['Boolean'];
+  username: Scalars['String'];
+  email: Scalars['String'];
+  name: Scalars['String'];
+  primaryAuthenticationType: Scalars['String'];
+  competitions: Array<Competition>;
+  connections: Array<ExternalConnection>;
+  subscriptions: Array<UserPushSubscriptionInput>;
 };
 
 
+export type Competition = {
+  __typename?: 'Competition';
+  competitionId: Scalars['String'];
+  competitionType: Scalars['String'];
+  startDate: Scalars['String'];
+  endDate: Scalars['String'];
+  roles: Array<Scalars['String']>;
+  notifications?: Maybe<Array<Notification>>;
+};
+
+export type Notification = {
+  __typename?: 'Notification';
+  _id: Scalars['ObjectId'];
+  body?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  badge?: Maybe<Scalars['String']>;
+  vibrate?: Maybe<Array<Scalars['Int']>>;
+  actions?: Maybe<Array<Scalars['String']>>;
+  url?: Maybe<Scalars['String']>;
+  timestamp: Scalars['Float'];
+};
+
+export type ExternalConnection = {
+  __typename?: 'ExternalConnection';
+  connectionType: Scalars['String'];
+  accessToken: Scalars['String'];
+  content: WcaContent;
+};
+
+export type WcaContent = {
+  __typename?: 'WCAContent';
+  id: Scalars['Int'];
+  delegateStatus: Scalars['String'];
+  birthdate: Scalars['String'];
+  teams: Array<WcaTeams>;
+  photos: Array<Scalars['String']>;
+  wcaId?: Maybe<Scalars['String']>;
+};
+
+export type WcaTeams = {
+  __typename?: 'WCATeams';
+  friendlyId: Scalars['String'];
+  leader: Scalars['Boolean'];
+};
+
+export type UserPushSubscriptionInput = {
+  __typename?: 'UserPushSubscriptionInput';
+  endpoint: Scalars['String'];
+  keys: Keys;
+  device?: Maybe<Scalars['String']>;
+  browser?: Maybe<Scalars['String']>;
+};
+
+export type Keys = {
+  __typename?: 'Keys';
+  p256dh: Scalars['String'];
+  auth: Scalars['String'];
+};
+
+export type WcifFetch = {
+  __typename?: 'WcifFetch';
+  name: Scalars['String'];
+  start_date: Scalars['String'];
+  end_date: Scalars['String'];
+  country_iso2: Scalars['String'];
+  competitionId: Scalars['String'];
+};
 
 export type Wcif = {
   __typename?: 'Wcif';
@@ -112,6 +182,7 @@ export type Person = {
   roles: Array<Scalars['String']>;
   assignments: Array<Assignment>;
   personalBests: Array<PersonalBest>;
+  subscribers: Array<UserSubscription>;
 };
 
 export type Registration = {
@@ -148,6 +219,15 @@ export type PersonalBest = {
   continentalRanking: Scalars['Int'];
   nationalRanking: Scalars['Int'];
   type: Scalars['String'];
+};
+
+export type UserSubscription = {
+  __typename?: 'UserSubscription';
+  name: Scalars['String'];
+  username: Scalars['String'];
+  _id: Scalars['ObjectId'];
+  connections: Array<ExternalConnection>;
+  subscriptions: Array<UserPushSubscriptionInput>;
 };
 
 export type Event = {
@@ -341,76 +421,10 @@ export type RoomWithoutActivties = {
   extensions: Array<Extension>;
 };
 
-export type User = {
-  __typename?: 'User';
-  _id: Scalars['ObjectId'];
-  username: Scalars['String'];
-  email: Scalars['String'];
-  name: Scalars['String'];
-  primaryAuthenticationType: Scalars['String'];
-  competitions: Array<Competition>;
-  connections: Array<ExternalConnection>;
-  subscriptions: Array<UserPushSubscriptionInput>;
-};
-
-export type Competition = {
-  __typename?: 'Competition';
-  competitionId: Scalars['String'];
-  competitionType: Scalars['String'];
-  startDate: Scalars['String'];
-  endDate: Scalars['String'];
-  roles: Array<Scalars['String']>;
-};
-
-export type ExternalConnection = {
-  __typename?: 'ExternalConnection';
-  connectionType: Scalars['String'];
-  accessToken: Scalars['String'];
-  content: WcaContent;
-};
-
-export type WcaContent = {
-  __typename?: 'WCAContent';
-  id: Scalars['Int'];
-  delegateStatus: Scalars['String'];
-  birthdate: Scalars['String'];
-  teams: Array<WcaTeams>;
-  photos: Array<Scalars['String']>;
-  wcaId?: Maybe<Scalars['String']>;
-};
-
-export type WcaTeams = {
-  __typename?: 'WCATeams';
-  friendlyId: Scalars['String'];
-  leader: Scalars['Boolean'];
-};
-
-export type UserPushSubscriptionInput = {
-  __typename?: 'UserPushSubscriptionInput';
-  endpoint: Scalars['String'];
-  keys: Keys;
-  device?: Maybe<Scalars['String']>;
-  browser?: Maybe<Scalars['String']>;
-};
-
-export type Keys = {
-  __typename?: 'Keys';
-  p256dh: Scalars['String'];
-  auth: Scalars['String'];
-};
-
-export type WcifFetch = {
-  __typename?: 'WcifFetch';
-  name: Scalars['String'];
-  start_date: Scalars['String'];
-  end_date: Scalars['String'];
-  country_iso2: Scalars['String'];
-  competitionId: Scalars['String'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
-  createTodo: Todo;
+  updateUser?: Maybe<User>;
+  subscribeMe: Scalars['Boolean'];
   createWcif: Wcif;
   deleteWcif: Wcif;
   updateWcifInfo: Wcif;
@@ -421,13 +435,16 @@ export type Mutation = {
   /** Clears the database. Only works in development when server is running locally. */
   clearDatabase: Scalars['Boolean'];
   updateOngoingGroups: Array<ActivityWithPerons>;
-  updateUser?: Maybe<User>;
-  subscribeMe: Scalars['Boolean'];
 };
 
 
-export type MutationCreateTodoArgs = {
-  createTodoData: NewTodoInput;
+export type MutationUpdateUserArgs = {
+  data: UpdateUserInput;
+};
+
+
+export type MutationSubscribeMeArgs = {
+  subscription: UserPushSubscription;
 };
 
 
@@ -479,18 +496,23 @@ export type MutationUpdateOngoingGroupsArgs = {
   closeGroups?: Maybe<Array<GroupInfo>>;
 };
 
-
-export type MutationUpdateUserArgs = {
-  data: UpdateUserInput;
+export type UpdateUserInput = {
+  _id: Scalars['ObjectId'];
+  newName: Scalars['String'];
+  newEmail: Scalars['String'];
+  newUsername: Scalars['String'];
 };
 
-
-export type MutationSubscribeMeArgs = {
-  subscription: UserPushSubscription;
+export type UserPushSubscription = {
+  endpoint: Scalars['String'];
+  keys: KeysInput;
+  device?: Maybe<Scalars['String']>;
+  browser?: Maybe<Scalars['String']>;
 };
 
-export type NewTodoInput = {
-  content: Scalars['String'];
+export type KeysInput = {
+  p256dh: Scalars['String'];
+  auth: Scalars['String'];
 };
 
 export type ScheduleInput = {
@@ -619,25 +641,6 @@ export type GroupInfo = {
   parentId?: Maybe<Scalars['Int']>;
 };
 
-export type UpdateUserInput = {
-  _id: Scalars['ObjectId'];
-  newName: Scalars['String'];
-  newEmail: Scalars['String'];
-  newUsername: Scalars['String'];
-};
-
-export type UserPushSubscription = {
-  endpoint: Scalars['String'];
-  keys: KeysInput;
-  device?: Maybe<Scalars['String']>;
-  browser?: Maybe<Scalars['String']>;
-};
-
-export type KeysInput = {
-  p256dh: Scalars['String'];
-  auth: Scalars['String'];
-};
-
 
 export const SettingsUpdateUserDocument = gql`
     mutation SettingsUpdateUser($data: UpdateUserInput!) {
@@ -761,6 +764,44 @@ export function useContextGetMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQuer
 export type ContextGetMeQueryHookResult = ReturnType<typeof useContextGetMeQuery>;
 export type ContextGetMeLazyQueryHookResult = ReturnType<typeof useContextGetMeLazyQuery>;
 export type ContextGetMeQueryResult = ApolloReactCommon.QueryResult<ContextGetMeQuery, ContextGetMeQueryVariables>;
+export const GetMyNotificationsDocument = gql`
+    query GetMyNotifications($competitionId: String!) {
+  getMyNotifications(competitionId: $competitionId) {
+    _id
+    body
+    title
+    icon
+    url
+    image
+  }
+}
+    `;
+
+/**
+ * __useGetMyNotificationsQuery__
+ *
+ * To run a query within a React component, call `useGetMyNotificationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyNotificationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyNotificationsQuery({
+ *   variables: {
+ *      competitionId: // value for 'competitionId'
+ *   },
+ * });
+ */
+export function useGetMyNotificationsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetMyNotificationsQuery, GetMyNotificationsQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetMyNotificationsQuery, GetMyNotificationsQueryVariables>(GetMyNotificationsDocument, baseOptions);
+      }
+export function useGetMyNotificationsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetMyNotificationsQuery, GetMyNotificationsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetMyNotificationsQuery, GetMyNotificationsQueryVariables>(GetMyNotificationsDocument, baseOptions);
+        }
+export type GetMyNotificationsQueryHookResult = ReturnType<typeof useGetMyNotificationsQuery>;
+export type GetMyNotificationsLazyQueryHookResult = ReturnType<typeof useGetMyNotificationsLazyQuery>;
+export type GetMyNotificationsQueryResult = ApolloReactCommon.QueryResult<GetMyNotificationsQuery, GetMyNotificationsQueryVariables>;
 export const ControlCenterUpdateOngoingGroupsDocument = gql`
     mutation ControlCenterUpdateOngoingGroups($competitionId: String!, $newGroups: [GroupInfo!], $closeGroups: [GroupInfo!]) {
   updateOngoingGroups(competitionId: $competitionId, newGroups: $newGroups, closeGroups: $closeGroups) {
@@ -1083,19 +1124,6 @@ export const CompetitionInformationDocument = gql`
       _id
       startDate
       numberOfDays
-      venues {
-        _id
-        rooms {
-          _id
-          activities {
-            _id
-            name
-            id
-            startTime
-            endTime
-          }
-        }
-      }
     }
     events {
       _id
@@ -1264,6 +1292,7 @@ export const ContextGetCompetitionDocument = gql`
             activityCode
             startTime
             endTime
+            ongoing
             childActivities {
               _id
               id
@@ -1271,6 +1300,7 @@ export const ContextGetCompetitionDocument = gql`
               activityCode
               startTime
               endTime
+              ongoing
             }
           }
         }
@@ -1730,6 +1760,13 @@ export type ContextGetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ContextGetMeQuery = { __typename?: 'Query', getMe?: Maybe<{ __typename?: 'User', _id: any, username: string, email: string, name: string, primaryAuthenticationType: string, connections: Array<{ __typename?: 'ExternalConnection', connectionType: string, content: { __typename?: 'WCAContent', id: number, wcaId?: Maybe<string>, photos: Array<string>, birthdate: string, delegateStatus: string, teams: Array<{ __typename?: 'WCATeams', friendlyId: string, leader: boolean }> } }>, competitions: Array<{ __typename?: 'Competition', competitionType: string, competitionId: string, roles: Array<string> }>, subscriptions: Array<{ __typename?: 'UserPushSubscriptionInput', endpoint: string, browser?: Maybe<string>, device?: Maybe<string> }> }> };
 
+export type GetMyNotificationsQueryVariables = Exact<{
+  competitionId: Scalars['String'];
+}>;
+
+
+export type GetMyNotificationsQuery = { __typename?: 'Query', getMyNotifications: Array<{ __typename?: 'Notification', _id: any, body?: Maybe<string>, title?: Maybe<string>, icon?: Maybe<string>, url?: Maybe<string>, image?: Maybe<string> }> };
+
 export type ControlCenterUpdateOngoingGroupsMutationVariables = Exact<{
   competitionId: Scalars['String'];
   newGroups?: Maybe<Array<GroupInfo>>;
@@ -1785,7 +1822,7 @@ export type CompetitionInformationQueryVariables = Exact<{
 }>;
 
 
-export type CompetitionInformationQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', _id: any, name: string, locationName: string, registrationOpen: string, registrationClose: string, settings: { __typename?: 'Setting', imageUrl: string, message: string, colorTheme: string }, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, rooms: Array<{ __typename?: 'Room', _id: any, activities: Array<{ __typename?: 'Activity', _id: any, name: string, id: number, startTime: string, endTime: string }> }> }> }, events: Array<{ __typename?: 'Event', _id: any, id: string }> }>, getTopCompetitors: Array<{ __typename?: 'Person', _id: any, name: string, wcaUserId: number, personalBests: Array<{ __typename?: 'PersonalBest', _id: any, eventId: string, best: number, type: string, worldRanking: number }>, avatar: { __typename?: 'Avatar', thumbUrl: string } }> };
+export type CompetitionInformationQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', _id: any, name: string, locationName: string, registrationOpen: string, registrationClose: string, settings: { __typename?: 'Setting', imageUrl: string, message: string, colorTheme: string }, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number }, events: Array<{ __typename?: 'Event', _id: any, id: string }> }>, getTopCompetitors: Array<{ __typename?: 'Person', _id: any, name: string, wcaUserId: number, personalBests: Array<{ __typename?: 'PersonalBest', _id: any, eventId: string, best: number, type: string, worldRanking: number }>, avatar: { __typename?: 'Avatar', thumbUrl: string } }> };
 
 export type CompetitionOverviewQueryVariables = Exact<{
   competitionId: Scalars['String'];
@@ -1799,7 +1836,7 @@ export type ContextGetCompetitionQueryVariables = Exact<{
 }>;
 
 
-export type ContextGetCompetitionQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', name: string, shortName: string, _id: any, competitionId: string, settings: { __typename?: 'Setting', colorTheme: string }, persons: Array<{ __typename?: 'Person', _id: any, wcaUserId: number, registrantId?: Maybe<number> }>, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, timezone: string, name: string, rooms: Array<{ __typename?: 'Room', _id: any, id: number, name: string, color: string, activities: Array<{ __typename?: 'Activity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string, childActivities: Array<{ __typename?: 'ChildActivity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string }> }> }> }> } }> };
+export type ContextGetCompetitionQuery = { __typename?: 'Query', getWcifByCompetitionId?: Maybe<{ __typename?: 'Wcif', name: string, shortName: string, _id: any, competitionId: string, settings: { __typename?: 'Setting', colorTheme: string }, persons: Array<{ __typename?: 'Person', _id: any, wcaUserId: number, registrantId?: Maybe<number> }>, schedule: { __typename?: 'Schedule', _id: any, startDate: string, numberOfDays: number, venues: Array<{ __typename?: 'Venue', _id: any, timezone: string, name: string, rooms: Array<{ __typename?: 'Room', _id: any, id: number, name: string, color: string, activities: Array<{ __typename?: 'Activity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string, ongoing?: Maybe<boolean>, childActivities: Array<{ __typename?: 'ChildActivity', _id: any, id: number, name: string, activityCode: string, startTime: string, endTime: string, ongoing?: Maybe<boolean> }> }> }> }> } }> };
 
 export type ControlCenterGetOpenGroupsQueryVariables = Exact<{
   competitionId: Scalars['String'];

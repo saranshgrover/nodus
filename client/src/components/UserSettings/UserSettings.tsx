@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 export default function UserSettings() {
 	const classes = useStyles()
-	const { info } = useContext(UserContext)
+	const { info, refetch } = useContext(UserContext)
 	const { pushNotificationSupported } = usePushNotifications()
 	const handleUserChange = ({ target: { name, value } }: any) =>
 		setUser({ ...user, [name]: { ...user[name], value } })
@@ -81,6 +81,7 @@ export default function UserSettings() {
 				},
 			},
 		})
+		refetch()
 	}
 
 	const confirmCallback = (done: boolean) => {
@@ -95,6 +96,7 @@ export default function UserSettings() {
 			<AskForPermission
 				open={pushNotifications}
 				setOpen={setPushNotifications}
+				onComplete={() => refetch()}
 			/>
 			{confirm && (
 				<ConfirmationDialog

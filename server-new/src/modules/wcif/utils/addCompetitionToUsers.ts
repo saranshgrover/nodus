@@ -1,4 +1,5 @@
-import { Wcif } from '../../../entities'
+import { DocumentType } from '@typegoose/typegoose'
+import { Competition, User, Wcif } from '../../../entities'
 import { UserMongooseModel } from '../../user/model'
 
 export default async function addCompetitionToUsers(wcif: Wcif) {
@@ -26,14 +27,28 @@ export default async function addCompetitionToUsers(wcif: Wcif) {
 			if (person.roles.includes('delegate')) roles.push('delegate')
 			if (person.roles.includes('trainee_delegate'))
 				roles.push('traineeDelegate')
-			user.competitions.push({
+			addCompetitionToUser(user, {
 				competitionType: 'WCA',
 				competitionId: wcif.competitionId,
 				startDate: wcif.schedule.startDate,
 				endDate: endDate.toISOString().split('T')[0],
 				roles: roles,
+				notifications: [],
 			})
-			await user.save()
 		}
 	}
+}
+
+export async function addCompetitionToUser(
+	user: DocumentType<User>,
+	competition: Competition
+) {
+	const hasCompetition = user.competitions.some(
+		(userComp) => userComp.competitionId === competition.competitionId
+	)
+	if (!hasCompetition) {
+		user.competitions.push(competition)
+		await user.save()
+	}
+	return
 }

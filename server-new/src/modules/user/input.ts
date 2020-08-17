@@ -1,7 +1,7 @@
-import { Field, InputType, ID } from 'type-graphql'
-import { MaxLength, MinLength, IsEmail } from 'class-validator'
-import { User } from '../../entities'
+import { IsEmail } from 'class-validator'
 import { ObjectId } from 'mongodb'
+import { Field, InputType } from 'type-graphql'
+import { User } from '../../entities'
 
 @InputType()
 export class UpdateUserInput implements Partial<User> {

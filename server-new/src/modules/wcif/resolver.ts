@@ -164,6 +164,7 @@ export default class WcifResolver {
 					: comp.persons[index].avatar,
 				roles: newPerson ? [] : comp.persons[index].roles,
 				personalBests: newPerson ? [] : comp.persons[index].personalBests,
+				subscribers: comp.persons[index].subscribers,
 			}
 			comp.persons[index] = competitor
 		}
