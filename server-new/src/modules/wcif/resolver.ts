@@ -246,13 +246,16 @@ export default class WcifResolver {
 		const competition = await this.wcifService.findByCompetitionIdLean(
 			competitionId
 		)
-		const newWcif = await wcaApiFetch<Wcif>(req.user.id, {
-			url: `${config.wca.originURL}/api/v0/competitions/${competitionId}/wcif/`,
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
+		const newWcif = await wcaApiFetch<Wcif>(
+			{
+				url: `${config.wca.originURL}/api/v0/competitions/${competitionId}/wcif/`,
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
 			},
-		})
+			{ userId: req.user.id }
+		)
 		const synchronizedWcif = await synchronize(competition, newWcif.data)
 		return await this.wcifService.updateWcif(competitionId, synchronizedWcif)
 	}

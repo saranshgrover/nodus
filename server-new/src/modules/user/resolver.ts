@@ -1,4 +1,3 @@
-import axios, { AxiosResponse } from 'axios'
 import { ObjectId } from 'mongodb'
 import {
 	Arg,
@@ -18,6 +17,7 @@ import { WcifMongooseModel } from '../wcif/model'
 import { UpdateUserInput } from './input'
 import { UserMongooseModel } from './model'
 import UserService from './service'
+import wcaApiFetch from './utils/wcaApiFetch'
 
 /*
   IMPORTANT: Your business logic must be in the service!
@@ -62,21 +62,16 @@ export default class UserResolver {
 	@UseMiddleware(isLoggedIn)
 	@Query((returns) => [WcifFetch])
 	async findMyManagableCompetitions(@Ctx() { req }: Context) {
-		const user = await this.userService.getById(req.user.id)
-		const wcaAccessToken = user!.connections.find(
-			(connection) => connection.connectionType === 'WCA'
-		)?.accessToken
-		if (!wcaAccessToken) {
-			throw new Error('No WCA Connection Found')
-		}
 		const baseApiUrl = `${config.wca.originURL}/api/v0`
-		const resp: AxiosResponse<[WcifFetch]> = await axios({
-			url: `${baseApiUrl}/competitions?managed_by_me=true&start=${new Date().toISOString()}`,
-			headers: {
-				Authorization: `Bearer ${wcaAccessToken}`,
-				'Content-Type': 'application/json',
+		const resp = await wcaApiFetch<[WcifFetch]>(
+			{
+				url: `${baseApiUrl}/competitions?managed_by_me=true&start=${new Date().toISOString()}`,
+				headers: {
+					'Content-Type': 'application/json',
+				},
 			},
-		})
+			{ userId: req.user.id }
+		)
 		let competitions = resp.data
 		let filterComps = []
 		if (competitions.length > 0) {

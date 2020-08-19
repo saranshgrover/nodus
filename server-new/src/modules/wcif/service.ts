@@ -30,13 +30,16 @@ export default class WcifService {
 		if (competition) {
 			throw new Error(`Error: Document with '${competitionId}' already exists.`)
 		}
-		const res = await wcaApiFetch<Partial<Wcif> & { id: string }>(userId, {
-			url: `${config.wca.originURL}/api/v0/competitions/${competitionId}/wcif/`,
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
+		const res = await wcaApiFetch<Partial<Wcif> & { id: string }>(
+			{
+				url: `${config.wca.originURL}/api/v0/competitions/${competitionId}/wcif/`,
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
 			},
-		})
+			{ userId }
+		)
 		const data = await res.data
 		const wcifData = await createModelFromWcif(data, competitionId)
 		const wcif = await this.wcifModel.create(wcifData)

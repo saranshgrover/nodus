@@ -6,7 +6,7 @@ import WCAStratetgy from 'passport-wca'
 import { config } from '../../config'
 import { User } from '../../entities'
 import { UserMongooseModel } from '../../modules/user/model'
-import handleConnect from './handleConnect'
+import { handleAuthorize, handleConnect } from './handleConnect'
 const LocalStrategy = passportLocal.Strategy
 
 export default function (passport: passport.PassportStatic) {
@@ -31,19 +31,31 @@ export default function (passport: passport.PassportStatic) {
 				callbackURL: callbackURL,
 				userProfileURL: `${originURL}/api/v0/me`,
 				scope: scope,
+				passReqToCallback: true,
 			},
 			(
+				req: Context['req'],
 				accessToken: string,
 				refreshToken: string,
 				profile: any,
 				done: () => void
-			) =>
-				handleConnect('WCA', {
-					accessToken,
-					refreshToken,
-					profile,
-					done,
-				})
+			) => {
+				if (req.user)
+					handleAuthorize('WCA', {
+						req,
+						accessToken,
+						refreshToken,
+						profile,
+						done,
+					})
+				else
+					handleConnect('WCA', {
+						accessToken,
+						refreshToken,
+						profile,
+						done,
+					})
+			}
 		)
 	)
 
@@ -61,7 +73,6 @@ export default function (passport: passport.PassportStatic) {
 	)
 
 	passport.serializeUser((user: User, done) => {
-		console.log(user)
 		done(null, {
 			id: user._id,
 			name: user.username,
@@ -77,11 +88,15 @@ export default function (passport: passport.PassportStatic) {
 	})
 
 	router.get('/wca', passport.authenticate('wca'))
+
+	router.get('/connect/wca', passport.authorize('wca'))
+
 	router.get(
 		'/wca/callback',
 		passport.authenticate('wca', { failureRedirect: '/login' }),
 		(req, res) => res.redirect(config.clientOrigin)
 	)
+
 	router.get('/logout', async (req, res) => {
 		await req.logout()
 		req.session?.destroy((err) => console.error(err))

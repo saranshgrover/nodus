@@ -30,14 +30,14 @@ afterAll(async (done) => {
 describe('User', () => {
 	it('should get user in db', async () => {
 		const user = createUser()
-		const { hashedPassword, _id, ...userToMatch } = user
+		const { password, _id, ...userToMatch } = user
 		await populateDatabase(UserMongooseModel, [user])
 		const graphqlSchema = await buildSchema()
 		const server = new ApolloServer({ schema: graphqlSchema }) as any
 		// use the test server to create a query function
 		const { query } = createTestClient(server)
 		const res = await query({ query: GET_USER, variables: { id: user._id } })
-		expect(res.data!.getUser!).toEqual<Omit<User, 'hashedPassword' | '_id'>>(
+		expect(res.data!.getUser!).toEqual<Omit<User, 'password' | '_id'>>(
 			userToMatch
 		)
 	})
@@ -56,7 +56,7 @@ describe('User', () => {
 
 	it('should get the logged in user', async () => {
 		const user = createUser()
-		const { hashedPassword, _id, ...userToMatch } = user
+		const { password, _id, ...userToMatch } = user
 		const graphqlSchema = await buildSchema()
 		const server = new ApolloServer({
 			schema: graphqlSchema,
@@ -66,9 +66,7 @@ describe('User', () => {
 		const { query } = createTestClient(server)
 
 		const res = await query({ query: GET_ME })
-		expect(res.data!.getMe).toEqual<Omit<User, 'hashedPassword' | '_id'>>(
-			userToMatch
-		)
+		expect(res.data!.getMe).toEqual<Omit<User, 'password' | '_id'>>(userToMatch)
 	})
 	// Still need to write these:
 	// it('should update user succesfully')

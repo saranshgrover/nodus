@@ -14,7 +14,7 @@ export const createUser = (): User => {
 		competitions: [],
 		connections: [],
 		email: faker.internet.email(),
-		hashedPassword: faker.internet.password(),
+		password: faker.internet.password(),
 		primaryAuthenticationType: 'LOCAL',
 		subscriptions: [],
 	}

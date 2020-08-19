@@ -10,9 +10,9 @@ export const updateIn = (object, [property, ...properyChain], updater) =>
 	properyChain.length === 0
 		? { ...object, [property]: updater(object[property]) }
 		: {
-				...object,
-				[property]: updateIn(object[property], properyChain, updater),
-		  }
+			...object,
+			[property]: updateIn(object[property], properyChain, updater),
+		}
 
 export const mapIn = (object, properyChain, mapper) =>
 	updateIn(object, properyChain, (array) => array && array.map(mapper))
@@ -56,3 +56,8 @@ export const getPreciseTime = (wcaTime) => {
 	const time = `${wcaTimeStr.slice(0, -2)}.${wcaTimeStr.slice(-2)}`
 	return time
 }
+
+export const arrayToObject = (array, keyField) => array.reduce((obj, item) => {
+	obj[item[keyField]] = item
+	return obj
+}, {})

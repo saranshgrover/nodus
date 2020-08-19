@@ -15,15 +15,18 @@ import Typography from '@material-ui/core/Typography'
 import Delete from '@material-ui/icons/Delete'
 import ConfirmationDialog from 'components/common/ConfirmationDialog'
 import AskForPermission from 'components/PushNotification/AskForPermission'
+import { SERVER_URI } from 'config'
 import usePushNotifications from 'hooks/usePushNotifications'
-import React, { useContext, useState } from 'react'
-import { UserContext } from '../../contexts/UserContext'
+import useUser from 'hooks/useUser'
+import { arrayToObject } from 'logic/tools'
+import React, { useState } from 'react'
 import { useSettingsUpdateUserMutation } from '../../generated/graphql'
 import WCAButton from '../common/WCAButton'
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		marginTop: theme.spacing(10),
+		padding: theme.spacing(2),
 		margin: 'auto',
 		width: '50vw',
 		minHeight: '20vh',
@@ -41,9 +44,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 export default function UserSettings() {
 	const classes = useStyles()
-	const { info, refetch } = useContext(UserContext)
+	const { info, refetch } = useUser()
 	const { pushNotificationSupported } = usePushNotifications()
-	const handleUserChange = ({ target: { name, value } }: any) =>
+	const handleUserChange = ({
+		target: { name, value },
+	}: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) =>
 		setUser({ ...user, [name]: { ...user[name], value } })
 	const [confirm, setConfirm] = useState(false)
 	const [pushNotifications, setPushNotifications] = useState(false)
@@ -68,7 +73,10 @@ export default function UserSettings() {
 			helperText: '',
 		},
 	})
-
+	const connections = React.useRef(
+		arrayToObject(info!.connections, 'connectionType')
+	)
+	console.log(connections)
 	const [updateUser, { loading, error }] = useSettingsUpdateUserMutation()
 	const handleSubmit = () => {
 		updateUser({
@@ -181,16 +189,25 @@ export default function UserSettings() {
 							Connections
 						</Typography>
 					</Grid>
-					{info!.connections.map((connection) => (
-						<Grid item key={connection.connectionType}>
-							<WCAButton
-								variant='contained'
-								color='primary'
-								onClick={() => {}}
-								text={connection.content.id}
-							/>
-						</Grid>
-					))}
+					<Grid item>
+						<WCAButton
+							variant='contained'
+							color={connections.current['WCA'] ? 'secondary' : 'primary'}
+							text={
+								connections.current['WCA']
+									? `${
+											connections.current['WCA'].content.wcaId ??
+											connections.current['WCA'].content.id
+									  }`
+									: 'Connect With WCA'
+							}
+							onClick={() => {
+								if (!connections.current['WCA']) {
+									window.location.href = `${SERVER_URI}/auth/connect/wca`
+								}
+							}}
+						/>
+					</Grid>
 				</Grid>
 			</Paper>
 			<Paper square className={classes.paper}>

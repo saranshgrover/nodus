@@ -23,7 +23,7 @@ export class User {
 	name: string
 
 	@prop()
-	hashedPassword: string
+	password: string
 
 	@prop()
 	@Field()
