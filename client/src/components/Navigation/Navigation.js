@@ -16,6 +16,7 @@ import Header from "../common/Header";
 import Footer from "../common/Footer";
 import Competition from "../CompetitionRouting/Competition";
 import UserSettings from "../UserSettings/UserSettings";
+import About from "../About/About";
 export default function Navigation() {
 	return (
 		<Router basename={process.env.PUBLIC_URL}>
@@ -40,7 +41,7 @@ export default function Navigation() {
 					path='/competitions/:compId/:tab?'
 					component={Competition}
 				/>
-				<Route exact path='/about' component={WelcomeLanding} />
+				<Route exact path='/about' component={About} />
 				<AuthenticatedRoute
 					authCallback={(user) => user.isSignedIn()}
 					RedirectComponent={<Redirect to='/' />}
