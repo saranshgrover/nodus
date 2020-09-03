@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
-import Divdier from '@material-ui/core/Divider'
+import Divider from '@material-ui/core/Divider'
 import Link from '@material-ui/core/Link'
 import FlipCameraAndroidIcon from '@material-ui/icons/FlipCameraAndroid'
 
@@ -90,7 +90,7 @@ export default function About() {
 				>{` and much more!`}</Typography>
 				<Typography className={classes.body} variant='h6'>
 					{`If you're an organizer/delegate and would like to use Nodus, or you have any feedback/bugs with the beta,`}{' '}
-					<Link href='mailto:saransh.grover@stonybrook.edu'>
+					<Link href='mailto:contact@saranshgrover.com'>
 						{`shoot me an email`}
 					</Link>
 				</Typography>
