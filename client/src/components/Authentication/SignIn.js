@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { SERVER_URI } from '../../config'
 import WCAButton from '../common/WCAButton'
 
@@ -24,12 +25,13 @@ const useStyles = makeStyles((theme) => ({
 		margin: theme.spacing(2),
 	},
 }))
-export default function Login({ history }) {
+export default function Login({ showLogo = true, parentClasses = {} }) {
 	const classes = useStyles()
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(null)
+	const history = useHistory()
 
 	const handleSubmit = async (event) => {
 		event.preventDefault()
@@ -52,7 +54,7 @@ export default function Login({ history }) {
 	}
 	return (
 		<>
-			<Paper square className={classes.paper}>
+			<Paper square className={parentClasses.paper ?? classes.paper}>
 				<form>
 					<Grid
 						container
@@ -65,12 +67,13 @@ export default function Login({ history }) {
 							direction='column'
 							justify='center'
 							alignItems='center'>
-							<Grid item>
-								<img
-									style={{ width: '64px', height: '64px' }}
-									src={`${process.env.PUBLIC_URL}/nodus-orange.png`}
-								/>
-							</Grid>
+							{showLogo &&
+								<Grid item>
+									<img
+										style={{ width: '64px', height: '64px' }}
+										src={`${process.env.PUBLIC_URL}/nodus-orange.png`}
+									/>
+								</Grid>}
 							<Grid item>
 								<Typography
 									className={classes.title}

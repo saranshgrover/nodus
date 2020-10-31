@@ -7,6 +7,7 @@ import {
 import useSnackbar from 'hooks/useSnackbar'
 import React, { useEffect, useState } from 'react'
 import useUser from '../../hooks/useUser'
+import About from '../About/About'
 import LinearProgress from '../LinearProgress/LinearProgress'
 import CompList from './CompList'
 import LandingSignedIn from './LandingSignedIn'
@@ -28,18 +29,20 @@ export default function WelcomeLanding() {
 	if (loading) return <LinearProgress />
 	return (
 		<React.Fragment>
+			{!user.isSignedIn() && <About />}
 			<Tabs
+				style={{ minHeight: '30vh' }}
 				variant='fullWidth'
 				value={value}
 				onChange={(_, newValue) => setValue(newValue)}>
-				<Tab value={0} label='Upcoming Competitions' />
+				<Tab value={0} />
 				{user.isSignedIn() && <Tab value={1} label='Your Competitions' />}
 			</Tabs>
 			{value === 0 && (
 				<CompList
 					date={true}
 					comps={upcomingCompetitions}
-					subheader='Upcoming Competitions'
+					subheader='Competitions'
 				/>
 			)}
 			{value === 1 && <LandingSignedIn />}

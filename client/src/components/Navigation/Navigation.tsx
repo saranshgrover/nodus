@@ -5,6 +5,7 @@ import {
 	Route,
 	Switch,
 } from 'react-router-dom'
+import About from '../About/About'
 import AuthenticatedRoute from '../AuthenticatedRoute/AuthenticatedRoute'
 import Register from '../Authentication/Register'
 import SignIn from '../Authentication/SignIn'
@@ -35,12 +36,17 @@ export default function Navigation() {
 					path='/settings'
 					component={UserSettings}
 				/>
-				<Route exact path='/about' component={WelcomeLanding} />
 				<Route exact path='/signin' component={SignIn} />
 				<Route exact path='/register' component={Register} />
-				<Route exact path={`/competitions`} component={LandingSignedIn} />
+				<AuthenticatedRoute
+					authCallback={(user) => user.isSignedIn()}
+					RedirectComponent={<Redirect to='/' />}
+					exact
+					path={`/competitions`}
+					component={LandingSignedIn}
+				/>
 				<Route path='/competitions/:compId/:tab?' component={Competition} />
-				<Route exact path='/about' component={WelcomeLanding} />
+				<Route exact path='/about' component={About} />
 				<Route exact path='/' component={WelcomeLanding} />
 				<Redirect to='/' />
 			</Switch>
