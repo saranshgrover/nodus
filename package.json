@@ -4,8 +4,9 @@
 	"description": "Nodus is a competition and event management tool for sporting events like speedcubing. It is integreated with both [WCA](https://worldcubeassociation.org) and [WCA Live](https://live.worldcubeassociation.org) and offers many features for both organizers and competitors like:",
 	"main": "index.js",
 	"scripts": {
-		"postinstall": "cd server-new && npm install && tsc",
-		"deploy:server": "git add . && git commit -m Heroku && git push heroku master"
+		"postinstall": "cd server-new && npm install && npm run tsc",
+		"deploy:server": "git add . && git commit -m Deploy && git push heroku master",
+		"tsc": "tsc"
 	},
 	"repository": {
 		"type": "git",
