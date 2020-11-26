@@ -1,0 +1,23 @@
+{
+	"name": "nodus",
+	"version": "1.0.0",
+	"description": "Nodus is a competition and event management tool for sporting events like speedcubing. It is integreated with both [WCA](https://worldcubeassociation.org) and [WCA Live](https://live.worldcubeassociation.org) and offers many features for both organizers and competitors like:",
+	"main": "index.js",
+	"scripts": {
+		"postinstall": "cd server-new && tsc",
+		"deploy:server": "git add . && git commit -m Heroku && git push heroku master"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/saranshgrover/nodus.git"
+	},
+	"engines": {
+		"node": "14.4.0"
+	},
+	"author": "Saransh Grover <saransh.grover@stonybrook.edu> (https://saranshgrover.com)",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/saranshgrover/nodus/issues"
+	},
+	"homepage": "https://github.com/saranshgrover/nodus#readme"
+}

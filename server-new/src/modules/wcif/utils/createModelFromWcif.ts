@@ -38,6 +38,7 @@ export default async function createModelFromWcif(
 	}
 	data.competitionId = data.id
 	data.synchronizedAt = new Date().getTime()
+	// @ts-ignore
 	delete data.id
 	return data as Wcif
 }

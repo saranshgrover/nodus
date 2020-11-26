@@ -70,6 +70,7 @@ describe('Wcif', () => {
 		//@ts-ignore
 		const wcif = await createModelFromWcif(wcif1, 'SBUFall2019')
 		// this value is dynamic, so snapshot wont match it
+		// @ts-ignore
 		delete wcif.synchronizedAt
 		expect(wcif).toMatchSnapshot()
 	})
