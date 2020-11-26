@@ -17,7 +17,6 @@
 		"@types/faker": "^4.1.12",
 		"@types/helmet": "0.0.46",
 		"@types/jest": "^26.0.4",
-		"@types/node": "^13.13.5",
 		"@types/passport": "^1.0.4",
 		"@types/passport-local": "^1.0.33",
 		"@types/web-push": "^3.3.0",
@@ -30,6 +29,7 @@
 	},
 	"dependencies": {
 		"@typegoose/typegoose": "^7.0.0",
+		"@types/node": "^13.13.5",
 		"@types/mongoose": "^5.7.16",
 		"apollo-server-express": "^2.13.0",
 		"axios": "^0.19.2",
