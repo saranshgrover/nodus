@@ -36,7 +36,7 @@ export default function WelcomeLanding() {
 					variant='fullWidth'
 					value={value}
 					onChange={(_, newValue) => setValue(newValue)}>
-					<Tab value={0} label='Upcoming Competitions' />
+					<Tab value={0} label='All Competitions' />
 					{user.isSignedIn() && <Tab value={1} label='Your Competitions' />}
 				</Tabs>
 			)}
