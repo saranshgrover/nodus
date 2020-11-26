@@ -29,9 +29,7 @@ const handleConnect = async (accessToken, refreshToken, profile, done) => {
 				// TODO Make this a function
 				username: `${profile.displayName
 					.toLowerCase()
-					.replace(/\s/g, '')}${Math.random()
-					.toString()
-					.slice(2, 6)}`,
+					.replace(/\s/g, '')}${Math.random().toString().slice(2, 6)}`,
 				name: profile.displayName,
 				email: profile.emails[0].value,
 				primaryAuthenticationType: 'WCA',
@@ -47,7 +45,7 @@ const handleConnect = async (accessToken, refreshToken, profile, done) => {
 			const resp = await axios({
 				method: 'GET',
 				url: `${WCA_ORIGIN}/api/v0/users/${profile.id}?upcoming_competitions=true`,
-				heeaders: {
+				headers: {
 					Authorization: `Bearer ${accessToken}`,
 					'Content-Type': 'application/json',
 				},
@@ -65,9 +63,7 @@ const handleConnect = async (accessToken, refreshToken, profile, done) => {
 					}
 					let roles = ['competitor']
 					if (
-						competition.delegates.some(
-							(delegate) => delegate.id === profile.id
-						)
+						competition.delegates.some((delegate) => delegate.id === profile.id)
 					)
 						roles.push('delegate')
 					if (
@@ -144,21 +140,11 @@ module.exports = (passport) => {
 					// User is register for an account
 					let body = req.body
 					// Body should contain name, username, email, and password
-					if (
-						!(
-							body.name &&
-							body.username &&
-							body.email &&
-							body.password
-						)
-					)
+					if (!(body.name && body.username && body.email && body.password))
 						return done(null, false)
 					// Make sure username and email aren't already used
 					const checkUser = await UserModel.findOne({
-						$or: [
-							{ email: body.email },
-							{ username: body.username },
-						],
+						$or: [{ email: body.email }, { username: body.username }],
 					}).exec()
 					if (checkUser) {
 						// User exists

@@ -1,18 +1,17 @@
-import React, { useState, useContext } from 'react'
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import TextField from '@material-ui/core/TextField'
+import { Button, Grid } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
-import { Grid, Button } from '@material-ui/core'
-import WCAButton from '../common/WCAButton'
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
+import React, { useState } from 'react'
 import { SERVER_URI } from '../../config'
+import WCAButton from '../common/WCAButton'
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		marginTop: theme.spacing(10),
-		margin: 'auto',
-		width: '50vw',
+		margin: '4em',
 	},
 	input: {
 		width: '30vw',
@@ -81,14 +80,9 @@ export default function Register() {
 					direction='column'
 					alignItems='center'
 					justify='center'
-					spacing={2}
-				>
+					spacing={2}>
 					<Grid item>
-						<Typography
-							className={classes.title}
-							color='primary'
-							variant='h5'
-						>
+						<Typography className={classes.title} color='primary' variant='h5'>
 							Nodus Register
 						</Typography>
 					</Grid>
@@ -137,8 +131,7 @@ export default function Register() {
 									disabled={loading}
 									varaint='outlined'
 									color='primary'
-									onClick={handleSubmit}
-								>
+									onClick={handleSubmit}>
 									Register
 								</Button>
 							</Grid>

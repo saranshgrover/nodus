@@ -1,10 +1,3 @@
-/**
- * Returns a list of data resembling
- * {start_date: , end_date: title:  }
- *
- * @param {*} events
- * @param {*} assignments
- */
 export const getScheduleData = (
 	events = [],
 	unselectedVenues = [],
@@ -91,10 +84,10 @@ export const flattenActivities = (schedule) => {
 	for (const venue of schedule.venues) {
 		for (const room of venue.rooms) {
 			for (const activity of room.activities) {
-				flatActivites.push({ ...activity, room })
+				flatActivites.push({ ...activity, room, parentId: null })
 				if (activity.childActivities) {
 					for (const childActivity of activity.childActivities)
-						flatActivites.push({ ...childActivity, room })
+						flatActivites.push({ ...childActivity, room, parentId: activity.id })
 				}
 			}
 		}

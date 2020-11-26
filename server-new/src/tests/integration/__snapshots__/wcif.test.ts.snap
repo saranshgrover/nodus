@@ -1,0 +1,432 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Wcif should  create a wcif 1`] = `
+Object {
+  "competitionId": "SBUFall2019",
+  "competitorLimit": 250,
+  "events": Array [
+    Object {
+      "extensions": Array [],
+      "id": "333",
+      "rounds": Array [
+        Object {
+          "advancementCondition": Object {
+            "level": 64,
+            "type": "ranking",
+          },
+          "cutoff": null,
+          "extensions": Array [],
+          "format": "a",
+          "id": "333-r1",
+          "results": Array [
+            Object {
+              "attempts": Array [
+                Object {
+                  "reconstruction": null,
+                  "result": 623,
+                },
+                Object {
+                  "reconstruction": null,
+                  "result": 1047,
+                },
+                Object {
+                  "reconstruction": null,
+                  "result": 777,
+                },
+                Object {
+                  "reconstruction": null,
+                  "result": 708,
+                },
+                Object {
+                  "reconstruction": null,
+                  "result": 909,
+                },
+              ],
+              "average": 798,
+              "best": 623,
+              "personId": 134,
+              "ranking": 1,
+            },
+            Object {
+              "attempts": Array [
+                Object {
+                  "reconstruction": null,
+                  "result": 730,
+                },
+                Object {
+                  "reconstruction": null,
+                  "result": 983,
+                },
+                Object {
+                  "reconstruction": null,
+                  "result": 746,
+                },
+                Object {
+                  "reconstruction": null,
+                  "result": 942,
+                },
+                Object {
+                  "reconstruction": null,
+                  "result": 731,
+                },
+              ],
+              "average": 806,
+              "best": 730,
+              "personId": 29,
+              "ranking": 2,
+            },
+          ],
+          "scrambleSetCount": 6,
+          "timeLimit": Object {
+            "centiseconds": 60000,
+            "cumulativeRoundIds": Array [],
+          },
+        },
+      ],
+    },
+  ],
+  "extensions": Array [],
+  "formatVersion": "1.0",
+  "locationName": "Student Activities Center, Stony Brook, NY 11790, USA",
+  "name": "SBU Fall 2019",
+  "persons": Array [
+    Object {
+      "assignments": Array [
+        Object {
+          "activityId": 71,
+          "assignmentCode": "competitor",
+          "stationNumber": null,
+        },
+        Object {
+          "activityId": 63,
+          "assignmentCode": "competitor",
+          "stationNumber": null,
+        },
+        Object {
+          "activityId": 75,
+          "assignmentCode": "competitor",
+          "stationNumber": null,
+        },
+        Object {
+          "activityId": 85,
+          "assignmentCode": "competitor",
+          "stationNumber": null,
+        },
+        Object {
+          "activityId": 57,
+          "assignmentCode": "competitor",
+          "stationNumber": null,
+        },
+        Object {
+          "activityId": 38,
+          "assignmentCode": "competitor",
+          "stationNumber": null,
+        },
+        Object {
+          "activityId": 65,
+          "assignmentCode": "staff-scrambler",
+          "stationNumber": null,
+        },
+        Object {
+          "activityId": 45,
+          "assignmentCode": "competitor",
+          "stationNumber": null,
+        },
+      ],
+      "avatar": Object {
+        "thumbUrl": "https://staging.worldcubeassociation.org/uploads/user/avatar/2015LARS02/1574949155_thumb.jpeg",
+        "url": "https://staging.worldcubeassociation.org/uploads/user/avatar/2015LARS02/1574949155.jpeg",
+      },
+      "birthdate": "1954-12-04",
+      "countryIso2": "US",
+      "email": "126272@worldcubeassociation.org",
+      "gender": "m",
+      "name": "Harry Larson",
+      "personalBests": Array [
+        Object {
+          "best": 504,
+          "continentalRanking": 3372,
+          "eventId": "222",
+          "nationalRanking": 2429,
+          "type": "average",
+          "worldRanking": 12318,
+        },
+        Object {
+          "best": 1349,
+          "continentalRanking": 2665,
+          "eventId": "333",
+          "nationalRanking": 1950,
+          "type": "average",
+          "worldRanking": 11271,
+        },
+        Object {
+          "best": 4746,
+          "continentalRanking": 5423,
+          "eventId": "333oh",
+          "nationalRanking": 3664,
+          "type": "average",
+          "worldRanking": 23205,
+        },
+        Object {
+          "best": 6562,
+          "continentalRanking": 2982,
+          "eventId": "444",
+          "nationalRanking": 2060,
+          "type": "average",
+          "worldRanking": 12858,
+        },
+        Object {
+          "best": 1292,
+          "continentalRanking": 6459,
+          "eventId": "pyram",
+          "nationalRanking": 4760,
+          "type": "average",
+          "worldRanking": 24886,
+        },
+        Object {
+          "best": 368,
+          "continentalRanking": 4640,
+          "eventId": "222",
+          "nationalRanking": 3284,
+          "type": "single",
+          "worldRanking": 17465,
+        },
+        Object {
+          "best": 1065,
+          "continentalRanking": 2234,
+          "eventId": "333",
+          "nationalRanking": 1639,
+          "type": "single",
+          "worldRanking": 9137,
+        },
+        Object {
+          "best": 3531,
+          "continentalRanking": 4962,
+          "eventId": "333oh",
+          "nationalRanking": 3345,
+          "type": "single",
+          "worldRanking": 21828,
+        },
+        Object {
+          "best": 5962,
+          "continentalRanking": 3257,
+          "eventId": "444",
+          "nationalRanking": 2246,
+          "type": "single",
+          "worldRanking": 14039,
+        },
+        Object {
+          "best": 16550,
+          "continentalRanking": 3729,
+          "eventId": "555",
+          "nationalRanking": 2641,
+          "type": "single",
+          "worldRanking": 14591,
+        },
+        Object {
+          "best": 969,
+          "continentalRanking": 7468,
+          "eventId": "pyram",
+          "nationalRanking": 5485,
+          "type": "single",
+          "worldRanking": 28546,
+        },
+      ],
+      "registrantId": 1,
+      "registration": Object {
+        "comments": "",
+        "eventIds": Array [
+          "222",
+          "333",
+          "333oh",
+          "444",
+          "555",
+          "pyram",
+        ],
+        "guests": 0,
+        "status": "accepted",
+        "wcaRegistrationId": 363859,
+      },
+      "roles": Array [],
+      "wcaId": "2015LARS02",
+      "wcaUserId": 126272,
+    },
+  ],
+  "registrationClose": "2019-11-16T00:00:00.000Z",
+  "registrationOpen": "2019-09-21T00:00:00.000Z",
+  "schedule": Object {
+    "numberOfDays": 1,
+    "startDate": "2019-11-23",
+    "venues": Array [
+      Object {
+        "countryIso2": "US",
+        "id": 1,
+        "latitudeMicrodegrees": 40914506,
+        "longitudeMicrodegrees": -73123564,
+        "name": "Stony Brook University",
+        "rooms": Array [
+          Object {
+            "activities": Array [
+              Object {
+                "activityCode": "pyram-r1",
+                "childActivities": Array [
+                  Object {
+                    "activityCode": "pyram-r1-g1",
+                    "childActivities": Array [],
+                    "endTime": "2019-11-23T14:45:00Z",
+                    "extensions": Array [],
+                    "id": 81,
+                    "name": "Pyraminx, Round 1, Group 1",
+                    "startTime": "2019-11-23T14:30:00Z",
+                  },
+                  Object {
+                    "activityCode": "pyram-r1-g3",
+                    "childActivities": Array [],
+                    "endTime": "2019-11-23T15:00:00Z",
+                    "extensions": Array [],
+                    "id": 83,
+                    "name": "Pyraminx, Round 1, Group 3",
+                    "startTime": "2019-11-23T14:45:00Z",
+                  },
+                  Object {
+                    "activityCode": "pyram-r1-g5",
+                    "childActivities": Array [],
+                    "endTime": "2019-11-23T15:15:00Z",
+                    "extensions": Array [],
+                    "id": 85,
+                    "name": "Pyraminx, Round 1, Group 5",
+                    "startTime": "2019-11-23T15:00:00Z",
+                  },
+                  Object {
+                    "activityCode": "pyram-r1-g7",
+                    "childActivities": Array [],
+                    "endTime": "2019-11-23T15:30:00Z",
+                    "extensions": Array [],
+                    "id": 87,
+                    "name": "Pyraminx, Round 1, Group 7",
+                    "startTime": "2019-11-23T15:15:00Z",
+                  },
+                ],
+                "endTime": "2019-11-23T15:30:00Z",
+                "extensions": Array [],
+                "id": 1,
+                "name": "Pyraminx, Round 1",
+                "startTime": "2019-11-23T14:30:00Z",
+              },
+              Object {
+                "activityCode": "222-r1",
+                "childActivities": Array [
+                  Object {
+                    "activityCode": "222-r1-g1",
+                    "childActivities": Array [],
+                    "endTime": "2019-11-23T15:42:00Z",
+                    "extensions": Array [],
+                    "id": 51,
+                    "name": "2x2x2 Cube, Round 1, Group 1",
+                    "startTime": "2019-11-23T15:30:00Z",
+                  },
+                  Object {
+                    "activityCode": "222-r1-g3",
+                    "childActivities": Array [],
+                    "endTime": "2019-11-23T15:54:00Z",
+                    "extensions": Array [],
+                    "id": 53,
+                    "name": "2x2x2 Cube, Round 1, Group 3",
+                    "startTime": "2019-11-23T15:42:00Z",
+                  },
+                  Object {
+                    "activityCode": "222-r1-g5",
+                    "childActivities": Array [],
+                    "endTime": "2019-11-23T16:06:00Z",
+                    "extensions": Array [],
+                    "id": 55,
+                    "name": "2x2x2 Cube, Round 1, Group 5",
+                    "startTime": "2019-11-23T15:54:00Z",
+                  },
+                  Object {
+                    "activityCode": "222-r1-g7",
+                    "childActivities": Array [],
+                    "endTime": "2019-11-23T16:18:00Z",
+                    "extensions": Array [],
+                    "id": 57,
+                    "name": "2x2x2 Cube, Round 1, Group 7",
+                    "startTime": "2019-11-23T16:06:00Z",
+                  },
+                  Object {
+                    "activityCode": "222-r1-g9",
+                    "childActivities": Array [],
+                    "endTime": "2019-11-23T16:30:00Z",
+                    "extensions": Array [],
+                    "id": 59,
+                    "name": "2x2x2 Cube, Round 1, Group 9",
+                    "startTime": "2019-11-23T16:18:00Z",
+                  },
+                ],
+                "endTime": "2019-11-23T16:30:00Z",
+                "extensions": Array [],
+                "id": 2,
+                "name": "2x2x2 Cube, Round 1",
+                "startTime": "2019-11-23T15:30:00Z",
+              },
+              Object {
+                "activityCode": "555-r1",
+                "childActivities": Array [
+                  Object {
+                    "activityCode": "555-r1-g1",
+                    "childActivities": Array [],
+                    "endTime": "2019-11-23T17:00:00Z",
+                    "extensions": Array [],
+                    "id": 71,
+                    "name": "5x5x5 Cube, Round 1, Group 1",
+                    "startTime": "2019-11-23T16:30:00Z",
+                  },
+                  Object {
+                    "activityCode": "555-r1-g3",
+                    "childActivities": Array [],
+                    "endTime": "2019-11-23T17:30:00Z",
+                    "extensions": Array [],
+                    "id": 73,
+                    "name": "5x5x5 Cube, Round 1, Group 3",
+                    "startTime": "2019-11-23T17:00:00Z",
+                  },
+                ],
+                "endTime": "2019-11-23T17:30:00Z",
+                "extensions": Array [],
+                "id": 3,
+                "name": "5x5x5 Cube, Round 1",
+                "startTime": "2019-11-23T16:30:00Z",
+              },
+            ],
+            "color": "#304a96",
+            "extensions": Array [],
+            "id": 1,
+            "name": "Ballroom A - Stage 1",
+          },
+        ],
+        "timezone": "America/New_York",
+      },
+    ],
+  },
+  "settings": Object {
+    "colorTheme": "orange_200",
+    "imageUrl": "",
+    "message": "",
+  },
+  "shortName": "SBU Fall 2019",
+}
+`;
+
+exports[`Wcif should throw not logged in error 1`] = `
+Object {
+  "data": null,
+  "errors": Array [
+    [GraphQLError: Not logged in],
+  ],
+  "extensions": undefined,
+  "http": Object {
+    "headers": Headers {
+      Symbol(map): Object {},
+    },
+  },
+}
+`;

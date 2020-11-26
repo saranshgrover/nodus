@@ -11,6 +11,12 @@
 		"@material-ui/core": "^4.9.9",
 		"@material-ui/icons": "^4.5.1",
 		"@material-ui/lab": "^4.0.0-alpha.32",
+		"@types/jest": "^26.0.4",
+		"@types/node": "^14.0.19",
+		"@types/react": "^16.9.41",
+		"@types/react-dom": "^16.9.8",
+		"@types/react-flag-icon-css": "^1.0.3",
+		"@types/react-swipeable-views": "^0.13.0",
 		"apollo-boost": "^0.4.7",
 		"apollo-cache-inmemory": "^1.6.5",
 		"apollo-client": "^2.6.8",
@@ -18,33 +24,47 @@
 		"apollo-link-error": "^1.1.13",
 		"apollo-link-http": "^1.5.17",
 		"clsx": "^1.0.4",
+		"global": "^4.4.0",
 		"graphql": "^15.0.0",
 		"history": "^4.10.1",
 		"material-table": "^1.57.2",
 		"moment": "^2.24.0",
 		"moment-timezone": "^0.5.27",
 		"mongoose": "^5.9.10",
+		"npm-watch": "^0.6.0",
 		"omit-deep": "^0.3.0",
 		"react": "^16.11.0",
 		"react-apollo": "^3.1.4",
-		"react-device-detect": "^1.9.10",
+		"react-device-detect": "^1.13.1",
 		"react-dom": "^16.11.0",
 		"react-error-boundary": "^2.2.1",
 		"react-flag-icon-css": "^1.0.25",
 		"react-ga": "^2.7.0",
 		"react-router-dom": "^5.1.2",
-		"react-scripts": "^3.3.0",
+		"react-scripts": "4.0.0",
 		"react-swipeable-views": "^0.13.9",
 		"react-test-renderer": "^16.12.0",
-		"styled-components": "^5.1.0"
+		"styled-components": "^5.1.0",
+		"typescript": "^3.9.6"
+	},
+	"watch": {
+		"gen-types": {
+			"patterns": [
+				"src/graphql",
+				"../schema.graphql"
+			],
+			"extensions": "ts"
+		}
 	},
 	"scripts": {
-		"start": "react-scripts start",
+		"start": "SET PORT=3001 && react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"predeploy": "npm run build",
-		"deploy": "gh-pages -d build"
+		"deploy": "gh-pages -d build",
+		"gen-types": "graphql-codegen",
+		"watch-gen-type": "npm-watch gen-types"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
@@ -62,6 +82,15 @@
 		]
 	},
 	"devDependencies": {
+		"@graphql-codegen/cli": "^1.17.0",
+		"@graphql-codegen/typescript": "^1.17.0",
+		"@graphql-codegen/typescript-operations": "^1.17.0",
+		"@graphql-codegen/typescript-react-apollo": "^1.17.0",
+		"@graphql-codegen/typescript-resolvers": "^1.17.0",
+		"@types/classnames": "^2.2.10",
+		"@types/mongoose": "^5.7.32",
+		"@types/react-router": "^5.1.8",
+		"@types/react-router-dom": "^5.1.5",
 		"babel-plugin-inline-react-svg": "^1.1.1",
 		"gh-pages": "^2.1.1"
 	}

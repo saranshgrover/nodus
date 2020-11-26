@@ -1,60 +1,62 @@
-import React, { useContext } from "react";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import AppsIcon from "@material-ui/icons/Apps";
-import VideocamIcon from "@material-ui/icons/Videocam";
-import GroupIcon from "@material-ui/icons/Group";
-import NotesIcon from "@material-ui/icons/Notes";
-import ScheduleIcon from "@material-ui/icons/Schedule";
-import { useHistory } from "react-router-dom";
-import { CompetitionContext } from "../../contexts/CompetitionContext";
-import EmojiEventsIcon from "@material-ui/icons/EmojiEvents";
-import SettingsIcon from "@material-ui/icons/Settings";
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import Tooltip from '@material-ui/core/Tooltip'
+import AppsIcon from '@material-ui/icons/Apps'
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents'
+import GroupIcon from '@material-ui/icons/Group'
+import NotesIcon from '@material-ui/icons/Notes'
+import NotificationsIcon from '@material-ui/icons/Notifications'
+import ScheduleIcon from '@material-ui/icons/Schedule'
+import SettingsIcon from '@material-ui/icons/Settings'
+import SyncIcon from '@material-ui/icons/Sync'
+import VideocamIcon from '@material-ui/icons/Videocam'
+import React, { useContext } from 'react'
+import { useHistory } from 'react-router-dom'
+import { CompetitionContext } from '../../contexts/CompetitionContext'
 
 export default function DashboardList() {
-	const history = useHistory();
-	const competition = useContext(CompetitionContext);
-	const { competitionId } = competition;
+	const history = useHistory()
+	const competition = useContext(CompetitionContext)
+	const { competitionId } = competition
 	const getIcon = (text) => {
 		switch (text) {
-			case "Projector":
-				return <VideocamIcon />;
-			case "Groups":
-				return <GroupIcon />;
-			case "Notifications":
-				return <NotificationsIcon />;
-			case "Incidents":
-				return <NotesIcon />;
-			case "Schedule":
-				return <ScheduleIcon />;
-			case "Results":
-				return <EmojiEventsIcon />;
-			case "Settings":
-				return <SettingsIcon />;
+			case 'Projector':
+				return <VideocamIcon />
+			case 'Groups':
+				return <GroupIcon />
+			case 'Notifications':
+				return <NotificationsIcon />
+			case 'Incidents':
+				return <NotesIcon />
+			case 'Schedule':
+				return <ScheduleIcon />
+			case 'Results':
+				return <EmojiEventsIcon />
+			case 'Settings':
+				return <SettingsIcon />
+			case 'Sync':
+				return <SyncIcon />
 			default:
-				return <AppsIcon />;
+				return <AppsIcon />
 		}
-	};
+	}
 	return (
-		<div style={{ marginTop: "15px" }}>
+		<div style={{ marginTop: '15px' }}>
 			<List>
 				{[
-					"Control Center",
-					"Competitors",
-					"Events",
-					"Groups",
-					...(competition.userRoles.some((role) =>
-						role.includes("delegate")
-					)
-						? ["Incidents"]
-						: ""),
+					'Control Center',
+					'Sync',
+					'Competitors',
+					'Events',
+					'Groups',
+					...(competition.userRoles.some((role) => role.includes('delegate'))
+						? ['Incidents']
+						: ''),
 					// 'Notifications',
-					"Projector",
-					"Schedule",
-					"Settings",
+					'Projector',
+					'Schedule',
+					'Settings',
 				].map((text) => (
 					<ListItem
 						button
@@ -62,16 +64,16 @@ export default function DashboardList() {
 						onClick={() =>
 							history.push(
 								`/competitions/${competitionId}/admin/${text
-									.replace(/\s+/g, "-")
+									.replace(/\s+/g, '-')
 									.toLowerCase()}`
 							)
-						}
-					>
-						<ListItemIcon>{getIcon(text)}</ListItemIcon>
-						<ListItemText primary={text} />
+						}>
+						<Tooltip title={text}>
+							<ListItemIcon>{getIcon(text)}</ListItemIcon>
+						</Tooltip>
 					</ListItem>
 				))}
 			</List>
 		</div>
-	);
+	)
 }

@@ -1,19 +1,18 @@
-import React, { useState, useContext } from 'react'
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import TextField from '@material-ui/core/TextField'
+import { Button, Grid } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
-import { Grid, Button } from '@material-ui/core'
-import WCAButton from '../common/WCAButton'
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
+import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { SERVER_URI } from '../../config'
+import WCAButton from '../common/WCAButton'
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		marginTop: theme.spacing(10),
-		margin: 'auto',
-		width: '50vw',
-		height: '70vh',
+		margin: '4em',
 	},
 	input: {
 		width: '30vw',
@@ -26,12 +25,13 @@ const useStyles = makeStyles((theme) => ({
 		margin: theme.spacing(2),
 	},
 }))
-export default function Login({ history }) {
+export default function Login({ showLogo = true, parentClasses = {} }) {
 	const classes = useStyles()
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [error, setError] = useState(null)
 	const [loading, setLoading] = useState(null)
+	const history = useHistory()
 
 	const handleSubmit = async (event) => {
 		event.preventDefault()
@@ -54,22 +54,33 @@ export default function Login({ history }) {
 	}
 	return (
 		<>
-			<Paper square className={classes.paper}>
+			<Paper square className={parentClasses.paper ?? classes.paper}>
 				<form>
 					<Grid
 						container
 						direction='column'
 						alignItems='center'
-						justify='center'
-					>
-						<Grid item>
-							<Typography
-								className={classes.title}
-								color='primary'
-								variant='h5'
-							>
-								Nodus Login
-							</Typography>
+						justify='center'>
+						<Grid
+							item
+							container
+							direction='column'
+							justify='center'
+							alignItems='center'>
+							{showLogo &&
+								<Grid item>
+									<img
+										style={{ width: '64px', height: '64px' }}
+										src={`${process.env.PUBLIC_URL}/nodus-orange.png`}
+									/>
+								</Grid>}
+							<Grid item>
+								<Typography
+									className={classes.title}
+									variant='h5'>
+									Login
+								</Typography>
+							</Grid>
 						</Grid>
 						<Grid item>
 							<TextField
@@ -106,10 +117,9 @@ export default function Login({ history }) {
 									<Button
 										className={classes.button}
 										disabled={loading}
-										varaint='outlined'
-										color='primary'
-										onClick={handleSubmit}
-									>
+										varaint='contained'
+										color='secondary'
+										onClick={handleSubmit}>
 										Login
 									</Button>
 								</Grid>
@@ -127,12 +137,8 @@ export default function Login({ history }) {
 									<Button
 										className={classes.button}
 										disabled={loading}
-										varaint='text'
-										color='primary'
-										onClick={() =>
-											history.push('/register')
-										}
-									>
+										variant='text'
+										onClick={() => history.push('/register')}>
 										Don't have an account yet? Register
 									</Button>
 								</Grid>

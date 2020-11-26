@@ -1,8 +1,5 @@
-import React from 'react'
 import Button from '@material-ui/core/Button'
-import SvgIcon from '@material-ui/core/SvgIcon'
-import Icon from '@material-ui/core/Icon'
-import WCASvg from '../../images/WCAlogo.svg'
+import React from 'react'
 
 function ButtonIcon() {
 	return (
@@ -13,14 +10,13 @@ function ButtonIcon() {
 	)
 }
 
-export default function WCAButton({ text, start, onClick, ...props }) {
+export default function WCAButton({ text, start = false, onClick, ...props }) {
 	return (
 		<Button
 			startIcon={start && <ButtonIcon />}
 			endIcon={!start && <ButtonIcon />}
 			onClick={onClick}
-			{...props}
-		>
+			{...props}>
 			{text}
 		</Button>
 	)

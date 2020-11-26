@@ -1,16 +1,16 @@
-import React, { useContext } from 'react'
+import { Tooltip } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid'
 import Link from '@material-ui/core/Link'
-// import Typography from '@material-ui/core/Typography';
-import InfoIcon from '@material-ui/icons/Info'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import ContactMailIcon from '@material-ui/icons/ContactMail'
 import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects'
-import { makeStyles } from '@material-ui/core/styles'
 import GitHubIcon from '@material-ui/icons/GitHub'
+// import Typography from '@material-ui/core/Typography';
+import InfoIcon from '@material-ui/icons/Info'
+import React, { useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { version } from '../../../package.json'
-import { Tooltip } from '@material-ui/core'
 import { ToggleThemeContext } from '../../contexts/ThemeProvider'
-import { useTheme } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 	},
 	link: {
+		cursor: 'pointer',
 		verticalAlign: 'middle',
 		fontWeight: 500,
 		'&:hover': {
@@ -38,9 +39,10 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Footer = () => {
-	const {toggleTheme} = useContext(ToggleThemeContext)
+	const { toggleTheme } = useContext(ToggleThemeContext)
 	const theme = useTheme()
 	const classes = useStyles()
+	const history = useHistory()
 	return (
 		<>
 			<div className={classes.footerPadding} />
@@ -49,13 +51,12 @@ const Footer = () => {
 				<Grid item className={classes.grow} />
 				<Grid item>
 					<Grid container spacing={2}>
-						<Tooltip title={'Gitub'}>
+						<Tooltip title={'Github'}>
 							<Grid item key='Github'>
 								<Link
 									className={classes.link}
 									variant='body2'
-									href={'https://github.com/saranshgrover/WCARealTime'}
-								>
+									href={'https://github.com/saranshgrover/nodus'}>
 									<GitHubIcon />
 								</Link>
 							</Grid>
@@ -65,8 +66,7 @@ const Footer = () => {
 								<Link
 									className={classes.link}
 									variant='body2'
-									href={'mailto:ycubiksrube@gmail.com'}
-								>
+									href={'mailto:ycubiksrube@gmail.com'}>
 									<ContactMailIcon />
 								</Link>
 							</Grid>
@@ -76,21 +76,19 @@ const Footer = () => {
 								theme.palette.type === 'light'
 									? 'Switch to Dark'
 									: 'Switch to Light'
-							}
-						>
+							}>
 							<Grid item key='Theme'>
 								<Link
 									className={classes.link}
 									variant='body2'
-									onClick={toggleTheme}
-								>
+									onClick={toggleTheme}>
 									<EmojiObjectsIcon />
 								</Link>
 							</Grid>
 						</Tooltip>
 						<Tooltip title={'About'}>
 							<Grid item key='Info'>
-								<Link className={classes.link} variant='body2' href={'/about'}>
+								<Link className={classes.link} variant='body2' onClick={() => history.push('/about')}>
 									<InfoIcon size={20} />
 								</Link>
 							</Grid>
