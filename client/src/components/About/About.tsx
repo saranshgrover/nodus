@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import Link from '@material-ui/core/Link'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import cx from 'clsx'
 import React from 'react'
 import useUser from '../../hooks/useUser'
 import SignIn from '../Authentication/SignIn'
@@ -14,11 +15,12 @@ const useStyles = makeStyles((theme) => ({
 		boxShadow: 'none',
 		border: '1px solid',
 		margin: 'auto',
-		marginRight: theme.spacing(2),
+		[theme.breakpoints.up('md')]: {
+			marginRight: theme.spacing(2),
+		},
 	},
 	root: {
-		backgroundImage: `url(${process.env.PUBLIC_URL}/about-bg.png)`,
-		backgroundColor: theme.palette.background.default,
+		background: `linear-gradient(-90deg,${theme.palette.secondary.light},${theme.palette.secondary.dark})`,
 		backgroundBlendMode: 'color',
 		backgroundRepeat: 'no-repeat',
 		[theme.breakpoints.down('md')]: {
@@ -41,13 +43,21 @@ const useStyles = makeStyles((theme) => ({
 	body: {
 		margin: theme.spacing(3),
 	},
+	text: {
+		color: theme.palette.common.white,
+	},
 }))
 export default function About() {
 	const classes = useStyles()
 	const { isSignedIn } = useUser()
 	return (
 		<>
-			<Grid className={classes.root} container direction='row' wrap='nowrap'>
+			<Grid
+				className={classes.root}
+				container
+				direction='row'
+				wrap='nowrap'
+				alignItems='center'>
 				<Box className={classes.box}>
 					<Grid
 						container
@@ -63,11 +73,11 @@ export default function About() {
 						</Grid>
 						<Grid item>
 							<Typography
-								color='textPrimary'
+								className={classes.text}
 								variant='h2'>{`Nodus`}</Typography>
 						</Grid>
 						<Grid item>
-							<Typography color='textSecondary' variant='subtitle2'>
+							<Typography className={classes.text} variant='subtitle2'>
 								{`Live Competition Software`}
 							</Typography>
 						</Grid>
@@ -75,31 +85,31 @@ export default function About() {
 					<Divider />
 					<Typography
 						align='center'
-						className={classes.body}
+						className={cx(classes.text, classes.body)}
 						color='textPrimary'
 						variant='h6'>
 						{`Nodus gives competitors live feedback and notifications during competitions. In addition, it lets organizers stay on top of schedule, keep in touch with staff and run a successful event. `}
 					</Typography>
 					<Typography
-						className={classes.body}
+						className={cx(classes.text, classes.body)}
 						align='center'
 						variant='h6'>{` ✔️ Group Assignments and Easy Visibility`}</Typography>
 					<Typography
-						className={classes.body}
+						className={cx(classes.text, classes.body)}
 						align='center'
 						variant='h6'>{` ✔️ Live Automated Projector`}</Typography>
 					<Typography
-						className={classes.body}
+						className={cx(classes.text, classes.body)}
 						align='center'
 						variant='h6'>{` ✔️ Push notifications`}</Typography>
 					<Typography
-						className={classes.body}
+						className={cx(classes.text, classes.body)}
 						align='center'
 						variant='h6'>{` ✔️ Incident Reporting and Management`}</Typography>
 
-					<Typography className={classes.body} variant='h6'>
+					<Typography className={cx(classes.text, classes.body)} variant='h6'>
 						{`If you're a WCA organizer/delegate and would like to use Nodus, or you have any feedback/bugs with the beta,`}{' '}
-						<Link href='mailto:contact@saranshgrover.com'>
+						<Link href='mailto:contact@saranshgrover.com' color='inherit'>
 							{`shoot me an email`}
 						</Link>
 					</Typography>

@@ -29,15 +29,17 @@ export default function WelcomeLanding() {
 	if (loading) return <LinearProgress />
 	return (
 		<React.Fragment>
-			{!user.isSignedIn() && <About />}
-			<Tabs
-				style={{ minHeight: '30vh' }}
-				variant='fullWidth'
-				value={value}
-				onChange={(_, newValue) => setValue(newValue)}>
-				<Tab value={0} />
-				{user.isSignedIn() && <Tab value={1} label='Your Competitions' />}
-			</Tabs>
+			{!user.isSignedIn() ? (
+				<About />
+			) : (
+				<Tabs
+					variant='fullWidth'
+					value={value}
+					onChange={(_, newValue) => setValue(newValue)}>
+					<Tab value={0} label='Upcoming Competitions' />
+					{user.isSignedIn() && <Tab value={1} label='Your Competitions' />}
+				</Tabs>
+			)}
 			{value === 0 && (
 				<CompList
 					date={true}

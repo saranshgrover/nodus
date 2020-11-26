@@ -29,6 +29,8 @@ const UserProvider = ({ children }: React.PropsWithChildren<{}>) => {
 		if (!loading && !error && data) {
 			const user = data.getMe
 			setUser(user)
+		} else if (!loading && error) {
+			setUser(null)
 		}
 	}, [loading, error, data])
 	if (loading || user === undefined) return <LinearProgress />

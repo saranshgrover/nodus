@@ -8,6 +8,7 @@ import GitHubIcon from '@material-ui/icons/GitHub'
 // import Typography from '@material-ui/core/Typography';
 import InfoIcon from '@material-ui/icons/Info'
 import React, { useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { version } from '../../../package.json'
 import { ToggleThemeContext } from '../../contexts/ThemeProvider'
 
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 	},
 	link: {
+		cursor: 'pointer',
 		verticalAlign: 'middle',
 		fontWeight: 500,
 		'&:hover': {
@@ -40,6 +42,7 @@ const Footer = () => {
 	const { toggleTheme } = useContext(ToggleThemeContext)
 	const theme = useTheme()
 	const classes = useStyles()
+	const history = useHistory()
 	return (
 		<>
 			<div className={classes.footerPadding} />
@@ -85,7 +88,7 @@ const Footer = () => {
 						</Tooltip>
 						<Tooltip title={'About'}>
 							<Grid item key='Info'>
-								<Link className={classes.link} variant='body2' href={'/about'}>
+								<Link className={classes.link} variant='body2' onClick={() => history.push('/about')}>
 									<InfoIcon size={20} />
 								</Link>
 							</Grid>

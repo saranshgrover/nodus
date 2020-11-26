@@ -72,72 +72,75 @@ export default function Header() {
 	const classes = useStyles()
 	return (
 		<React.Fragment>
-			<HideOnScroll>
-				<AppBar className={classes.appBar} color='primary'>
-					<Toolbar className={classes.titleIcon}>
-						<Typography
-							component={Link}
-							variant='h6'
-							className={classes.title}
-							onClick={() => {
-								setAdmin(false) // Stops Admin button from showing with going to home
-								history.push('/')
-							}}>
-							<img
-								style={{ width: '64px', height: '64px' }}
-								src={`${process.env.PUBLIC_URL}/nodus-orange.png`}
-							/>
-						</Typography>
-						{admin && (
-							<Button
-								variant='text'
-								onClick={() =>
-									history.push(
-										`/competitions/${match.params.competitionId}/${
-											match.params.tab === 'admin' ? '' : 'admin'
-										}`
-									)
-								}
-								startIcon={
-									match.params.tab === 'admin' ? (
-										<VisibilityIcon />
-									) : (
-										<LockIcon />
-									)
-								}>
-								{match.params.tab === 'admin' ? 'Public' : 'Admin'}
-							</Button>
-						)}
-						{user.isSignedIn() ? (
-							<>
-								<Button
-									endIcon={<ArrowDropDownIcon />}
-									ref={profileMenuRef}
-									onClick={() => setMenuOpen(true)}
-									variant='text'
-									style={{ textTransform: 'none' }}>
-									{user.info.username}
-								</Button>
-							</>
-						) : (
-							<Button
-								variant='contained'
-								color='secondary'
-								onClick={() => history.push('/signin')}>
-								Sign In
-							</Button>
-						)}
-						{user.isSignedIn() && (
-							<ProfilePopover
-								anchorEl={profileMenuRef.current}
-								isOpen={menuOpen}
-								onClose={() => setMenuOpen(false)}
-							/>
-						)}
-					</Toolbar>
-				</AppBar>
-			</HideOnScroll>
-			<div className={classes.toolbar} />
+			{(user.isSignedIn() || match.params.competitionId) && // dont show header on homepage
+				<>
+					<HideOnScroll>
+						<AppBar className={classes.appBar} color='primary'>
+							<Toolbar className={classes.titleIcon}>
+								<Typography
+									component={Link}
+									variant='h6'
+									className={classes.title}
+									onClick={() => {
+										setAdmin(false) // Stops Admin button from showing with going to home
+										history.push('/')
+									}}>
+									<img
+										style={{ width: '64px', height: '64px' }}
+										src={`${process.env.PUBLIC_URL}/nodus-orange.png`}
+									/>
+								</Typography>
+								{admin && (
+									<Button
+										variant='text'
+										onClick={() =>
+											history.push(
+												`/competitions/${match.params.competitionId}/${match.params.tab === 'admin' ? '' : 'admin'
+												}`
+											)
+										}
+										startIcon={
+											match.params.tab === 'admin' ? (
+												<VisibilityIcon />
+											) : (
+													<LockIcon />
+												)
+										}>
+										{match.params.tab === 'admin' ? 'Public' : 'Admin'}
+									</Button>
+								)}
+								{user.isSignedIn() ? (
+									<>
+										<Button
+											endIcon={<ArrowDropDownIcon />}
+											ref={profileMenuRef}
+											onClick={() => setMenuOpen(true)}
+											variant='text'
+											style={{ textTransform: 'none' }}>
+											{user.info.username}
+										</Button>
+									</>
+								) : (
+										<Button
+											variant='contained'
+											color='secondary'
+											onClick={() => history.push('/signin')}>
+											Sign In
+										</Button>
+									)}
+								{user.isSignedIn() && (
+									<ProfilePopover
+										anchorEl={profileMenuRef.current}
+										isOpen={menuOpen}
+										onClose={() => setMenuOpen(false)}
+									/>
+								)}
+							</Toolbar>
+						</AppBar>
+					</HideOnScroll>
+					<div className={classes.toolbar} />
+				</>
+			}
 		</React.Fragment>
 	)
 }

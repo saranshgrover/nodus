@@ -77,7 +77,6 @@ export default function Login({ showLogo = true, parentClasses = {} }) {
 							<Grid item>
 								<Typography
 									className={classes.title}
-									color='primary'
 									variant='h5'>
 									Login
 								</Typography>
@@ -118,8 +117,8 @@ export default function Login({ showLogo = true, parentClasses = {} }) {
 									<Button
 										className={classes.button}
 										disabled={loading}
-										varaint='outlined'
-										color='primary'
+										varaint='contained'
+										color='secondary'
 										onClick={handleSubmit}>
 										Login
 									</Button>
@@ -138,8 +137,7 @@ export default function Login({ showLogo = true, parentClasses = {} }) {
 									<Button
 										className={classes.button}
 										disabled={loading}
-										varaint='text'
-										color='primary'
+										variant='text'
 										onClick={() => history.push('/register')}>
 										Don't have an account yet? Register
 									</Button>
