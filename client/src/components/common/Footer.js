@@ -97,7 +97,8 @@ const Footer = () => {
 							<Link
 								className={classes.link}
 								variant='body2'
-								href={'https://github.com/saranshgrover/WCARealTime/releases'}>
+								href={'https://github.com/saranshgrover/nodus'}
+							>
 								{version}
 							</Link>
 						</Grid>
