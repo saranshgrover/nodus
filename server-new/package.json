@@ -23,11 +23,11 @@
 		"apollo-server-testing": "^2.13.1",
 		"faker": "^4.1.0",
 		"jest": "^26.0.1",
-		"rimraf": "^3.0.2",
 		"ts-jest": "^25.5.1",
 		"ts-node-dev": "^1.0.0-pre.44"
 	},
 	"dependencies": {
+		"rimraf": "^3.0.2",
 		"@typegoose/typegoose": "^7.0.0",
 		"@types/node": "^13.13.5",
 		"@types/mongoose": "^5.7.16",
