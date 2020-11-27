@@ -4,8 +4,8 @@ import session from 'express-session'
 import mongoose from 'mongoose'
 import { config } from '../../config'
 
-
 export default async (app: express.Application) => {
+	app.set('trust proxy', 1)
 	const MongoStore = connectMongo(session)
 
 	const sessionOptions = {

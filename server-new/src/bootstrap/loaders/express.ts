@@ -9,7 +9,6 @@ import sessionConfig from './session'
 export default async (app: express.Application) => {
 	// Body parser only needed during POST on the graphQL path
 	app.use(bodyParser.json())
-	app.set('trust proxy', 1)
 	// Cors configuration
 	app.use('*', cors({ origin: config.clientOrigin, credentials: true }))
 
