@@ -19,6 +19,6 @@
 		"types": ["node", "jest"],
 		"typeRoots": ["./@types", "./node_modules/@types"]
 	},
-	"exclude": ["node_modules"],
+	"exclude": ["node_modules", "src/tests"],
 	"include": ["./src/**/*", "@types/"]
 }
