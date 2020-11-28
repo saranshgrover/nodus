@@ -15,9 +15,9 @@ export default async (app: express.Application) => {
 		proxy: true,
 		cookie: {
 			httpOnly: true,
-			secure: false,
+			secure: true,
 			// Note: This may be temporary. sameSite should be true but requires work to set up server and client on same URL.
-			sameSite: false,
+			sameSite: 'none',
 		},
 		store: new MongoStore({
 			mongooseConnection: mongoose.connection,
