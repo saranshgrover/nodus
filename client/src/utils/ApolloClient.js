@@ -1,8 +1,8 @@
-import omitDeep from 'omit-deep'
-import ApolloClient from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
+import ApolloClient from 'apollo-client'
+import { ApolloLink, concat } from 'apollo-link'
 import { HttpLink } from 'apollo-link-http'
-import { ApolloLink } from 'apollo-link'
+import omitDeep from 'omit-deep'
 import { SERVER_URI } from '../config'
 
 const typenameLink = new ApolloLink((operation, forward) => {
@@ -19,13 +19,12 @@ const typenameLink = new ApolloLink((operation, forward) => {
 	return forward(operation)
 })
 
+const httpLink = new HttpLink({
+	uri: `${SERVER_URI}/graphql`,
+	credentials: 'include',
+})
+
 export const client = new ApolloClient({
-	link: ApolloLink.from([
-		typenameLink,
-		new HttpLink({
-			uri: `${SERVER_URI}/graphql`,
-			credentials: 'include',
-		}),
-	]),
+	link: concat(typenameLink, httpLink),
 	cache: new InMemoryCache(),
 })
