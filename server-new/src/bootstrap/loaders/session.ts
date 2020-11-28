@@ -2,7 +2,7 @@ import connectMongo from 'connect-mongo'
 import express from 'express'
 import session from 'express-session'
 import mongoose from 'mongoose'
-import { config } from '../../config'
+import { config, PRODUCTION } from '../../config'
 
 export default async (app: express.Application) => {
 	app.set('trust proxy', 1)
@@ -15,14 +15,14 @@ export default async (app: express.Application) => {
 		proxy: true,
 		cookie: {
 			httpOnly: true,
-			secure: true,
-			// Note: This may be temporary. sameSite should be true but requires work to set up server and client on same URL.
-			sameSite: 'none',
+			secure: PRODUCTION,
+			sameSite: PRODUCTION ? 'none' : 'lax',
 		},
 		store: new MongoStore({
 			mongooseConnection: mongoose.connection,
 		}),
 	}
+	// @ts-ignore
 	const expressSession = session(sessionOptions)
 	app.use(expressSession)
 }
