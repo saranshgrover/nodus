@@ -50,7 +50,7 @@ const init = async () => {
 			httpOnly: true,
 			secure: false,
 			// Note: This may be temporary. sameSite should be true but requires work to set up server and client on same URL.
-			sameSite: false,
+			sameSite: 'none',
 		},
 		store: new MongoStore({
 			mongooseConnection: mongoose.connection,
