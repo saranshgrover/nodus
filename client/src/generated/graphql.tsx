@@ -1571,6 +1571,16 @@ export const ResultsGetOpenRoundsDocument = gql`
   getOpenRounds(competitionId: $competitionId) {
     _id
     id
+    results {
+      _id
+      personId
+      ranking
+      best
+      average
+      attempts {
+        result
+      }
+    }
   }
 }
     `;
@@ -1912,7 +1922,7 @@ export type ResultsGetOpenRoundsQueryVariables = Exact<{
 }>;
 
 
-export type ResultsGetOpenRoundsQuery = { __typename?: 'Query', getOpenRounds: Array<{ __typename?: 'Round', _id: any, id: string }> };
+export type ResultsGetOpenRoundsQuery = { __typename?: 'Query', getOpenRounds: Array<{ __typename?: 'Round', _id: any, id: string, results: Array<{ __typename?: 'Result', _id: any, personId: string, ranking: number, best: number, average: number, attempts: Array<{ __typename?: 'Attempt', result: number }> }> }> };
 
 export type RoutingFindByCompetitionIdQueryVariables = Exact<{
   competitionId: Scalars['String'];

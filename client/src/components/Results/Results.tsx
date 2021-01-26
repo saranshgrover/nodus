@@ -96,7 +96,12 @@ export default function Results() {
 			/>
 			{tabs.map((tab, index) => (
 				<TabPanel value={value} index={index} key={`tab-${index}`}>
-					{<tab.Component roundId={tab.id} />}
+					{
+						<tab.Component
+							roundId={tab.id}
+							results={rounds?.find((r) => r.id === tab.id)?.results}
+						/>
+					}
 				</TabPanel>
 			))}
 		</Fragment>

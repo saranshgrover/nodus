@@ -86,58 +86,55 @@ export default function UserGroups({ wcif }: Props) {
 							</TableHead>
 							<TableBody>
 								{mySchedule &&
-									mySchedule.map((assignment) => (
-										<TableRow key={assignment.title}>
-											<TableCell className={classes.tableCell}>
-												<Typography>
-													{moment(assignment.startDate)
-														.tz(wcif.schedule.venues[0].timezone)
-														.format('hh:mm a')}
-												</Typography>
-											</TableCell>
-											<TableCell className={classes.tableCell}>
-												<Typography>
-													{
-														activityKey[
-															parseActivityCode(
-																assignment.activity.activityCode
-															).eventId
-														]
-													}
-												</Typography>
-											</TableCell>
-											<TableCell className={classes.tableCell}>
-												<Typography>
-													{`Group ${
-														parseActivityCode(assignment.activity.activityCode)
-															.groupNumber
-													}`}
-												</Typography>
-											</TableCell>
-											<TableCell className={classes.tableCell}>
-												<Typography>
-													{assignedTo(assignment.assignmentCode)}
-												</Typography>
-											</TableCell>
-											<TableCell className={classes.tableCell}>
-												<Grid container alignItems='center'>
-													<Grid item>
-														<Typography>
-															{assignment.activity.room.name}
-														</Typography>
+									mySchedule.map((assignment: any) => {
+										const {
+											eventId,
+											groupNumber,
+											attemptNumber,
+										} = parseActivityCode(assignment.activity.activityCode)
+										return (
+											<TableRow key={assignment.title}>
+												<TableCell className={classes.tableCell}>
+													<Typography>
+														{moment(assignment.startDate)
+															.tz(wcif.schedule.venues[0].timezone)
+															.format('hh:mm a')}
+													</Typography>
+												</TableCell>
+												<TableCell className={classes.tableCell}>
+													<Typography>{activityKey[eventId]}</Typography>
+												</TableCell>
+												<TableCell className={classes.tableCell}>
+													<Typography>
+														{groupNumber && `Group ${groupNumber}`}
+														{attemptNumber && `Attempt ${attemptNumber}`}
+													</Typography>
+												</TableCell>
+												<TableCell className={classes.tableCell}>
+													<Typography>
+														{assignedTo(assignment.assignmentCode)}
+													</Typography>
+												</TableCell>
+												<TableCell className={classes.tableCell}>
+													<Grid container alignItems='center'>
+														<Grid item>
+															<Typography>
+																{assignment.activity.room.name}
+															</Typography>
+														</Grid>
+														<Grid item>
+															<FiberManualRecordIcon
+																style={{
+																	fontSize: '50px',
+																	color: assignment.activity.room.color,
+																}}
+															/>
+														</Grid>
 													</Grid>
-													<Grid item>
-														<FiberManualRecordIcon
-															style={{
-																fontSize: '50px',
-																color: assignment.activity.room.color,
-															}}
-														/>
-													</Grid>
-												</Grid>
-											</TableCell>
-										</TableRow>
-									))}
+												</TableCell>
+											</TableRow>
+										)
+									})}
 							</TableBody>
 						</Table>
 					</Paper>

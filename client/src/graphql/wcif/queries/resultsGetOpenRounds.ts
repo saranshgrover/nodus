@@ -5,6 +5,16 @@ export const ResultsGetOpenRounds = gql`
 		getOpenRounds(competitionId: $competitionId) {
 			_id
 			id
+			results {
+				_id
+				personId
+				ranking
+				best
+				average
+				attempts {
+					result
+				}
+			}
 		}
 	}
 `

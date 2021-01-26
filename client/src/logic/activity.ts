@@ -1,6 +1,7 @@
 import { Person } from 'generated/graphql'
 
 export const parseActivityCode = (activityCode: string) => {
+	console.log(activityCode)
 	//@ts-ignore
 	const [, e, r, g, a] = activityCode.match(
 		/(\w+)(?:-r(\d+))?(?:-g(\d+))?(?:-a(\d+))?/

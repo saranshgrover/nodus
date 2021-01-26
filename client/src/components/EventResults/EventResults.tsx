@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/react-hooks'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import gql from 'graphql-tag'
 import useCompetition from 'hooks/useCompetition'
 import React from 'react'
@@ -34,15 +35,31 @@ const WCA_ROUND_QUERY = gql`
 
 interface Props {
 	roundId: string
+	results: Maybe<
+		Array<{
+			__typename?: 'Result'
+			_id: any
+			personId: string
+			ranking: number
+			best: number
+			average: number
+			attempts: Array<{
+				__typename?: 'Attempt'
+				result: number
+			}>
+		}>
+	>
 }
 
-export default function EventResults({ roundId }: Props) {
+export default function EventResults({ roundId, results }: Props) {
 	const { competitionId } = useCompetition()
 	const { loading, data, error } = useQuery(WCA_ROUND_QUERY, {
 		client: WCALiveClient,
 		variables: { competitionId, roundId },
 	})
-	if (loading) return <></>
+	if (results)
+		return <CompetitorResultList competitors={results} roundId={roundId} />
+	if (loading) return <LinearProgress />
 	if (error) return <Error message={error.message} />
 	return (
 		<CompetitorResultList competitors={data.round.results} roundId={roundId} />
