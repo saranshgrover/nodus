@@ -1,4 +1,5 @@
-import React, { useContext } from 'react'
+import { Link } from '@material-ui/core'
+import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -6,11 +7,10 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import Paper from '@material-ui/core/Paper'
-import { formatAttemptResult } from '../../logic/attempts'
-import { Link } from '@material-ui/core'
+import React, { useContext } from 'react'
 import { CompetitionContext } from '../../contexts/CompetitionContext'
 import { parseActivityCode } from '../../logic/activity'
+import { formatAttemptResult } from '../../logic/attempts'
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -60,10 +60,10 @@ export default function CompetitorList({ competitors, roundId }) {
 										i === 0
 											? '#c9b037'
 											: i === 1
-											? '#b4b4b4'
-											: i === 2
-											? '#ad8a56'
-											: '',
+												? '#b4b4b4'
+												: i === 2
+													? '#ad8a56'
+													: '',
 								}}
 							>
 								{row.ranking}
@@ -86,7 +86,7 @@ export default function CompetitorList({ competitors, roundId }) {
 							</TableCell>
 							{times(attempts, (index) => (
 								<TableCell key={index} align='right'>
-									{formatAttemptResult(row.attempts[index], eventId, false)}
+									{formatAttemptResult(row.attempts[index]?.result, eventId, false)}
 								</TableCell>
 							))}
 						</TableRow>
